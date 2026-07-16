@@ -1,0 +1,144 @@
+{
+  "site": {
+    "name": "INNOCRAFT",
+    "description": "Kelas offline pengembangan addon Minecraft untuk anak-anak dengan pendekatan yang profesional dan hangat."
+  },
+  "nav": {
+    "home": "Beranda",
+    "about": "Tentang",
+    "projects": "Proyek",
+    "gallery": "Galeri",
+    "contact": "Kontak",
+    "cta": "Jadwalkan Kunjungan"
+  },
+  "hero": {
+    "eyebrow": "Belajar teknologi secara menyenangkan",
+    "title": "Tempat anak tumbuh di bidang teknologi lewat pengalaman yang bermakna.",
+    "description": "INNOCRAFT membantu anak memahami dunia digital melalui lingkungan belajar yang terarah, aman, dan penuh rasa ingin tahu.",
+    "primaryAction": "Hubungi kami",
+    "secondaryAction": "Lihat lebih lanjut"
+  },
+  "whyMinecraft": {
+    "eyebrow": "Mengapa ini penting",
+    "title": "Minecraft menjadi jembatan untuk kreativitas dan kemampuan berpikir anak.",
+    "description": "Bukan sekadar bermain, tetapi ruang bagi anak untuk mengembangkan cara berpikir, berkolaborasi, dan memecahkan masalah.",
+    "items": [
+      { "title": "Kreativitas", "description": "Anak belajar membuat ide mereka menjadi nyata dengan cara yang terstruktur dan menyenangkan." },
+      { "title": "Logika", "description": "Setiap tantangan mendorong mereka berpikir sistematis dan memahami sebab-akibat." },
+      { "title": "Kolaborasi", "description": "Proses belajar berlangsung dalam suasana yang mendorong kerja sama dan komunikasi." },
+      { "title": "Literasi digital", "description": "Anak terbiasa melihat teknologi sebagai alat untuk menyelesaikan masalah dan berekspresi." }
+    ]
+  },
+  "about": {
+    "eyebrow": "Tentang INNOCRAFT",
+    "title": "Kami menciptakan pengalaman belajar yang profesional, personal, dan relevan.",
+    "description": "INNOCRAFT hadir untuk membantu orang tua melihat bahwa teknologi bisa dipelajari dengan cara yang terarah dan aman, khususnya untuk anak yang sedang berkembang.",
+    "bullets": [
+      { "title": "Visi", "description": "Menjadi ruang belajar offline yang membantu anak mengembangkan rasa percaya diri dan kemampuan teknologi secara alami." },
+      { "title": "Misi", "description": "Menyediakan suasana kelas yang hangat, terstruktur, dan penuh dukungan agar setiap anak merasa aman untuk belajar." },
+      { "title": "Filosofi", "description": "Belajar tidak harus terasa kaku. Kami memadukan disiplin, eksplorasi, dan bimbingan manusiawi." }
+    ]
+  },
+  "mentor": {
+    "eyebrow": "Tentang mentor",
+    "title": "Pengajar yang menggabungkan pengalaman nyata dan pendekatan yang sabar.",
+    "description": "Dengan pengalaman lebih dari 5 tahun di ranah teknologi dan proyek nyata, mentor memandu setiap sesi dengan fokus pada pemahaman, bukan sekadar hasil.",
+    "stats": [
+      { "label": "Tahun pengalaman", "value": "5+" },
+      { "label": "Proyek nyata", "value": "Banyak" },
+      { "label": "Pendekatan", "value": "Praktis" },
+      { "label": "Kelas", "value": "Offline" }
+    ],
+    "highlights": [
+      "Membimbing anak dengan bahasa yang sederhana dan mudah dipahami.",
+      "Menyeimbangkan eksplorasi kreatif dengan pemahaman yang kuat.",
+      "Menyesuaikan pendekatan dengan usia dan kebutuhan anak."
+    ]
+  },
+  "projects": {
+    "eyebrow": "Proyek",
+    "title": "Contoh kerja yang menunjukkan proses belajar yang serius dan menyenangkan.",
+    "description": "Setiap proyek dirancang untuk membantu anak melihat bahwa ide mereka bisa berkembang menjadi hasil yang nyata.",
+    "buttonLabel": "Lihat contoh",
+    "items": [
+      { "title": "Desain level sederhana", "description": "Anak belajar mengorganisasi ide dan membuat pengalaman yang mudah dipahami.", "link": "https://example.com" },
+      { "title": "Konsep interaksi", "description": "Mereka melihat bagaimana elemen bekerja bersama dalam ekosistem yang konsisten.", "link": "https://example.com" }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Galeri",
+    "title": "Suasana kelas yang nyaman, fokus, dan penuh semangat belajar.",
+    "description": "Setiap sudut kelas dirancang agar anak merasa aman, terbuka, dan siap untuk belajar.",
+    "items": [
+      { "title": "Ruang belajar", "description": "Area yang tenang dan rapi untuk fokus pada proses belajar." },
+      { "title": "Interaksi mentor", "description": "Bimbingan personal membantu anak merasa didukung sepanjang sesi." },
+      { "title": "Aktivitas kelompok", "description": "Anak belajar bekerja sama dalam lingkungan yang penuh rasa hormat." }
+    ]
+  },
+  "benefits": {
+    "eyebrow": "Apa yang diperoleh anak",
+    "title": "Anak berkembang tidak hanya dalam kemampuan teknis, tetapi juga dalam rasa percaya diri.",
+    "description": "Kami membantu mereka membangun fondasi yang berguna untuk masa depan, dengan pendekatan yang kuat namun tetap menyenangkan.",
+    "items": [
+      { "title": "Percaya diri", "description": "Anak belajar mengungkapkan ide dan menyelesaikan tantangan dengan lebih tenang." },
+      { "title": "Berpikir kreatif", "description": "Mereka terbiasa melihat masalah sebagai ruang untuk berinovasi." },
+      { "title": "Pemecahan masalah", "description": "Setiap sesi mendorong anak untuk mencari solusi yang masuk akal dan terukur." },
+      { "title": "Portofolio awal", "description": "Hasil karya mereka menjadi bukti proses belajar yang nyata dan berkembang." }
+    ]
+  },
+  "opportunities": {
+    "eyebrow": "Peluang masa depan",
+    "title": "Teknologi membuka banyak pintu bagi anak di masa depan.",
+    "description": "Keterampilan yang mereka bangun di sini dapat menjadi fondasi untuk berbagai bidang yang terus berkembang.",
+    "note": "Peta peluang ini akan diperluas seiring perkembangan program dan kolaborasi dengan mitra industri.",
+    "items": [
+      { "title": "Desainer pengalaman", "description": "Membuat ide terasa jelas dan menarik untuk orang lain." },
+      { "title": "Developer", "description": "Mengembangkan kemampuan berpikir logis untuk membangun solusi digital." },
+      { "title": "Tim kreatif", "description": "Bekerja pada ide, visual, dan pengalaman interaktif." },
+      { "title": "Inovator muda", "description": "Menjadi bagian dari ekosistem teknologi yang terus berubah." }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Testimoni",
+    "title": "Apa yang orang tua dan anak rasakan tentang pengalaman ini.",
+    "description": "Kami fokus membangun rasa aman, kualitas belajar, dan kepercayaan yang tumbuh dari waktu ke waktu.",
+    "items": [
+      { "name": "Ibu Clara", "role": "Orang tua siswa", "quote": "Saya senang melihat anak saya lebih percaya diri dan antusias saat belajar." },
+      { "name": "Rafi", "role": "Siswa", "quote": "Saya merasa belajar jadi lebih jelas dan menyenangkan karena mentor selalu sabar." }
+    ]
+  },
+  "classInfo": {
+    "eyebrow": "Informasi kelas",
+    "title": "Kelas yang dirancang untuk anak usia 8 sampai 16 tahun.",
+    "description": "Suasana belajar yang nyaman, interaktif, dan terarah untuk menjaga fokus tanpa terasa terlalu berat.",
+    "schedule": "Jadwal", "days": "Setiap hari",
+    "time": "Sesi berlangsung pada jam yang fleksibel sesuai kebutuhan kelas.",
+    "age": "Usia peserta: 8-16 tahun",
+    "facilities": ["Ruangan nyaman", "Laptop", "Internet stabil", "Mentor interaktif"],
+    "note": "Lokasi kelas dapat disesuaikan untuk kebutuhan program."
+  },
+  "cta": {
+    "title": "Siap melihat bagaimana anak Anda bisa tumbuh di sini?",
+    "description": "Kunjungan singkat bisa membantu Anda memahami suasana belajar, pendekatan mentor, dan nilai yang dibangun dalam setiap sesi.",
+    "action": "Jadwalkan kunjungan"
+  },
+  "contact": {
+    "eyebrow": "Kontak",
+    "title": "Hubungi kami untuk pertanyaan, kunjungan, atau informasi kelas.",
+    "description": "Kami senang berbicara dengan orang tua yang ingin memahami lebih jauh tentang program ini.",
+    "whatsapp": "WhatsApp",
+    "email": "hello@innocraft.id",
+    "instagram": "@innocraft.id",
+    "tiktok": "@innocraft.id",
+    "maps": "Lokasi",
+    "hours": "Jam operasional kami fleksibel dan dapat disesuaikan untuk kunjungan.",
+    "address": "Alamat kelas akan ditambahkan sesuai kebutuhan operasional."
+  },
+  "footer": {
+    "text": "© 2026 INNOCRAFT. Semua hak dilindungi.",
+    "links": [
+      { "label": "Beranda", "href": "#home" },
+      { "label": "Kontak", "href": "#contact" }
+    ]
+  }
+}

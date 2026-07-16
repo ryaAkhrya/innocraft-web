@@ -1,0 +1,145 @@
+{
+  "site": {
+    "name": "INNOCRAFT",
+    "description": "Offline Minecraft addon development classes for children with a professional and warm approach."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "gallery": "Gallery",
+    "contact": "Contact",
+    "cta": "Book a Visit"
+  },
+  "hero": {
+    "eyebrow": "Learning technology in a meaningful way",
+    "title": "A place where children grow their future skills through thoughtful experiences.",
+    "description": "INNOCRAFT helps children understand the digital world through a structured, safe, and curiosity-driven learning environment.",
+    "primaryAction": "Contact us",
+    "secondaryAction": "Learn more"
+  },
+  "whyMinecraft": {
+    "eyebrow": "Why this matters",
+    "title": "Minecraft becomes a bridge for creativity and thoughtful problem solving.",
+    "description": "This is not just play. It is a space where children develop how they think, collaborate, and solve challenges.",
+    "items": [
+      { "title": "Creativity", "description": "Children learn to shape ideas into something tangible through a structured and enjoyable process." },
+      { "title": "Logic", "description": "Every challenge encourages systems thinking and a clearer understanding of cause and effect." },
+      { "title": "Collaboration", "description": "The learning experience encourages teamwork, listening, and shared problem solving." },
+      { "title": "Digital literacy", "description": "Children become more comfortable seeing technology as a tool for expression and problem solving." }
+    ]
+  },
+  "about": {
+    "eyebrow": "About INNOCRAFT",
+    "title": "We create learning experiences that feel professional, personal, and meaningful.",
+    "description": "INNOCRAFT exists to help parents see that technology can be learned in a structured, safe, and encouraging environment for growing children.",
+    "bullets": [
+      { "title": "Vision", "description": "To become an offline learning space that helps children build confidence and technology skill in a natural way." },
+      { "title": "Mission", "description": "To provide a warm, guided, and thoughtfully structured class where every child feels supported to learn." },
+      { "title": "Philosophy", "description": "Learning does not need to feel rigid. We combine discipline, exploration, and human guidance." }
+    ]
+  },
+  "mentor": {
+    "eyebrow": "About the mentor",
+    "title": "A mentor who blends real experience with a calm and encouraging approach.",
+    "description": "With over 5 years of experience in technology and real-world projects, the mentor guides each session with a focus on understanding rather than simply finishing tasks.",
+    "stats": [
+      { "label": "Years of experience", "value": "5+" },
+      { "label": "Real projects", "value": "Many" },
+      { "label": "Approach", "value": "Practical" },
+      { "label": "Format", "value": "Offline" }
+    ],
+    "highlights": [
+      "Guiding children with simple, clear, and encouraging language.",
+      "Balancing creative exploration with strong understanding.",
+      "Adapting the pace to each child’s age and needs."
+    ]
+  },
+  "projects": {
+    "eyebrow": "Projects",
+    "title": "Examples of work that show a serious and joyful learning process.",
+    "description": "Each project is designed to help children see that their ideas can grow into something real.",
+    "buttonLabel": "View example",
+    "items": [
+      { "title": "Simple level design", "description": "Children learn how to organise ideas and build experiences that others can understand easily.", "link": "https://example.com" },
+      { "title": "Interaction concepts", "description": "They begin to see how elements work together within a consistent system.", "link": "https://example.com" }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Gallery",
+    "title": "A classroom atmosphere that feels calm, focused, and energised.",
+    "description": "Every part of the learning environment is designed to help children feel safe, welcome, and ready to learn.",
+    "items": [
+      { "title": "Learning space", "description": "A calm and organised area for focused learning and reflection." },
+      { "title": "Mentor interaction", "description": "Personal guidance helps children feel supported throughout each session." },
+      { "title": "Group activities", "description": "Children learn how to collaborate in an environment built on respect." }
+    ]
+  },
+  "benefits": {
+    "eyebrow": "What children gain",
+    "title": "Children grow not only in technical ability, but also in confidence.",
+    "description": "We help them build a foundation that is practical for the future while still feeling enjoyable and meaningful.",
+    "items": [
+      { "title": "Confidence", "description": "Children learn to share ideas and face challenges with greater calm and clarity." },
+      { "title": "Creative thinking", "description": "They begin to see problems as spaces for imagination and innovation." },
+      { "title": "Problem solving", "description": "Each session encourages thoughtful solutions that are practical and measurable." },
+      { "title": "Early portfolio", "description": "Their work becomes a visible record of real growth and learning progress." }
+    ]
+  },
+  "opportunities": {
+    "eyebrow": "Future opportunities",
+    "title": "Technology opens many doors for children in the years ahead.",
+    "description": "The skills they build here can become a foundation for a wide range of evolving fields.",
+    "note": "This opportunity map will expand as the program grows and new industry partnerships are added.",
+    "items": [
+      { "title": "Experience designer", "description": "Creating experiences that feel clear, useful, and engaging for others." },
+      { "title": "Developer", "description": "Developing logical thinking for building digital solutions." },
+      { "title": "Creative team", "description": "Working on ideas, visuals, and interactive experiences together." },
+      { "title": "Young innovator", "description": "Becoming part of a technology ecosystem that continues to evolve." }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Testimonials",
+    "title": "What parents and children feel about this experience.",
+    "description": "We focus on building trust, quality learning, and confidence over time.",
+    "items": [
+      { "name": "Clara", "role": "Parent", "quote": "I love seeing my child become more confident and excited to learn." },
+      { "name": "Rafi", "role": "Student", "quote": "I feel like learning is clearer and more enjoyable because the mentor is always patient." }
+    ]
+  },
+  "classInfo": {
+    "eyebrow": "Class information",
+    "title": "A class designed for children aged 8 to 16.",
+    "description": "A comfortable, interactive, and focused environment that keeps learning engaging without feeling overwhelming.",
+    "schedule": "Schedule",
+    "days": "Every day",
+    "time": "Sessions are arranged on a flexible schedule based on class needs.",
+    "age": "Participant age: 8-16",
+    "facilities": ["Comfortable room", "Laptop", "Stable internet", "Interactive mentor"],
+    "note": "The class location can be adjusted based on program needs."
+  },
+  "cta": {
+    "title": "Ready to see how your child could grow here?",
+    "description": "A short visit can help you understand the classroom atmosphere, the teaching approach, and the value built into each session.",
+    "action": "Book a visit"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Get in touch for questions, visits, or class information.",
+    "description": "We are happy to speak with parents who want to understand the program in more detail.",
+    "whatsapp": "WhatsApp",
+    "email": "hello@innocraft.id",
+    "instagram": "@innocraft.id",
+    "tiktok": "@innocraft.id",
+    "maps": "Location",
+    "hours": "Our operating hours are flexible and can be arranged for visits.",
+    "address": "The class address will be added as operations are finalized."
+  },
+  "footer": {
+    "text": "© 2026 INNOCRAFT. All rights reserved.",
+    "links": [
+      { "label": "Home", "href": "#home" },
+      { "label": "Contact", "href": "#contact" }
+    ]
+  }
+}
