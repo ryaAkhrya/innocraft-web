@@ -118,24 +118,109 @@ export function StudioHeroEditor({
   const [saved, setSaved] = useState<StudioHeroData>(base);
   const isDirty = JSON.stringify(draft) !== JSON.stringify(saved);
 
-  // Mock persistence (client-only)
-  const STORAGE_KEY = "studio.hero.mock";
+  const [heroRowId, setHeroRowId] = useState<string | null>(null);
 
-  // Prevent hydration mismatch: first render uses default mock data.
-  // After mount, we load localStorage and then update state.
+  // Hydration-safe: first render uses default mock data.
+  // After mount, load hero from Supabase; insert default if empty.
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
+    let cancelled = false;
 
-    try {
-      const parsed = JSON.parse(raw) as StudioHeroData;
-      setSaved(parsed);
-      setDraft(parsed);
-    } catch {
-      // ignore
+    async function loadHero() {
+      try {
+        const { supabase } = await import("@/lib/supabase/client");
+
+        const { data, error } = await supabase
+          .from("hero")
+          .select("id, badge, title, subtitle, primary_button_text, secondary_button_text, hero_video_url")
+          .limit(1);
+
+        if (cancelled) return;
+
+        if (error) {
+          setSaved(base);
+          setDraft(base);
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          const { data: inserted, error: insertError } = await supabase
+            .from("hero")
+            .insert({
+              badge: base.badge,
+              title: base.title,
+              subtitle: base.subtitle,
+              primary_button_text: base.primaryButtonText,
+              primary_button_url: "",
+              secondary_button_text: base.secondaryButtonText,
+              secondary_button_url: "",
+              hero_video_url: base.heroVideoUrl,
+            })
+            .select("id, badge, title, subtitle, primary_button_text, secondary_button_text, hero_video_url")
+            .limit(1);
+
+          if (cancelled) return;
+
+          if (insertError || !inserted || inserted.length === 0) {
+            setSaved(base);
+            setDraft(base);
+            return;
+          }
+
+          const row = inserted[0];
+          setHeroRowId(String(row.id));
+          setSaved({
+            badge: row.badge ?? base.badge,
+            title: row.title ?? base.title,
+            subtitle: row.subtitle ?? base.subtitle,
+            primaryButtonText:
+              row.primary_button_text ?? base.primaryButtonText,
+            secondaryButtonText:
+              row.secondary_button_text ?? base.secondaryButtonText,
+            heroVideoUrl: row.hero_video_url ?? base.heroVideoUrl,
+          });
+          setDraft({
+            badge: row.badge ?? base.badge,
+            title: row.title ?? base.title,
+            subtitle: row.subtitle ?? base.subtitle,
+            primaryButtonText:
+              row.primary_button_text ?? base.primaryButtonText,
+            secondaryButtonText:
+              row.secondary_button_text ?? base.secondaryButtonText,
+            heroVideoUrl: row.hero_video_url ?? base.heroVideoUrl,
+          });
+
+          return;
+        }
+
+        const row = data[0];
+        setHeroRowId(String(row.id));
+        const mapped: StudioHeroData = {
+          badge: row.badge ?? base.badge,
+          title: row.title ?? base.title,
+          subtitle: row.subtitle ?? base.subtitle,
+          primaryButtonText:
+            row.primary_button_text ?? base.primaryButtonText,
+          secondaryButtonText:
+            row.secondary_button_text ?? base.secondaryButtonText,
+          heroVideoUrl: row.hero_video_url ?? base.heroVideoUrl,
+        };
+
+        setSaved(mapped);
+        setDraft(mapped);
+      } catch {
+        if (!cancelled) {
+          setSaved(base);
+          setDraft(base);
+        }
+      }
     }
-  }, []);
+
+    loadHero();
+    return () => {
+      cancelled = true;
+    };
+  }, [base]);
+
 
 
   function reset() {
@@ -143,11 +228,76 @@ export function StudioHeroEditor({
   }
 
   function save() {
+    // Keep existing preview behavior: update local state immediately.
     setSaved(draft);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-    }
+
+    // Persist to Supabase (single-row behavior via heroRowId + UPDATE).
+    void (async () => {
+      try {
+        if (!heroRowId) {
+          // Fallback: re-create row if we couldn't load id for some reason.
+          const { supabase } = await import("@/lib/supabase/client");
+          const { data: inserted } = await supabase
+            .from("hero")
+            .insert({
+              badge: draft.badge,
+              title: draft.title,
+              subtitle: draft.subtitle,
+              primary_button_text: draft.primaryButtonText,
+              primary_button_url: "",
+              secondary_button_text: draft.secondaryButtonText,
+              secondary_button_url: "",
+              hero_video_url: draft.heroVideoUrl,
+            })
+            .select("id")
+            .limit(1);
+
+          const newId = inserted?.[0]?.id;
+
+          if (!newId) return;
+          setHeroRowId(String(newId));
+
+          await (await import("@/lib/supabase/client")).supabase
+            .from("hero")
+            .update({
+              badge: draft.badge,
+              title: draft.title,
+              subtitle: draft.subtitle,
+              primary_button_text: draft.primaryButtonText,
+              primary_button_url: "",
+              secondary_button_text: draft.secondaryButtonText,
+              secondary_button_url: "",
+              hero_video_url: draft.heroVideoUrl,
+            })
+            .eq("id", newId);
+
+
+
+          return;
+        }
+
+
+        const { supabase } = await import("@/lib/supabase/client");
+        await supabase
+          .from("hero")
+          .update({
+            badge: draft.badge,
+            title: draft.title,
+            subtitle: draft.subtitle,
+            primary_button_text: draft.primaryButtonText,
+            primary_button_url: "",
+            secondary_button_text: draft.secondaryButtonText,
+            secondary_button_url: "",
+            hero_video_url: draft.heroVideoUrl,
+          })
+          .eq("id", heroRowId);
+      } catch {
+        // Preserve existing behavior: errors are not surfaced in UI.
+      }
+    })();
   }
+
+
 
 
   return (

@@ -15,9 +15,16 @@ import {
   type StudioHeroData,
 } from "@/lib/studio/mock-hero";
 
-const STORAGE_KEY = "studio.hero.mock";
+
+
+
+
+import { supabase } from "@/lib/supabase/client";
+
+
 
 export function Hero() {
+
   const { t } = useLanguage();
 
   // Hydration-safe: render default on first pass (SSR + initial client render).
@@ -26,17 +33,83 @@ export function Hero() {
   );
 
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        setHeroData(defaultStudioHeroData);
-        return;
+    let cancelled = false;
+
+    async function loadHero() {
+      try {
+        const { data, error } = await supabase
+          .from("hero")
+          .select("*")
+          .limit(1);
+
+        if (cancelled) return;
+
+        if (error) {
+          setHeroData(defaultStudioHeroData);
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          const { data: inserted, error: insertError } = await supabase
+            .from("hero")
+            .insert({
+              badge: defaultStudioHeroData.badge,
+              title: defaultStudioHeroData.title,
+              subtitle: defaultStudioHeroData.subtitle,
+              primary_button_text: defaultStudioHeroData.primaryButtonText,
+              primary_button_url: "",
+              secondary_button_text: defaultStudioHeroData.secondaryButtonText,
+              secondary_button_url: "",
+              hero_video_url: defaultStudioHeroData.heroVideoUrl,
+            })
+            .select("*")
+            .limit(1);
+
+          if (cancelled) return;
+
+          if (insertError || !inserted || inserted.length === 0) {
+            setHeroData(defaultStudioHeroData);
+            return;
+          }
+
+          const row = inserted[0];
+          setHeroData({
+            badge: row.badge ?? defaultStudioHeroData.badge,
+            title: row.title ?? defaultStudioHeroData.title,
+            subtitle: row.subtitle ?? defaultStudioHeroData.subtitle,
+            primaryButtonText:
+              row.primary_button_text ?? defaultStudioHeroData.primaryButtonText,
+            secondaryButtonText:
+              row.secondary_button_text ??
+              defaultStudioHeroData.secondaryButtonText,
+            heroVideoUrl: row.hero_video_url ?? defaultStudioHeroData.heroVideoUrl,
+          });
+          return;
+        }
+
+        const row = data[0];
+        setHeroData({
+          badge: row.badge ?? defaultStudioHeroData.badge,
+          title: row.title ?? defaultStudioHeroData.title,
+          subtitle: row.subtitle ?? defaultStudioHeroData.subtitle,
+          primaryButtonText:
+            row.primary_button_text ?? defaultStudioHeroData.primaryButtonText,
+          secondaryButtonText:
+            row.secondary_button_text ?? defaultStudioHeroData.secondaryButtonText,
+          heroVideoUrl: row.hero_video_url ?? defaultStudioHeroData.heroVideoUrl,
+        });
+      } catch {
+        if (!cancelled) setHeroData(defaultStudioHeroData);
       }
-      setHeroData(JSON.parse(raw) as StudioHeroData);
-    } catch {
-      setHeroData(defaultStudioHeroData);
     }
+
+    loadHero();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
 
   return (
     <Section id="home" className="pt-6 pb-10 sm:pt-10 sm:pb-16">
