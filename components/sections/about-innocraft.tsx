@@ -1,26 +1,69 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { Container } from "@/components/ui/container";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
 import { Section } from "@/components/ui/section";
 import { SectionTitle } from "@/components/ui/section-title";
 
 import { useLanguage } from "@/lib/i18n/language-provider";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
 import { defaultStudioTentangData, StudioTentangData } from "@/lib/studio/mock-tentang";
 
-const STORAGE_KEY = "studio.tentang.mock";
+import { supabase } from "@/lib/supabase/client";
+
 
 export function AboutInnocraft() {
   const { t } = useLanguage();
 
-  const { value: saved } = useMockCmsState<StudioTentangData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioTentangData,
-  });
+  // Hydration-safe: render default on first pass (SSR + initial client render).
+  const [aboutData, setAboutData] = useState<StudioTentangData>(
+    defaultStudioTentangData,
+  );
 
-  const imageUrl = saved.imageUrl && saved.imageUrl.trim().length > 0
-    ? saved.imageUrl
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadAbout() {
+      try {
+        const { data, error } = await supabase
+          .from("about")
+          .select("*")
+          .limit(1);
+
+        if (cancelled) return;
+
+        if (error) {
+          setAboutData(defaultStudioTentangData);
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          setAboutData(defaultStudioTentangData);
+          return;
+        }
+
+        const row = data[0];
+        setAboutData({
+          title: row.title ?? defaultStudioTentangData.title,
+          subtitle: row.subtitle ?? defaultStudioTentangData.subtitle,
+          description: row.description ?? defaultStudioTentangData.description,
+          imageUrl: row.image_url ?? defaultStudioTentangData.imageUrl,
+        });
+      } catch {
+        if (!cancelled) setAboutData(defaultStudioTentangData);
+      }
+    }
+
+    loadAbout();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const imageUrl = aboutData.imageUrl && aboutData.imageUrl.trim().length > 0
+    ? aboutData.imageUrl
     : null;
 
   return (
@@ -30,8 +73,8 @@ export function AboutInnocraft() {
           <div className="rounded-[2rem] border border-border bg-white p-8 shadow-soft sm:p-10">
             <SectionTitle
               eyebrow={t.about.eyebrow}
-              title={saved.title || t.about.title}
-              description={saved.description || t.about.description}
+              title={aboutData.title || t.about.title}
+              description={aboutData.description || t.about.description}
             />
           </div>
           <div className="grid gap-4">
@@ -40,7 +83,7 @@ export function AboutInnocraft() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imageUrl}
-                  alt={saved.title || t.about.title}
+                  alt={aboutData.title || t.about.title}
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -52,8 +95,8 @@ export function AboutInnocraft() {
               </div>
             )}
             <div className="rounded-[1.5rem] border border-border bg-white/90 p-6 shadow-sm">
-              <h3 className="text-xl font-semibold text-heading">{saved.subtitle || t.about.eyebrow}</h3>
-              <p className="mt-3 text-sm leading-7 text-paragraph">{saved.description || t.about.description}</p>
+              <h3 className="text-xl font-semibold text-heading">{aboutData.subtitle || t.about.eyebrow}</h3>
+              <p className="mt-3 text-sm leading-7 text-paragraph">{aboutData.description || t.about.description}</p>
             </div>
           </div>
         </MotionWrapper>
