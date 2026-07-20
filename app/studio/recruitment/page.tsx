@@ -18,9 +18,8 @@ import {
   StudioJob,
   StudioRecruitmentData,
 } from "@/lib/studio/mock-recruitment";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
 
-const STORAGE_KEY = "studio.recruitment.mock";
+import { supabase } from "@/lib/supabase/client";
 
 function createId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -34,16 +33,34 @@ function safeTrim(s: string | null | undefined) {
   return (s ?? "").trim();
 }
 
+function toRecruitmentJob(row: {
+  id: string;
+  title: string | null;
+  employment_type: string | null;
+  location: string | null;
+  status: string | null;
+  description: string | null;
+  requirements: string[] | null;
+  display_order: number | null;
+}): StudioJob {
+  return {
+    id: String(row.id),
+    position: row.title ?? "",
+    employmentType: row.employment_type ?? "",
+    location: row.location ?? "",
+    status: row.status === "Closed" ? "Closed" : "Open",
+    description: row.description ?? "",
+    requirements: row.requirements ?? [],
+  };
+}
+
 function normalizeJob(input: StudioJob | any): StudioJob {
   return {
     id: String(input?.id ?? createId()),
     position: String(input?.position ?? ""),
     employmentType: String(input?.employmentType ?? ""),
     location: String(input?.location ?? ""),
-    status:
-      input?.status === "Closed" || input?.status === "Open"
-        ? input.status
-        : "Open",
+    status: input?.status === "Closed" ? "Closed" : "Open",
     description: String(input?.description ?? ""),
     requirements: Array.isArray(input?.requirements)
       ? input.requirements.map((x: any) => String(x ?? "")).filter(Boolean)
@@ -64,23 +81,58 @@ function getSelectedIndex(items: StudioJob[], selectedId: string | null) {
 }
 
 export default function StudioRecruitmentPage() {
-  const { value: saved, save } = useMockCmsState<StudioRecruitmentData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioRecruitmentData,
-  });
-
+  const [saved, setSaved] = useState<StudioRecruitmentData>(defaultStudioRecruitmentData);
   const [draft, setDraft] = useState<StudioRecruitmentData>(() =>
-    normalizeData(defaultStudioRecruitmentData),
+    normalizeData(defaultStudioRecruitmentData)
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
-  // Sync draft after hydration.
+  // Hydration-safe: load from Supabase on mount
   useEffect(() => {
-    setDraft(normalizeData(saved));
-  }, [saved]);
+    let cancelled = false;
 
-  // Keep selection valid.
+    async function loadRecruitment() {
+      try {
+        const { data, error } = await supabase
+          .from("recruitment")
+          .select("id, title, employment_type, location, status, description, requirements, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load recruitment jobs:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          const jobs = data.map(toRecruitmentJob);
+          setSaved({ jobs });
+          setDraft({ jobs: jobs.map((j) => ({ ...j })) });
+          if (!selectedId && jobs.length > 0) setSelectedId(jobs[0].id);
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading recruitment:", e);
+      }
+    }
+
+    loadRecruitment();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Keep draft in sync with saved
+  useEffect(() => {
+    if (draft.jobs.length === 0 && saved.jobs.length > 0) {
+      setDraft({ jobs: saved.jobs.map((j) => ({ ...j })) });
+    }
+  }, [saved, draft]);
+
+  // Keep selection valid
   useEffect(() => {
     if (!selectedId) return;
     const exists = draft.jobs.some((j) => j.id === selectedId);
@@ -93,17 +145,112 @@ export default function StudioRecruitmentPage() {
   }, [draft.jobs, selectedId]);
 
   const isDirty = useMemo(() => {
-    return JSON.stringify(draft) !== JSON.stringify(normalizeData(saved));
+    const a = JSON.stringify(draft);
+    const b = JSON.stringify(saved);
+    return a !== b;
   }, [draft, saved]);
 
   function onSave() {
-    save(draft);
+    void (async () => {
+      try {
+        const { supabase: client } = await import("@/lib/supabase/client");
+
+        // Fetch existing job IDs
+        const { data: existingRecords } = await client
+          .from("recruitment")
+          .select("id, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        const existingIds = new Set(existingRecords?.map((r) => r.id) ?? []);
+
+        // Determine which IDs to delete: rows in Supabase but removed from draft
+        const currentIds = new Set(draft.jobs.map((j) => j.id));
+        const idsToDelete = existingRecords?.filter((r) => !currentIds.has(r.id)) ?? [];
+
+        if (idsToDelete.length > 0) {
+          console.log(`Deleting ${idsToDelete.length} removed job(s) from Supabase...`);
+          for (const record of idsToDelete) {
+            const { error: deleteError } = await client
+              .from("recruitment")
+              .delete()
+              .eq("id", record.id);
+
+            if (deleteError) {
+              console.error(`Failed to delete job ${record.id}:`, deleteError);
+            }
+          }
+        }
+
+        // Working copy to track UUID updates from inserts
+        const updatedDraft = [...draft.jobs];
+        let newSelectedId = selectedId;
+
+        // Update or insert each job
+        for (let i = 0; i < updatedDraft.length; i++) {
+          const job = updatedDraft[i];
+          const originalId = job.id;
+
+          if (!existingIds.has(job.id)) {
+            // New job - insert and get UUID
+            const { data: insertedData, error: insertError } = await client
+              .from("recruitment")
+              .insert({
+                title: job.position,
+                employment_type: job.employmentType,
+                location: job.location,
+                status: job.status,
+                description: job.description,
+                requirements: job.requirements,
+                display_order: i,
+                is_active: true,
+              })
+              .select("id");
+
+            if (insertError) {
+              console.error(`Failed to insert job ${i + 1}:`, insertError);
+            } else if (insertedData && insertedData[0]) {
+              updatedDraft[i] = { ...updatedDraft[i], id: insertedData[0].id };
+              if (originalId === selectedId) {
+                newSelectedId = insertedData[0].id;
+              }
+            }
+          } else {
+            // Existing UUID - update
+            const { error: updateError } = await client
+              .from("recruitment")
+              .update({
+                title: job.position,
+                employment_type: job.employmentType,
+                location: job.location,
+                status: job.status,
+                description: job.description,
+                requirements: job.requirements,
+                display_order: i,
+                is_active: true,
+              })
+              .eq("id", job.id);
+
+            if (updateError) {
+              console.error(`Failed to update job ${job.id}:`, updateError);
+            }
+          }
+        }
+
+        // Sync both states with the updated IDs
+        setSaved({ jobs: updatedDraft.map((j) => ({ ...j })) });
+        setDraft({ jobs: updatedDraft });
+        setSelectedId(newSelectedId);
+      } catch (e) {
+        console.error("Error saving recruitment:", e);
+      }
+    })();
   }
 
   function onReset() {
     const ok = confirmReset("Reset changes for Recruitment?");
     if (!ok) return;
-    setDraft(normalizeData(saved));
+    setDraft({ jobs: saved.jobs.map((j) => ({ ...j })) });
     setSelectedId(null);
     setIsEditorOpen(false);
   }
@@ -131,9 +278,12 @@ export default function StudioRecruitmentPage() {
 
   function updateSelected(patch: Partial<StudioJob>) {
     if (!selectedItem) return;
+
     setDraft((d) => ({
       ...d,
-      jobs: d.jobs.map((j) => (j.id === selectedItem.id ? { ...j, ...patch } : j)),
+      jobs: d.jobs.map((j) =>
+        j.id === selectedItem.id ? { ...j, ...patch } : j,
+      ),
     }));
   }
 
@@ -484,4 +634,3 @@ export default function StudioRecruitmentPage() {
     </StudioShell>
   );
 }
-

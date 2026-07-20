@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Container } from "@/components/ui/container";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
@@ -11,14 +11,33 @@ import { recruitmentJobsMock } from "./recruitment-mock-data";
 import type { RecruitmentJob, RecruitmentModalPayload } from "./recruitment-types";
 import { RecruitmentModal } from "./recruitment-modal";
 
-import { useMockCmsState } from "@/lib/studio/cms-storage";
 import {
   defaultStudioRecruitmentData,
-  type StudioRecruitmentData,
   type StudioJob,
 } from "@/lib/studio/mock-recruitment";
 
-const STORAGE_KEY = "studio.recruitment.mock";
+import { supabase } from "@/lib/supabase/client";
+
+
+function toRecruitmentJob(row: {
+  id: string;
+  title: string | null;
+  employment_type: string | null;
+  location: string | null;
+  status: string | null;
+  description: string | null;
+  requirements: string[] | null;
+}): StudioJob {
+  return {
+    id: String(row.id),
+    position: row.title ?? "",
+    employmentType: row.employment_type ?? "",
+    location: row.location ?? "",
+    status: row.status === "Closed" ? "Closed" : "Open",
+    description: row.description ?? "",
+    requirements: row.requirements ?? [],
+  };
+}
 
 function StatusBadge({ status }: { status: RecruitmentJob["status"] }) {
   const isOpen = status === "open";
@@ -95,18 +114,51 @@ function cmsJobToRecruitmentJob(cms: StudioJob, index: number): RecruitmentJob {
 }
 
 export function RecruitmentSection() {
-  const { value: saved } = useMockCmsState<StudioRecruitmentData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioRecruitmentData,
-  });
+  // Hydration-safe: render default on first pass
+  const [cmsJobs, setCmsJobs] = useState<StudioJob[]>(
+    defaultStudioRecruitmentData.jobs
+  );
 
   const jobs = useMemo<RecruitmentJob[]>(() => {
-    const source = saved.jobs.length > 0 ? saved : defaultStudioRecruitmentData;
-    return source.jobs.map((cms, idx) => cmsJobToRecruitmentJob(cms, idx));
-  }, [saved]);
+    return cmsJobs.map((cms, idx) => cmsJobToRecruitmentJob(cms, idx));
+  }, [cmsJobs]);
 
   const [selected, setSelected] = useState<RecruitmentJob | null>(null);
   const [open, setOpen] = useState(false);
+
+  // Load from Supabase on mount
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadRecruitment() {
+      try {
+        const { data, error } = await supabase
+          .from("recruitment")
+          .select("id, title, employment_type, location, status, description, requirements, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load recruitment:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          setCmsJobs(data.map(toRecruitmentJob));
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading recruitment:", e);
+      }
+    }
+
+    loadRecruitment();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const payload: RecruitmentModalPayload | null = selected ? { job: selected } : null;
 
