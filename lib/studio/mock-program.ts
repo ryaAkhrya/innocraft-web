@@ -7,8 +7,12 @@ export type StudioProgramEntry = {
   features: StudioProgramFeature[];
   ctaText: string;
   subtitle?: string;
+  // Extended fields for Supabase projects table
   imageUrl?: string;
   projectUrl?: string;
+  ageRange?: string;
+  duration?: string;
+  category?: string;
 };
 
 export type StudioProgramData = {
@@ -39,4 +43,3 @@ export const defaultStudioProgramData: StudioProgramData = {
     },
   ],
 };
-
