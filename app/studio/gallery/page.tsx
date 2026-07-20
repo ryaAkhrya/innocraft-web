@@ -21,9 +21,8 @@ import {
   StudioGalleryData,
   StudioGalleryItem,
 } from "@/lib/studio/mock-gallery";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
 
-const STORAGE_KEY = "studio.gallery.mock";
+import { supabase } from "@/lib/supabase/client";
 
 function createId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -31,6 +30,21 @@ function createId() {
     return (crypto as any).randomUUID() as string;
   }
   return `g_${Math.random().toString(16).slice(2)}_${Date.now()}`;
+}
+
+
+function toGalleryItem(row: {
+  id: string;
+  image_url: string | null;
+  title: string | null;
+  description: string | null;
+}): StudioGalleryItem {
+  return {
+    id: String(row.id),
+    imageUrl: row.image_url ?? "",
+    title: row.title ?? "",
+    description: row.description ?? "",
+  };
 }
 
 function normalizeItem(input: StudioGalleryItem | any): StudioGalleryItem {
@@ -50,22 +64,58 @@ function normalizeData(input: StudioGalleryData | any): StudioGalleryData {
 }
 
 export default function StudioGalleryPage() {
-  const { value: saved, save } = useMockCmsState<StudioGalleryData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioGalleryData,
-  });
-
-  const [draft, setDraft] = useState<StudioGalleryData>(
-    normalizeData(defaultStudioGalleryData),
+  const [saved, setSaved] = useState<StudioGalleryData>(defaultStudioGalleryData);
+  const [draft, setDraft] = useState<StudioGalleryData>(() =>
+    normalizeData(defaultStudioGalleryData)
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
+  // Hydration-safe: load from Supabase on mount
   useEffect(() => {
-    setDraft(normalizeData(saved));
-  }, [saved]);
+    let cancelled = false;
 
-  // Keep selection stable after load.
+    async function loadGallery() {
+      try {
+        const { data, error } = await supabase
+          .from("gallery")
+          .select("id, image_url, title, description, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load gallery items:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          const items = data.map(toGalleryItem);
+          setSaved({ items });
+          setDraft({ items: items.map((i) => ({ ...i })) });
+          if (!selectedId && items.length > 0) setSelectedId(items[0].id);
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading gallery:", e);
+      }
+    }
+
+    loadGallery();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Keep draft in sync with saved
+  useEffect(() => {
+    if (draft.items.length === 0 && saved.items.length > 0) {
+      setDraft({ items: saved.items.map((i) => ({ ...i })) });
+    }
+  }, [saved, draft]);
+
+  // Keep selection stable after load
   useEffect(() => {
     if (selectedId) {
       const exists = draft.items.some((i) => i.id === selectedId);
@@ -79,17 +129,106 @@ export default function StudioGalleryPage() {
   }, [draft.items, selectedId]);
 
   const isDirty = useMemo(() => {
-    return JSON.stringify(draft) !== JSON.stringify(normalizeData(saved));
+    const a = JSON.stringify(draft);
+    const b = JSON.stringify(saved);
+    return a !== b;
   }, [draft, saved]);
 
   function onSave() {
-    save(draft);
+    void (async () => {
+      try {
+        const { supabase: client } = await import("@/lib/supabase/client");
+
+        // Fetch existing gallery IDs
+        const { data: existingRecords } = await client
+          .from("gallery")
+          .select("id, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        const existingIds = new Set(existingRecords?.map((r) => r.id) ?? []);
+
+        // Determine which IDs to delete: rows in Supabase but removed from draft
+        const currentIds = new Set(draft.items.map((i) => i.id));
+        const idsToDelete = existingRecords?.filter((r) => !currentIds.has(r.id)) ?? [];
+
+        if (idsToDelete.length > 0) {
+          console.log(`Deleting ${idsToDelete.length} removed gallery item(s) from Supabase...`);
+          for (const record of idsToDelete) {
+            const { error: deleteError } = await client
+              .from("gallery")
+              .delete()
+              .eq("id", record.id);
+
+            if (deleteError) {
+              console.error(`Failed to delete gallery item ${record.id}:`, deleteError);
+            }
+          }
+        }
+
+        // Working copy to track UUID updates from inserts
+        const updatedDraft = [...draft.items];
+        let newSelectedId = selectedId;
+
+        // Update or insert each gallery item
+        for (let i = 0; i < updatedDraft.length; i++) {
+          const item = updatedDraft[i];
+          const originalId = item.id;
+
+          if (!existingIds.has(item.id)) {
+            // New item - insert and get UUID
+            const { data: insertedData, error: insertError } = await client
+              .from("gallery")
+              .insert({
+                image_url: item.imageUrl,
+                title: item.title,
+                description: item.description,
+                display_order: i,
+                is_active: true,
+              })
+              .select("id");
+
+            if (insertError) {
+              console.error(`Failed to insert gallery item ${i + 1}:`, insertError);
+            } else if (insertedData && insertedData[0]) {
+              updatedDraft[i] = { ...updatedDraft[i], id: insertedData[0].id };
+              if (originalId === selectedId) {
+                newSelectedId = insertedData[0].id;
+              }
+            }
+          } else {
+            // Existing UUID - update
+            const { error: updateError } = await client
+              .from("gallery")
+              .update({
+                image_url: item.imageUrl,
+                title: item.title,
+                description: item.description,
+                display_order: i,
+                is_active: true,
+              })
+              .eq("id", item.id);
+
+            if (updateError) {
+              console.error(`Failed to update gallery item ${item.id}:`, updateError);
+            }
+          }
+        }
+
+        // Sync both states with the updated IDs
+        setSaved({ items: updatedDraft.map((i) => ({ ...i })) });
+        setDraft({ items: updatedDraft });
+        setSelectedId(newSelectedId);
+      } catch (e) {
+        console.error("Error saving gallery:", e);
+      }
+    })();
   }
 
   function onReset() {
     const ok = confirmReset("Reset changes for Gallery?");
     if (!ok) return;
-    setDraft(normalizeData(saved));
+    setDraft({ items: saved.items.map((i) => ({ ...i })) });
     setSelectedId(null);
     setIsEditorOpen(false);
   }
@@ -135,7 +274,6 @@ export default function StudioGalleryPage() {
         return nextItems[0].id;
       })();
 
-      // Keep modal state consistent
       setSelectedId(nextSelected);
       setIsEditorOpen(false);
 
@@ -423,4 +561,3 @@ export default function StudioGalleryPage() {
     </StudioShell>
   );
 }
-
