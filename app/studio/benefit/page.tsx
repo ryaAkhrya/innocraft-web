@@ -1,5 +1,7 @@
 "use client";
 
+import { Compass, GraduationCap, Sparkles, TrendingUp } from "lucide-react";
+
 import { useEffect, useState } from "react";
 
 import { StudioShell } from "@/components/studio/studio-shell";
@@ -19,38 +21,182 @@ import {
   StudioBenefitCard,
   StudioBenefitData,
 } from "@/lib/studio/mock-benefit";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
+
+import { supabase } from "@/lib/supabase/client";
+
+
+function toStudiBenefitCard(row: {
+  id: string;
+  icon: string | null;
+  title: string | null;
+  description: string | null;
+  display_order: number;
+}): StudioBenefitCard {
+  return {
+    id: String(row.id),
+    icon: "🧠",
+    title: row.title ?? "",
+    description: row.description ?? "",
+  };
+}
+
 
 export default function StudioBenefitPage() {
-  const STORAGE_KEY = "studio.benefit.mock";
-
-  const { value: saved, save } = useMockCmsState<StudioBenefitData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioBenefitData,
+  const [draft, setDraft] = useState<StudioBenefitData>({
+    ...defaultStudioBenefitData,
+    cards: defaultStudioBenefitData.cards.map((c) => ({ ...c })),
   });
-
-  const [draft, setDraft] = useState<StudioBenefitData>(defaultStudioBenefitData);
-
-  useEffect(() => {
-    setDraft(saved);
-  }, [saved]);
+  const [saved, setSaved] = useState<StudioBenefitData>({
+    ...defaultStudioBenefitData,
+    cards: defaultStudioBenefitData.cards.map((c) => ({ ...c })),
+  });
 
   const isDirty = JSON.stringify(draft) !== JSON.stringify(saved);
 
-  function onSave() {
-    save(draft);
-  }
+  // Hardcoded icons for preview (same as public Benefits)
+  const icons = [GraduationCap, Sparkles, Compass, TrendingUp];
 
-  function onReset() {
+  // Hydration-safe: first render uses default mock data.
+  // After mount, load benefits from Supabase.
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadBenefits() {
+      try {
+        // Fetch specifically the 4 intended positions (0,1,2,3)
+        const { data, error } = await supabase
+          .from("benefits")
+          .select("id, icon, title, description, display_order")
+          .in("display_order", [0, 1, 2, 3])
+          .order("display_order", { ascending: true });
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load benefits:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          // Sort by display_order to ensure correct card order
+          const sortedData = data.sort((a, b) => a.display_order - b.display_order);
+          const mappedCards = sortedData.map(toStudiBenefitCard);
+
+          // Ensure exactly 4 cards, pad with defaults if needed
+          const finalCards = mappedCards.length >= 4
+            ? mappedCards.slice(0, 4)
+            : [...mappedCards, ...defaultStudioBenefitData.cards.slice(mappedCards.length, 4)];
+
+          setSaved(prev => ({
+            ...prev,
+            cards: finalCards,
+          }));
+          setDraft(prev => ({
+            ...prev,
+            cards: finalCards,
+          }));
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading benefits:", e);
+      }
+    }
+
+    loadBenefits();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function reset() {
     const ok = confirmReset("Reset changes for Benefit?");
     if (!ok) return;
-    setDraft(saved);
+    setDraft({
+      ...saved,
+      cards: saved.cards.map((c) => ({ ...c })),
+    });
+  }
+
+  async function save() {
+    // Persist to Supabase - update/insert each card.
+    void (async () => {
+      try {
+        const { supabase: client } = await import("@/lib/supabase/client");
+
+        // First, fetch existing records at positions 0-3
+        const { data: existingRecords, error: fetchError } = await client
+          .from("benefits")
+          .select("id, display_order")
+          .in("display_order", [0, 1, 2, 3])
+          .order("display_order", { ascending: true });
+
+        if (fetchError) {
+          console.error("Failed to fetch existing records:", fetchError);
+          return;
+        }
+
+        // Create a map of display_order to id for quick lookup
+        const orderToId = new Map<number, string>();
+        existingRecords?.forEach(record => {
+          orderToId.set(record.display_order, record.id);
+        });
+
+        // Update each card - either update existing or insert new
+        for (let i = 0; i < draft.cards.length; i++) {
+          const card = draft.cards[i];
+          const existingId = orderToId.get(i);
+
+          if (existingId) {
+            // Update existing record
+            const { error: updateError } = await client
+              .from("benefits")
+              .update({
+                icon: "🧠",
+                title: card.title,
+                description: card.description,
+                display_order: i,
+                is_active: true,
+              })
+              .eq("id", existingId);
+
+            if (updateError) {
+              console.error(`Failed to update card ${i + 1} (id: ${existingId}):`, updateError);
+            }
+          } else {
+            // No record at this position - insert new
+            const { error: insertError } = await client
+              .from("benefits")
+              .insert({
+                icon: "🧠",
+                title: card.title,
+                description: card.description,
+                display_order: i,
+                is_active: true,
+              });
+
+            if (insertError) {
+              console.error(`Failed to insert card ${i + 1}:`, insertError);
+            }
+          }
+        }
+
+        // Update local state with saved values
+        setSaved(prev => ({
+          ...prev,
+          cards: [...draft.cards],
+        }));
+      } catch (e) {
+        console.error("Error saving benefits:", e);
+      }
+    })();
   }
 
   function updateCard(index: number, patch: Partial<StudioBenefitCard>) {
+    // Ignore icon changes
+    const { icon, ...rest } = patch;
     setDraft((d) => ({
       ...d,
-      cards: d.cards.map((c, i) => (i === index ? { ...c, ...patch } : c)),
+      cards: d.cards.map((c, i) => (i === index ? { ...c, ...rest } : c)),
     }));
   }
 
@@ -96,7 +242,7 @@ export default function StudioBenefitPage() {
               </div>
 
               <div className="mt-8 space-y-4">
-                <h3 className="text-sm font-semibold text-white/80">Benefits (4)</h3>
+                <h3 className="text-sm font-semibold text-white/80">Benefits ({draft.cards.length})</h3>
 
                 {draft.cards.map((card, idx) => (
                   <div
@@ -109,13 +255,6 @@ export default function StudioBenefitPage() {
                     </div>
 
                     <div className="mt-4 grid gap-4">
-                      <CmsTextInput
-                        label="Icon name"
-                        value={card.icon}
-                        onChange={(v) => updateCard(idx, { icon: v })}
-                        placeholder="🧠"
-                      />
-
                       <CmsTextInput
                         label="Title"
                         value={card.title}
@@ -139,14 +278,14 @@ export default function StudioBenefitPage() {
                 <CmsPrimaryButton
                   variant="solid"
                   disabled={!isDirty}
-                  onClick={onSave}
+                  onClick={save}
                 >
                   Save Changes
                 </CmsPrimaryButton>
                 <CmsPrimaryButton
                   variant="ghost"
                   disabled={!isDirty}
-                  onClick={onReset}
+                  onClick={reset}
                 >
                   Reset Changes
                 </CmsPrimaryButton>
@@ -173,26 +312,29 @@ export default function StudioBenefitPage() {
                   </p>
 
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    {draft.cards.map((card) => (
-                      <div
-                        key={card.id}
-                        className="rounded-3xl border border-white/10 bg-white/5 p-5"
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="rounded-2xl border border-white/10 bg-[#0B1020]/20 p-3 text-white/90">
-                            {card.icon}
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-sm font-semibold text-white">
-                              {card.title}
-                            </p>
-                            <p className="mt-2 text-sm leading-relaxed text-white/60">
-                              {card.description}
-                            </p>
+                    {draft.cards.map((card, cardIdx) => {
+                      const Icon = icons[cardIdx % icons.length];
+                      return (
+                        <div
+                          key={card.id}
+                          className="rounded-3xl border border-white/10 bg-white/5 p-5"
+                        >
+                          <div className="flex items-start gap-4">
+                            <div className="rounded-2xl border border-white/10 bg-[#0B1020]/20 p-3 text-white/90">
+                              <Icon className="h-5 w-5" />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-semibold text-white">
+                                {card.title}
+                              </p>
+                              <p className="mt-2 text-sm leading-relaxed text-white/60">
+                                {card.description}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -203,5 +345,3 @@ export default function StudioBenefitPage() {
     </StudioShell>
   );
 }
-
-
