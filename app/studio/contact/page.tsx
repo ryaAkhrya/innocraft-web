@@ -12,28 +12,129 @@ import {
   defaultStudioContactData,
   StudioContactData,
 } from "@/lib/studio/mock-contact";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
 
-const STORAGE_KEY = "studio.contact.mock";
+import { supabase } from "@/lib/supabase/client";
+
+function toContactData(row: {
+  company_name: string | null;
+  address: string | null;
+  whatsapp: string | null;
+  email: string | null;
+  maps_url: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  tiktok: string | null;
+  opening_hours: string | null;
+}): StudioContactData {
+  return {
+    companyName: row.company_name ?? "",
+    address: row.address ?? "",
+    whatsapp: row.whatsapp ?? "",
+    email: row.email ?? "",
+    mapsUrl: row.maps_url ?? "",
+    instagram: row.instagram ?? "",
+    facebook: row.facebook ?? "",
+    tiktok: row.tiktok ?? "",
+    openingHours: row.opening_hours ?? "",
+  };
+}
+
+function fromContactData(data: StudioContactData) {
+  return {
+    company_name: data.companyName,
+    address: data.address,
+    whatsapp: data.whatsapp,
+    email: data.email,
+    maps_url: data.mapsUrl,
+    instagram: data.instagram,
+    facebook: data.facebook,
+    tiktok: data.tiktok,
+    opening_hours: data.openingHours,
+  };
+}
 
 export default function StudioContactPage() {
-  const { value: saved, save } = useMockCmsState<StudioContactData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioContactData,
-  });
-
+  const [saved, setSaved] = useState<StudioContactData>(defaultStudioContactData);
   const [draft, setDraft] = useState<StudioContactData>(defaultStudioContactData);
+  const [existingId, setExistingId] = useState<string | null>(null);
 
+  // Hydration-safe: load from Supabase on mount
   useEffect(() => {
-    setDraft(saved);
-  }, [saved]);
+    let cancelled = false;
+
+    async function loadContact() {
+      try {
+        const { data, error } = await supabase
+          .from("contact")
+          .select("id, company_name, address, whatsapp, email, maps_url, instagram, facebook, tiktok, opening_hours")
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load contact:", error.message, error.code, error.details);
+          return;
+        }
+
+        if (data) {
+          const contactData = toContactData(data);
+          setSaved(contactData);
+          setDraft(contactData);
+          setExistingId(data.id);
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading contact:", e);
+      }
+    }
+
+    loadContact();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const isDirty = useMemo(() => {
     return JSON.stringify(draft) !== JSON.stringify(saved);
   }, [draft, saved]);
 
   function onSave() {
-    save(draft);
+    void (async () => {
+      try {
+        const { supabase: client } = await import("@/lib/supabase/client");
+
+        if (existingId) {
+          // Update existing row
+          const { error: updateError } = await client
+            .from("contact")
+            .update(fromContactData(draft))
+            .eq("id", existingId);
+
+          if (updateError) {
+            console.error("Failed to update contact:", updateError.message, updateError.code, updateError.details);
+            return;
+          }
+        } else {
+          // Insert new row
+          const { data: insertedData, error: insertError } = await client
+            .from("contact")
+            .insert(fromContactData(draft))
+            .select("id");
+
+          if (insertError) {
+            console.error("Failed to insert contact:", insertError.message, insertError.code, insertError.details);
+            return;
+          }
+          if (insertedData && insertedData[0]) {
+            setExistingId(insertedData[0].id);
+          }
+        }
+
+        setSaved(draft);
+      } catch (e) {
+        console.error("Error saving contact:", e);
+      }
+    })();
   }
 
   function onReset() {
@@ -102,6 +203,13 @@ export default function StudioContactPage() {
                   placeholder="https://facebook.com/..."
                 />
               </div>
+
+              <CmsTextInput
+                label="TikTok"
+                value={draft.tiktok}
+                onChange={(v) => setDraft((d) => ({ ...d, tiktok: v }))}
+                placeholder="https://tiktok.com/..."
+              />
 
               <CmsTextarea
                 label="Opening Hours"
@@ -190,6 +298,13 @@ export default function StudioContactPage() {
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <p className="text-xs font-semibold text-white/60">TikTok</p>
+                  <p className="mt-2 break-words text-xs text-white/75">
+                    {draft.tiktok || "(Add TikTok)"}
+                  </p>
+                </div>
+
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-xs font-semibold text-white/60">Maps URL</p>
                   <p className="mt-2 break-words text-xs text-white/75">
                     {draft.mapsUrl || "(Add maps URL)"}
@@ -203,4 +318,3 @@ export default function StudioContactPage() {
     </StudioShell>
   );
 }
-

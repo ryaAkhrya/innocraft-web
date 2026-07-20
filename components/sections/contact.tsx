@@ -5,44 +5,85 @@ import { Container } from "@/components/ui/container";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
 import { Section } from "@/components/ui/section";
 import { SectionTitle } from "@/components/ui/section-title";
-import { useMemo } from "react";
 
 import { useLanguage } from "@/lib/i18n/language-provider";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
+
 import {
   defaultStudioContactData,
   type StudioContactData,
 } from "@/lib/studio/mock-contact";
 
-const STORAGE_KEY = "studio.contact.mock";
+import { supabase } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
+
+
+function toContactData(row: {
+  company_name: string | null;
+  address: string | null;
+  whatsapp: string | null;
+  email: string | null;
+  maps_url: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  tiktok: string | null;
+  opening_hours: string | null;
+}): StudioContactData {
+  return {
+    companyName: row.company_name ?? "",
+    address: row.address ?? "",
+    whatsapp: row.whatsapp ?? "",
+    email: row.email ?? "",
+    mapsUrl: row.maps_url ?? "",
+    instagram: row.instagram ?? "",
+    facebook: row.facebook ?? "",
+    tiktok: row.tiktok ?? "",
+    openingHours: row.opening_hours ?? "",
+  };
+}
 
 export function Contact() {
   const { t } = useLanguage();
 
-  const { value: saved } = useMockCmsState<StudioContactData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioContactData,
-  });
-
-  const data = saved.whatsapp ? saved : defaultStudioContactData;
-
-  const waUrl = data.whatsapp
-    ? `https://wa.me/${data.whatsapp.replace(/[^0-9]/g, "")}?text=Halo%20INNOCRAFT,%20saya%20ingin%20menjadwalkan%20kunjungan`
-    : "";
-
-  const contactCta = useMemo(
-    () => ({
-      title: "Jadwalkan Kunjungan",
-      subtitle:
-        "Datang langsung ke kelas INNOCRAFT untuk melihat bagaimana anak belajar teknologi melalui Minecraft. Konsultasi dan kunjungan gratis.",
-      whatsappHeading: "Booking via WhatsApp",
-      whatsappDescription:
-        "Klik tombol di bawah untuk langsung menghubungi tim INNOCRAFT dan menjadwalkan kunjungan.",
-      buttonLabel: "Jadwalkan Kunjungan Sekarang",
-      whatsappUrl: waUrl,
-    }),
-    [waUrl],
+  // Hydration-safe: render default on first pass
+  const [contactData, setContactData] = useState<StudioContactData>(
+    defaultStudioContactData
   );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadContact() {
+      try {
+        const { data, error } = await supabase
+          .from("contact")
+          .select("id, company_name, address, whatsapp, email, maps_url, instagram, facebook, tiktok, opening_hours")
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load contact:", error.message, error.code, error.details);
+          return;
+        }
+
+        if (data) {
+          setContactData(toContactData(data));
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading contact:", e);
+      }
+    }
+
+    loadContact();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const waUrl = contactData.whatsapp
+    ? `https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, "")}?text=Halo%20INNOCRAFT,%20saya%20ingin%20menjadwalkan%20kunjungan`
+    : "";
 
   return (
     <Section id="contact" className="py-10 sm:py-16">
@@ -51,8 +92,8 @@ export function Contact() {
           <MotionWrapper className="rounded-[2rem] border border-border bg-white p-8 shadow-soft sm:p-10">
             <SectionTitle
               eyebrow={t.contact.eyebrow}
-              title={contactCta.title}
-              description={contactCta.subtitle}
+              title="Hubungi kami untuk pertanyaan, kunjungan, atau informasi kelas."
+              description={t.contact.description}
             />
 
             <div className="mt-8">
@@ -62,27 +103,27 @@ export function Contact() {
                     <div className="flex items-center gap-3">
                       <MessageCircle className="h-5 w-5 text-heading" />
                       <h3 className="text-lg font-semibold text-heading">
-                        {contactCta.whatsappHeading}
+                        Booking via WhatsApp
                       </h3>
                     </div>
                     <p className="mt-3 text-sm leading-7 text-paragraph">
-                      {contactCta.whatsappDescription}
+                      Klik tombol di bawah untuk langsung menghubungi tim INNOCRAFT dan menjadwalkan kunjungan.
                     </p>
                   </div>
 
                   <div className="sm:pt-1">
-                    {contactCta.whatsappUrl ? (
+                    {waUrl ? (
                       <a
-                        href={contactCta.whatsappUrl}
+                        href={waUrl}
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex w-full items-center justify-center rounded-full border border-buttonBg bg-buttonBg px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-buttonHover sm:w-auto"
                       >
-                        {contactCta.buttonLabel}
+                        Jadwalkan Kunjungan Sekarang
                       </a>
                     ) : (
                       <span className="inline-flex w-full items-center justify-center rounded-full border border-border bg-white/60 px-6 py-3 text-sm font-semibold text-paragraph shadow-soft sm:w-auto">
-                        {contactCta.buttonLabel}
+                        Jadwalkan Kunjungan Sekarang
                       </span>
                     )}
                   </div>
@@ -98,14 +139,14 @@ export function Contact() {
                   <MessageCircle className="mt-1 h-5 w-5 text-heading" />
                   <div>
                     <p className="font-semibold text-heading">WhatsApp</p>
-                    {data.whatsapp ? (
+                    {contactData.whatsapp ? (
                       <a
-                        href={`https://wa.me/${data.whatsapp.replace(/[^0-9]/g, "")}`}
+                        href={`https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, "")}`}
                         target="_blank"
                         rel="noreferrer"
                         className="mt-1 block text-paragraph hover:text-heading"
                       >
-                        {data.whatsapp}
+                        {contactData.whatsapp}
                       </a>
                     ) : (
                       <p className="mt-1 text-paragraph">{t.contact.whatsapp}</p>
@@ -117,12 +158,12 @@ export function Contact() {
                   <Mail className="mt-1 h-5 w-5 text-heading" />
                   <div>
                     <p className="font-semibold text-heading">Email</p>
-                    {data.email ? (
+                    {contactData.email ? (
                       <a
-                        href={`mailto:${data.email}`}
+                        href={`mailto:${contactData.email}`}
                         className="mt-1 block text-paragraph hover:text-heading"
                       >
-                        {data.email}
+                        {contactData.email}
                       </a>
                     ) : (
                       <p className="mt-1 text-paragraph">{t.contact.email}</p>
@@ -134,14 +175,14 @@ export function Contact() {
                   <Send className="mt-1 h-5 w-5 text-heading" />
                   <div>
                     <p className="font-semibold text-heading">Instagram</p>
-                    {data.instagram ? (
+                    {contactData.instagram ? (
                       <a
-                        href={data.instagram}
+                        href={contactData.instagram}
                         target="_blank"
                         rel="noreferrer"
                         className="mt-1 block text-paragraph hover:text-heading"
                       >
-                        {t.contact.instagram}
+                        {contactData.instagram}
                       </a>
                     ) : (
                       <p className="mt-1 text-paragraph">{t.contact.instagram}</p>
@@ -153,14 +194,39 @@ export function Contact() {
                   <Send className="mt-1 h-5 w-5 text-heading" />
                   <div>
                     <p className="font-semibold text-heading">TikTok</p>
-                    <a
-                      href="https://tiktok.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-1 block text-paragraph hover:text-heading"
-                    >
-                      {t.contact.tiktok}
-                    </a>
+                    {contactData.tiktok ? (
+                      <a
+                        href={contactData.tiktok}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-1 block text-paragraph hover:text-heading"
+                      >
+                        {contactData.tiktok}
+                      </a>
+                    ) : (
+                      <p className="mt-1 text-paragraph">{t.contact.tiktok}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Send className="mt-1 h-5 w-5 text-heading" />
+                  <div>
+                    <p className="font-semibold text-heading">Facebook</p>
+                    {contactData.facebook ? (
+                      <a
+                        href={contactData.facebook}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-1 block text-paragraph hover:text-heading"
+                      >
+                        {contactData.facebook}
+                      </a>
+                    ) : (
+                      <p className="mt-1 text-paragraph">
+                        {"https://facebook.com/innocraft.id"}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -171,17 +237,17 @@ export function Contact() {
                 <MapPin className="mt-1 h-5 w-5 text-heading" />
                 <div>
                   <p className="font-semibold text-heading">{t.contact.maps}</p>
-                  {data.mapsUrl ? (
+                  {contactData.mapsUrl ? (
                     <a
-                      href={data.mapsUrl}
+                      href={contactData.mapsUrl}
                       target="_blank"
                       rel="noreferrer"
                       className="mt-1 block text-paragraph hover:text-heading"
                     >
-                      {data.address}
+                      {contactData.address}
                     </a>
                   ) : (
-                    <p className="mt-1 text-paragraph">{data.address || t.contact.address}</p>
+                    <p className="mt-1 text-paragraph">{contactData.address || t.contact.address}</p>
                   )}
                 </div>
               </div>
@@ -190,7 +256,7 @@ export function Contact() {
                 <div>
                   <p className="font-semibold text-heading">Business hours</p>
                   <p className="mt-1 text-sm leading-7 text-paragraph">
-                    {data.openingHours || t.contact.hours}
+                    {contactData.openingHours || t.contact.hours}
                   </p>
                 </div>
               </div>

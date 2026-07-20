@@ -12,34 +12,133 @@ import {
   defaultStudioSettingsData,
   StudioSettingsData,
 } from "@/lib/studio/mock-settings";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
 
-const STORAGE_KEY = "studio.settings.mock";
+import { supabase } from "@/lib/supabase/client";
+
+function toSettingsData(row: {
+  website_name: string | null;
+  logo_url: string | null;
+  favicon_url: string | null;
+  footer_text: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  tiktok: string | null;
+}): StudioSettingsData {
+  return {
+    websiteName: row.website_name ?? "",
+    logoUrl: row.logo_url ?? "",
+    faviconUrl: row.favicon_url ?? "",
+    footerText: row.footer_text ?? "",
+    seoTitle: row.seo_title ?? "",
+    seoDescription: row.seo_description ?? "",
+    instagramUrl: row.instagram ?? "",
+    facebookUrl: row.facebook ?? "",
+    tiktokUrl: row.tiktok ?? "",
+  };
+}
+
+function fromSettingsData(data: StudioSettingsData) {
+  return {
+    website_name: data.websiteName,
+    logo_url: data.logoUrl,
+    favicon_url: data.faviconUrl,
+    footer_text: data.footerText,
+    seo_title: data.seoTitle,
+    seo_description: data.seoDescription,
+    instagram: data.instagramUrl,
+    facebook: data.facebookUrl,
+    tiktok: data.tiktokUrl,
+  };
+}
 
 function safeTrim(s: string | null | undefined) {
   return (s ?? "").trim();
 }
 
 export default function StudioSettingsPage() {
-  const { value: saved, save } = useMockCmsState<StudioSettingsData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioSettingsData,
-  });
+  const [saved, setSaved] = useState<StudioSettingsData>(defaultStudioSettingsData);
+  const [draft, setDraft] = useState<StudioSettingsData>(defaultStudioSettingsData);
+  const [existingId, setExistingId] = useState<string | null>(null);
 
-  const [draft, setDraft] = useState<StudioSettingsData>(
-    defaultStudioSettingsData,
-  );
-
+  // Hydration-safe: load from Supabase on mount
   useEffect(() => {
-    setDraft(saved);
-  }, [saved]);
+    let cancelled = false;
+
+    async function loadSettings() {
+      try {
+        const { data, error } = await supabase
+          .from("settings")
+          .select("id, website_name, logo_url, favicon_url, footer_text, seo_title, seo_description, instagram, facebook, tiktok")
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load settings:", error.message, error.code, error.details);
+          return;
+        }
+
+        if (data) {
+          const settingsData = toSettingsData(data);
+          setSaved(settingsData);
+          setDraft(settingsData);
+          setExistingId(data.id);
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading settings:", e);
+      }
+    }
+
+    loadSettings();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const isDirty = useMemo(() => {
     return JSON.stringify(draft) !== JSON.stringify(saved);
   }, [draft, saved]);
 
   function onSave() {
-    save(draft);
+    void (async () => {
+      try {
+        const { supabase: client } = await import("@/lib/supabase/client");
+
+        if (existingId) {
+          // Update existing row
+          const { error: updateError } = await client
+            .from("settings")
+            .update(fromSettingsData(draft))
+            .eq("id", existingId);
+
+          if (updateError) {
+            console.error("Failed to update settings:", updateError.message, updateError.code, updateError.details);
+            return;
+          }
+        } else {
+          // Insert new row
+          const { data: insertedData, error: insertError } = await client
+            .from("settings")
+            .insert(fromSettingsData(draft))
+            .select("id");
+
+          if (insertError) {
+            console.error("Failed to insert settings:", insertError.message, insertError.code, insertError.details);
+            return;
+          }
+          if (insertedData && insertedData[0]) {
+            setExistingId(insertedData[0].id);
+          }
+        }
+
+        setSaved(draft);
+      } catch (e) {
+        console.error("Error saving settings:", e);
+      }
+    })();
   }
 
   function onReset() {
@@ -75,25 +174,6 @@ export default function StudioSettingsPage() {
                   onChange={(v) => setDraft((d) => ({ ...d, websiteName: v }))}
                   placeholder="INNOCRAFT"
                 />
-
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <CmsTextInput
-                    label="Primary Color"
-                    value={draft.primaryColor}
-                    onChange={(v) =>
-                      setDraft((d) => ({ ...d, primaryColor: v }))
-                    }
-                    placeholder="#FFCFC9"
-                  />
-                  <CmsTextInput
-                    label="Secondary Color"
-                    value={draft.secondaryColor}
-                    onChange={(v) =>
-                      setDraft((d) => ({ ...d, secondaryColor: v }))
-                    }
-                    placeholder="#9AE6FF"
-                  />
-                </div>
 
                 <CmsTextInput
                   label="Logo URL"
@@ -166,12 +246,12 @@ export default function StudioSettingsPage() {
                   />
 
                   <CmsTextInput
-                    label="YouTube URL"
-                    value={draft.youtubeUrl}
+                    label="TikTok URL"
+                    value={draft.tiktokUrl}
                     onChange={(v) =>
-                      setDraft((d) => ({ ...d, youtubeUrl: v }))
+                      setDraft((d) => ({ ...d, tiktokUrl: v }))
                     }
-                    placeholder="https://youtube.com/@innocraft"
+                    placeholder="https://tiktok.com"
                   />
                 </div>
               </div>
@@ -223,20 +303,6 @@ export default function StudioSettingsPage() {
                       Favicon: {faviconPresent ? "Set" : "Missing"}
                     </p>
                   </div>
-
-                  <div className="w-full sm:w-40">
-                    <p className="text-xs font-semibold text-white/60">Theme</p>
-                    <div className="mt-3 flex gap-3">
-                      <div
-                        className="h-10 w-10 rounded-xl border border-white/10"
-                        style={{ backgroundColor: draft.primaryColor }}
-                      />
-                      <div
-                        className="h-10 w-10 rounded-xl border border-white/10"
-                        style={{ backgroundColor: draft.secondaryColor }}
-                      />
-                    </div>
-                  </div>
                 </div>
 
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -280,10 +346,10 @@ export default function StudioSettingsPage() {
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <p className="text-xs font-semibold text-white/60">
-                      YouTube
+                      TikTok
                     </p>
                     <p className="mt-2 break-words text-xs text-white/70">
-                      {draft.youtubeUrl || "(Not set)"}
+                      {draft.tiktokUrl || "(Not set)"}
                     </p>
                   </div>
                 </div>
@@ -295,4 +361,3 @@ export default function StudioSettingsPage() {
     </StudioShell>
   );
 }
-
