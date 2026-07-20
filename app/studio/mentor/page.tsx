@@ -21,9 +21,8 @@ import {
   StudioMentor,
   StudioMentorData,
 } from "@/lib/studio/mock-mentor";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
 
-const STORAGE_KEY = "studio.mentor.mock";
+import { supabase } from "@/lib/supabase/client";
 
 function createId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -31,6 +30,23 @@ function createId() {
     return (crypto as any).randomUUID() as string;
   }
   return `m_${Math.random().toString(16).slice(2)}_${Date.now()}`;
+}
+
+
+function toMentor(row: {
+  id: string;
+  photo_url: string | null;
+  name: string | null;
+  position: string | null;
+  description: string | null;
+}): StudioMentor {
+  return {
+    id: String(row.id),
+    photoUrl: row.photo_url ?? "",
+    name: row.name ?? "",
+    position: row.position ?? "",
+    description: row.description ?? "",
+  };
 }
 
 function normalizeItem(input: StudioMentor | any): StudioMentor {
@@ -60,23 +76,58 @@ function getSelectedIndex(items: StudioMentor[], selectedId: string | null) {
 }
 
 export default function StudioMentorPage() {
-  const { value: saved, save } = useMockCmsState<StudioMentorData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioMentorData,
-  });
-
+  const [saved, setSaved] = useState<StudioMentorData>(defaultStudioMentorData);
   const [draft, setDraft] = useState<StudioMentorData>(() =>
-    normalizeData(defaultStudioMentorData),
+    normalizeData(defaultStudioMentorData)
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
-  // Sync draft after hydration.
+  // Hydration-safe: load from Supabase on mount
   useEffect(() => {
-    setDraft(normalizeData(saved));
-  }, [saved]);
+    let cancelled = false;
 
-  // Keep selection valid.
+    async function loadMentors() {
+      try {
+        const { data, error } = await supabase
+          .from("mentors")
+          .select("id, photo_url, name, position, description, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load mentors:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          const mentors = data.map(toMentor);
+          setSaved({ mentors });
+          setDraft({ mentors: mentors.map((m) => ({ ...m })) });
+          if (!selectedId && mentors.length > 0) setSelectedId(mentors[0].id);
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading mentors:", e);
+      }
+    }
+
+    loadMentors();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Keep draft in sync with saved
+  useEffect(() => {
+    if (draft.mentors.length === 0 && saved.mentors.length > 0) {
+      setDraft({ mentors: saved.mentors.map((m) => ({ ...m })) });
+    }
+  }, [saved, draft]);
+
+  // Keep selection valid
   useEffect(() => {
     if (!selectedId) return;
     const exists = draft.mentors.some((m) => m.id === selectedId);
@@ -89,17 +140,108 @@ export default function StudioMentorPage() {
   }, [draft.mentors, selectedId]);
 
   const isDirty = useMemo(() => {
-    return JSON.stringify(draft) !== JSON.stringify(normalizeData(saved));
+    const a = JSON.stringify(draft);
+    const b = JSON.stringify(saved);
+    return a !== b;
   }, [draft, saved]);
 
   function onSave() {
-    save(draft);
+    void (async () => {
+      try {
+        const { supabase: client } = await import("@/lib/supabase/client");
+
+        // Fetch existing mentor IDs
+        const { data: existingRecords } = await client
+          .from("mentors")
+          .select("id, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        const existingIds = new Set(existingRecords?.map((r) => r.id) ?? []);
+
+        // Determine which IDs to delete: rows in Supabase but removed from draft
+        const currentIds = new Set(draft.mentors.map((m) => m.id));
+        const idsToDelete = existingRecords?.filter((r) => !currentIds.has(r.id)) ?? [];
+
+        if (idsToDelete.length > 0) {
+          console.log(`Deleting ${idsToDelete.length} removed mentor(s) from Supabase...`);
+          for (const record of idsToDelete) {
+            const { error: deleteError } = await client
+              .from("mentors")
+              .delete()
+              .eq("id", record.id);
+
+            if (deleteError) {
+              console.error(`Failed to delete mentor ${record.id}:`, deleteError);
+            }
+          }
+        }
+
+        // Working copy to track UUID updates from inserts
+        const updatedDraft = [...draft.mentors];
+        let newSelectedId = selectedId;
+
+        // Update or insert each mentor
+        for (let i = 0; i < updatedDraft.length; i++) {
+          const mentor = updatedDraft[i];
+          const originalId = mentor.id;
+
+          if (!existingIds.has(mentor.id)) {
+            // New mentor - insert and get UUID
+            const { data: insertedData, error: insertError } = await client
+              .from("mentors")
+              .insert({
+                photo_url: mentor.photoUrl,
+                name: mentor.name,
+                position: mentor.position,
+                description: mentor.description,
+                display_order: i,
+                is_active: true,
+              })
+              .select("id");
+
+            if (insertError) {
+              console.error(`Failed to insert mentor ${i + 1}:`, insertError);
+            } else if (insertedData && insertedData[0]) {
+              updatedDraft[i] = { ...updatedDraft[i], id: insertedData[0].id };
+              if (originalId === selectedId) {
+                newSelectedId = insertedData[0].id;
+              }
+            }
+          } else {
+            // Existing UUID - update
+            const { error: updateError } = await client
+              .from("mentors")
+              .update({
+                photo_url: mentor.photoUrl,
+                name: mentor.name,
+                position: mentor.position,
+                description: mentor.description,
+                display_order: i,
+                is_active: true,
+              })
+              .eq("id", mentor.id);
+
+            if (updateError) {
+              console.error(`Failed to update mentor ${mentor.id}:`, updateError);
+            }
+          }
+        }
+
+        // Sync both states with the updated IDs
+        setSaved({ mentors: updatedDraft.map((m) => ({ ...m })) });
+        setDraft({ mentors: updatedDraft });
+        setSelectedId(newSelectedId);
+      } catch (e) {
+        console.error("Error saving mentors:", e);
+      }
+    })();
   }
 
   function onReset() {
     const ok = confirmReset("Reset changes for Mentor?");
     if (!ok) return;
-    setDraft(normalizeData(saved));
+    setDraft({ mentors: saved.mentors.map((m) => ({ ...m })) });
     setSelectedId(null);
     setIsEditorOpen(false);
   }
@@ -461,4 +603,3 @@ export default function StudioMentorPage() {
     </StudioShell>
   );
 }
-

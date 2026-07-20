@@ -7,23 +7,74 @@ import { Section } from "@/components/ui/section";
 import { SectionTitle } from "@/components/ui/section-title";
 
 import { useLanguage } from "@/lib/i18n/language-provider";
-import { useMockCmsState } from "@/lib/studio/cms-storage";
 import {
   defaultStudioMentorData,
-  type StudioMentorData,
+  type StudioMentor,
 } from "@/lib/studio/mock-mentor";
 
-const STORAGE_KEY = "studio.mentor.mock";
+import { supabase } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
+
+
+function toMentor(row: {
+  id: string;
+  photo_url: string | null;
+  name: string | null;
+  position: string | null;
+  description: string | null;
+}): StudioMentor {
+  return {
+    id: String(row.id),
+    photoUrl: row.photo_url ?? "",
+    name: row.name ?? "",
+    position: row.position ?? "",
+    description: row.description ?? "",
+  };
+}
 
 export function Mentor() {
   const { t } = useLanguage();
 
-  const { value: saved } = useMockCmsState<StudioMentorData>({
-    storageKey: STORAGE_KEY,
-    defaultValue: defaultStudioMentorData,
-  });
+  // Hydration-safe: render default on first pass
+  const [firstMentor, setFirstMentor] = useState<StudioMentor | null>(
+    defaultStudioMentorData.mentors[0] ?? null
+  );
 
-  const data = saved.mentors.length > 0 ? saved : defaultStudioMentorData;
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadFirstMentor() {
+      try {
+        const { data, error } = await supabase
+          .from("mentors")
+          .select("id, photo_url, name, position, description, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true })
+          .limit(1);
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load mentor:", error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          setFirstMentor(toMentor(data[0]));
+        }
+        // If no data, keep defaults
+      } catch (e) {
+        console.error("Error loading mentor:", e);
+      }
+    }
+
+    loadFirstMentor();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const mentor = firstMentor;
 
   return (
     <Section className="py-10 sm:py-16">
@@ -31,12 +82,11 @@ export function Mentor() {
         <MotionWrapper className="rounded-[2rem] border border-border bg-white p-8 shadow-soft sm:p-10">
           <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div className="rounded-[1.75rem] border border-border bg-gradient-to-br from-primaryBg/50 to-white p-6">
-              {data.mentors[0].photoUrl &&
-              data.mentors[0].photoUrl.trim().length > 0 ? (
+              {mentor?.photoUrl && mentor.photoUrl.trim().length > 0 ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={data.mentors[0].photoUrl}
-                  alt={data.mentors[0].name}
+                  src={mentor.photoUrl}
+                  alt={mentor.name}
                   className="h-[320px] w-full rounded-[1.5rem] border border-white/70 object-cover"
                 />
               ) : (
