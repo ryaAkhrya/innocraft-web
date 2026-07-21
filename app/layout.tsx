@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   description:
     "Premium bilingual experience for parents exploring an offline Minecraft Addon Development class for children.",
   keywords: ["Minecraft", "addon development", "offline class", "children education", "technology learning"],
+  authors: [{ name: "INNOCRAFT Team" }],
   openGraph: {
     title: "INNOCRAFT",
     description:
@@ -31,12 +32,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: "https://www.innocraft.id",
+    images: [{ url: "/logo.png" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "INNOCRAFT",
     description:
       "Premium bilingual experience for parents exploring an offline Minecraft Addon Development class for children.",
+    images: ["/logo.png"],
   },
   icons: {
     // Replace logo by updating /public/logo.png

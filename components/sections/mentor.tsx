@@ -88,11 +88,12 @@ export function Mentor() {
               <MotionWrapper className="overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primaryBg/50 via-white to-white p-4">
                 {mentor?.photoUrl?.trim() ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={mentor.photoUrl}
-                    alt={mentor.name}
-                    className="h-full w-full rounded-xl object-cover"
-                  />
+<img
+  src={mentor.photoUrl}
+  alt={mentor.name}
+  className="h-full w-full rounded-xl object-cover"
+  loading="lazy"
+/>
                 ) : (
                   <div className="flex h-80 items-center justify-center rounded-xl border border-white/70 bg-white/80">
                     <span className="text-sm font-medium text-paragraph/70">
@@ -148,11 +149,12 @@ export function Mentor() {
                 <div className="aspect-[4/3] overflow-hidden">
                   {mentor.photoUrl?.trim() ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={mentor.photoUrl}
-                      alt={mentor.name}
-                      className="h-full w-full rounded-t-3xl object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+<img
+  src={mentor.photoUrl}
+  alt={mentor.name}
+  className="h-full w-full rounded-t-3xl object-cover transition-transform duration-500 group-hover:scale-105"
+  loading="lazy"
+/>
                   ) : (
                     <div className="flex h-full items-center justify-center rounded-t-3xl border-b border-border bg-gradient-to-br from-primaryBg/50 to-white">
                       <span className="text-sm font-medium text-paragraph/60">
