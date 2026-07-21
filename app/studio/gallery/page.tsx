@@ -16,6 +16,7 @@ import { confirmReset } from "@/components/studio/cms-confirm-reset";
 import { CmsReorderControls } from "@/components/studio/cms-reorder";
 import { CmsItemEditModal } from "@/components/studio/cms-item-edit-modal";
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 import {
   defaultStudioGalleryData,
@@ -24,6 +25,8 @@ import {
 } from "@/lib/studio/mock-gallery";
 
 import { supabase } from "@/lib/supabase/client";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
+
 
 function createId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -71,6 +74,8 @@ export default function StudioGalleryPage() {
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+
+  const { isSaving, isSuccess, hasError, error, startSaving, saveSuccess, saveError } = useSaveFeedback();
 
   // Hydration-safe: load from Supabase on mount
   useEffect(() => {
@@ -136,6 +141,7 @@ export default function StudioGalleryPage() {
   }, [draft, saved]);
 
   function onSave() {
+    startSaving();
     void (async () => {
       try {
         const { supabase: client } = await import("@/lib/supabase/client");
@@ -170,6 +176,7 @@ export default function StudioGalleryPage() {
         // Working copy to track UUID updates from inserts
         const updatedDraft = [...draft.items];
         let newSelectedId = selectedId;
+        let hasAnyError = false;
 
         // Update or insert each gallery item
         for (let i = 0; i < updatedDraft.length; i++) {
@@ -191,6 +198,7 @@ export default function StudioGalleryPage() {
 
             if (insertError) {
               console.error(`Failed to insert gallery item ${i + 1}:`, insertError);
+              hasAnyError = true;
             } else if (insertedData && insertedData[0]) {
               updatedDraft[i] = { ...updatedDraft[i], id: insertedData[0].id };
               if (originalId === selectedId) {
@@ -212,6 +220,7 @@ export default function StudioGalleryPage() {
 
             if (updateError) {
               console.error(`Failed to update gallery item ${item.id}:`, updateError);
+              hasAnyError = true;
             }
           }
         }
@@ -220,8 +229,15 @@ export default function StudioGalleryPage() {
         setSaved({ items: updatedDraft.map((i) => ({ ...i })) });
         setDraft({ items: updatedDraft });
         setSelectedId(newSelectedId);
+
+        if (hasAnyError) {
+          saveError("Some items failed to save");
+        } else {
+          saveSuccess();
+        }
       } catch (e) {
         console.error("Error saving gallery:", e);
+        saveError("Failed to save gallery");
       }
     })();
   }
@@ -341,6 +357,20 @@ export default function StudioGalleryPage() {
                 </CmsPrimaryButton>
               </div>
 
+              {hasError && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+                  <AlertCircle className="h-4 w-4" />
+                  {error}
+                </div>
+              )}
+
+              {isSuccess && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+                  <CheckCircle className="h-4 w-4" />
+                  Changes saved!
+                </div>
+              )}
+
               <div className="mt-5 space-y-3">
                 {draft.items.length === 0 ? (
                   <p className="text-sm text-white/60">No items yet.</p>
@@ -424,6 +454,7 @@ export default function StudioGalleryPage() {
                     <CmsPrimaryButton
                       variant="solid"
                       disabled={!isDirty}
+                      isLoading={isSaving}
                       onClick={onSave}
                     >
                       Save Changes
@@ -431,6 +462,7 @@ export default function StudioGalleryPage() {
                     <CmsPrimaryButton
                       variant="ghost"
                       disabled={!isDirty}
+                      isLoading={isSaving}
                       onClick={onReset}
                     >
                       Reset Changes
@@ -485,6 +517,7 @@ export default function StudioGalleryPage() {
                   <CmsPrimaryButton
                     variant="solid"
                     disabled={!isDirty}
+                    isLoading={isSaving}
                     onClick={onSave}
                   >
                     Save Changes
@@ -492,6 +525,7 @@ export default function StudioGalleryPage() {
                   <CmsPrimaryButton
                     variant="ghost"
                     disabled={!isDirty}
+                    isLoading={isSaving}
                     onClick={onReset}
                   >
                     Reset Changes

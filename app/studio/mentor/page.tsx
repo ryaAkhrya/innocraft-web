@@ -12,10 +12,11 @@ import {
   CmsTextInput,
   CmsTextarea,
 } from "@/components/studio/cms-form-input";
-import { confirmReset } from "@/components/studio/cms-confirm-reset";
 import { CmsReorderControls } from "@/components/studio/cms-reorder";
 import { CmsItemEditModal } from "@/components/studio/cms-item-edit-modal";
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
+import { confirmReset } from "@/components/studio/cms-confirm-reset";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 import {
   defaultStudioMentorData,
@@ -24,6 +25,8 @@ import {
 } from "@/lib/studio/mock-mentor";
 
 import { supabase } from "@/lib/supabase/client";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
+
 
 function createId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -40,7 +43,7 @@ function toMentor(row: {
   name: string | null;
   position: string | null;
   description: string | null;
-}): StudioMentor {
+}) {
   return {
     id: String(row.id),
     photoUrl: row.photo_url ?? "",
@@ -83,6 +86,8 @@ export default function StudioMentorPage() {
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+
+  const { isSaving, isSuccess, hasError, error, startSaving, saveSuccess, saveError } = useSaveFeedback();
 
   // Hydration-safe: load from Supabase on mount
   useEffect(() => {
@@ -147,10 +152,10 @@ export default function StudioMentorPage() {
   }, [draft, saved]);
 
   function onSave() {
+    startSaving();
     // Capture current state immediately to avoid stale closure
     const currentDraft = draft.mentors;
-    
-    
+
     void (async () => {
       try {
         const { supabase: client } = await import("@/lib/supabase/client");
@@ -164,6 +169,7 @@ export default function StudioMentorPage() {
 
         if (fetchError) {
           console.error('Mentor save - failed to fetch existing:', fetchError.message);
+          saveError(fetchError.message);
           return;
         }
 
@@ -172,9 +178,9 @@ export default function StudioMentorPage() {
         // Determine which IDs to delete: rows in Supabase but removed from draft
         const currentIds = new Set(currentDraft.map((m) => m.id));
         const idsToDelete = existingRecords?.filter((r) => !currentIds.has(r.id)) ?? [];
+        let hasAnyError = false;
 
         if (idsToDelete.length > 0) {
-          
           for (const record of idsToDelete) {
             const { error: deleteError } = await client
               .from("mentors")
@@ -183,6 +189,7 @@ export default function StudioMentorPage() {
 
             if (deleteError) {
               console.error(`Failed to delete mentor ${record.id}:`, deleteError);
+              hasAnyError = true;
             }
           }
         }
@@ -210,9 +217,9 @@ export default function StudioMentorPage() {
               })
               .select("id");
 
-            
             if (insertError) {
               console.error(`Failed to insert mentor ${i + 1}:`, insertError);
+              hasAnyError = true;
             } else if (insertedData && insertedData[0]) {
               updatedDraft[i] = { ...updatedDraft[i], id: insertedData[0].id };
               if (originalId === selectedId) {
@@ -233,9 +240,9 @@ export default function StudioMentorPage() {
               })
               .eq("id", mentor.id);
 
-            
             if (updateError) {
               console.error(`Failed to update mentor ${mentor.id}:`, updateError);
+              hasAnyError = true;
             }
           }
         }
@@ -244,8 +251,15 @@ export default function StudioMentorPage() {
         setSaved({ mentors: updatedDraft.map((m) => ({ ...m })) });
         setDraft({ mentors: updatedDraft });
         setSelectedId(newSelectedId);
+
+        if (hasAnyError) {
+          saveError("Some mentors failed to save");
+        } else {
+          saveSuccess();
+        }
       } catch (e) {
         console.error("Error saving mentors:", e);
+        saveError("Failed to save mentors");
       }
     })();
   }
@@ -279,7 +293,6 @@ export default function StudioMentorPage() {
 
   function updateSelected(patch: Partial<StudioMentor>) {
     if (!selectedItem) return;
-    
 
     setDraft((d) => {
       const nextDraft = {
@@ -303,7 +316,6 @@ export default function StudioMentorPage() {
       const nextSelected = (() => {
         if (!nextMentors.length) return null;
         if (id !== selectedId) return selectedId;
-        // choose previous, else first
         if (idx > 0) return nextMentors[idx - 1]?.id ?? nextMentors[0].id;
         return nextMentors[0].id;
       })();
@@ -375,6 +387,20 @@ export default function StudioMentorPage() {
                   + Add Mentor
                 </CmsPrimaryButton>
               </div>
+
+              {hasError && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+                  <AlertCircle className="h-4 w-4" />
+                  {error}
+                </div>
+              )}
+
+              {isSuccess && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+                  <CheckCircle className="h-4 w-4" />
+                  Changes saved!
+                </div>
+              )}
 
               <div className="mt-5 space-y-3">
                 {draft.mentors.length === 0 ? (
@@ -467,6 +493,7 @@ export default function StudioMentorPage() {
                     <CmsPrimaryButton
                       variant="solid"
                       disabled={!isDirty}
+                      isLoading={isSaving}
                       onClick={onSave}
                     >
                       Save Changes
@@ -474,6 +501,7 @@ export default function StudioMentorPage() {
                     <CmsPrimaryButton
                       variant="ghost"
                       disabled={!isDirty}
+                      isLoading={isSaving}
                       onClick={onReset}
                     >
                       Reset Changes
@@ -535,6 +563,7 @@ export default function StudioMentorPage() {
                   <CmsPrimaryButton
                     variant="solid"
                     disabled={!isDirty}
+                    isLoading={isSaving}
                     onClick={onSave}
                   >
                     Save Changes
@@ -542,6 +571,7 @@ export default function StudioMentorPage() {
                   <CmsPrimaryButton
                     variant="ghost"
                     disabled={!isDirty}
+                    isLoading={isSaving}
                     onClick={onReset}
                   >
                     Reset Changes

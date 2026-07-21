@@ -7,6 +7,7 @@ import { CmsSectionShell } from "@/components/studio/cms-section-shell";
 import { CmsButtonRow, CmsPrimaryButton } from "@/components/studio/cms-button-row";
 import { CmsTextInput, CmsTextarea } from "@/components/studio/cms-form-input";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 import {
   defaultStudioContactData,
@@ -14,6 +15,7 @@ import {
 } from "@/lib/studio/mock-contact";
 
 import { supabase } from "@/lib/supabase/client";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
 
 function toContactData(row: {
   company_name: string | null;
@@ -58,6 +60,8 @@ export default function StudioContactPage() {
   const [draft, setDraft] = useState<StudioContactData>(defaultStudioContactData);
   const [existingId, setExistingId] = useState<string | null>(null);
 
+  const { isSaving, isSuccess, hasError, error, startSaving, saveSuccess, saveError } = useSaveFeedback();
+
   // Hydration-safe: load from Supabase on mount
   useEffect(() => {
     let cancelled = false;
@@ -99,6 +103,7 @@ export default function StudioContactPage() {
   }, [draft, saved]);
 
   function onSave() {
+    startSaving();
     void (async () => {
       try {
         const { supabase: client } = await import("@/lib/supabase/client");
@@ -112,6 +117,7 @@ export default function StudioContactPage() {
 
           if (updateError) {
             console.error("Failed to update contact:", updateError.message, updateError.code, updateError.details);
+            saveError(updateError.message);
             return;
           }
         } else {
@@ -123,6 +129,7 @@ export default function StudioContactPage() {
 
           if (insertError) {
             console.error("Failed to insert contact:", insertError.message, insertError.code, insertError.details);
+            saveError(insertError.message);
             return;
           }
           if (insertedData && insertedData[0]) {
@@ -131,8 +138,10 @@ export default function StudioContactPage() {
         }
 
         setSaved(draft);
+        saveSuccess();
       } catch (e) {
         console.error("Error saving contact:", e);
+        saveError("Failed to save contact");
       }
     })();
   }
@@ -158,6 +167,20 @@ export default function StudioContactPage() {
                 Update fields and see changes instantly.
               </p>
             </div>
+
+            {hasError && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+                <AlertCircle className="h-4 w-4" />
+                {error}
+              </div>
+            )}
+
+            {isSuccess && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+                <CheckCircle className="h-4 w-4" />
+                Changes saved!
+              </div>
+            )}
 
             <div className="mt-6 space-y-5">
               <CmsTextInput
@@ -231,6 +254,7 @@ export default function StudioContactPage() {
               <CmsPrimaryButton
                 variant="solid"
                 disabled={!isDirty}
+                isLoading={isSaving}
                 onClick={onSave}
               >
                 Save Changes
@@ -239,6 +263,7 @@ export default function StudioContactPage() {
               <CmsPrimaryButton
                 variant="ghost"
                 disabled={!isDirty}
+                isLoading={isSaving}
                 onClick={onReset}
               >
                 Reset Changes

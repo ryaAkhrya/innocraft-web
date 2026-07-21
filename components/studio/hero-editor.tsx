@@ -6,7 +6,8 @@ import { StudioHeroData } from "@/lib/studio/mock-hero";
 import { defaultStudioHeroData } from "@/lib/studio/mock-hero";
 import { cn } from "@/lib/utils";
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, CheckCircle } from "lucide-react";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
 
 function FieldCard({
   children,
@@ -108,7 +109,7 @@ export function StudioHeroEditor({
   const isDirty = JSON.stringify(draft) !== JSON.stringify(saved);
 
   const [heroRowId, setHeroRowId] = useState<string | null>(null);
-  const [saveError, setSaveError] = useState<string | null>(null);
+  const { status, error, isSaving, isSuccess, hasError, startSaving, saveSuccess, saveError } = useSaveFeedback();
 
   // Hydration-safe: first render uses default mock data.
   // After mount, load hero from Supabase; insert default if empty.
@@ -214,15 +215,14 @@ export function StudioHeroEditor({
 
   function reset() {
     setDraft(saved);
-    setSaveError(null);
   }
 
   function save() {
     // Capture current draft values immediately to avoid closure stale value issue
     const valuesToSave = { ...draft };
     
-    // Clear previous error
-    setSaveError(null);
+    // Start saving state
+    startSaving();
     
     // Keep existing preview behavior: update local state immediately.
     setSaved(valuesToSave);
@@ -251,7 +251,7 @@ export function StudioHeroEditor({
           const newId = inserted?.[0]?.id;
 
           if (!newId) {
-            setSaveError("Failed to create hero row");
+            saveError("Failed to create hero row");
             return;
           }
           setHeroRowId(String(newId));
@@ -271,7 +271,9 @@ export function StudioHeroEditor({
             .eq("id", newId);
 
           if (error) {
-            setSaveError(error.message);
+            saveError(error.message);
+          } else {
+            saveSuccess();
           }
 
           return;
@@ -294,10 +296,12 @@ export function StudioHeroEditor({
           .eq("id", heroRowId);
 
         if (error) {
-          setSaveError(error.message);
+          saveError(error.message);
+        } else {
+          saveSuccess();
         }
       } catch (err) {
-        setSaveError(err instanceof Error ? err.message : "Failed to save hero");
+        saveError(err instanceof Error ? err.message : "Failed to save hero");
       }
     })();
   }
@@ -314,10 +318,17 @@ export function StudioHeroEditor({
           </p>
         </div>
 
-        {saveError && (
+        {hasError && (
           <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
             <AlertCircle className="h-4 w-4" />
-            {saveError}
+            {error}
+          </div>
+        )}
+
+        {isSuccess && (
+          <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+            <CheckCircle className="h-4 w-4" />
+            Changes saved!
           </div>
         )}
 
@@ -389,14 +400,14 @@ export function StudioHeroEditor({
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           <PrimaryButton
             variant="solid"
-            disabled={!isDirty}
+            disabled={!isDirty || isSaving}
             onClick={save}
           >
-            Save Changes
+            {isSaving ? "Saving..." : "Save Changes"}
           </PrimaryButton>
           <PrimaryButton
             variant="ghost"
-            disabled={!isDirty}
+            disabled={!isDirty || isSaving}
             onClick={reset}
           >
             Reset Changes

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Image as ImageIcon, BookOpen, Star, LayoutGrid, Users, Briefcase, Phone, Settings, HeartHandshake, Code } from "lucide-react";
+import { Menu, X, LayoutDashboard, Image as ImageIcon, BookOpen, Star, LayoutGrid, Users, Briefcase, Phone, Settings, HeartHandshake, Code } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SecondaryButton } from "@/components/ui/button";
 import { clearStudioSessionCookie } from "@/lib/studio/mock-auth";
@@ -20,7 +20,7 @@ export function StudioShell({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const navItems = useMemo<NavItem[]>(
     () => [
@@ -49,105 +49,190 @@ export function StudioShell({
   }
 
   const active = currentHref();
+  const activeLabel = navItems.find((x) => x.href === active)?.label ?? "Dashboard";
+
+  // Close drawer on route change (mobile)
+  useEffect(() => {
+    setIsDrawerOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when drawer is open
+  useEffect(() => {
+    if (isDrawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isDrawerOpen]);
 
   return (
     <div className="min-h-screen bg-[#0B1020] text-slate-100">
-      <div className="mx-auto flex max-w-[1400px]">
-        <aside
-          className={cn(
-            "fixed left-0 top-0 z-30 flex h-screen flex-col border-r border-white/10 bg-[#0B1020]/90 backdrop-blur",
-            "w-64",
-            isCollapsed && "w-20",
-          )}
-        >
-          <div className="flex items-center justify-between px-4 py-5">
-            <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}> 
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#FFCFC9] to-[#9AE6FF] text-[#0B1020] font-black">
-                I
-              </div>
-              {!isCollapsed ? (
-                <div className="leading-tight">
-                  <p className="text-sm font-semibold">INNOCRAFT</p>
-                  <p className="text-xs text-white/60">Studio</p>
-                </div>
-              ) : null}
-            </div>
+      {/* Mobile Drawer Overlay */}
+      {isDrawerOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={() => setIsDrawerOpen(false)}
+        />
+      )}
 
-            <button
-              type="button"
-              onClick={() => setIsCollapsed((v) => !v)}
-              className="rounded-xl border border-white/10 bg-white/5 p-2 text-white/80 hover:bg-white/10"
-              aria-label="Toggle sidebar"
-            >
-              <span className="text-xs">{isCollapsed ? ">" : "<"}</span>
-            </button>
+      {/* Mobile Drawer */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-white/10 bg-[#0B1020]/95 backdrop-blur lg:hidden",
+          "transition-transform duration-200",
+          isDrawerOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <div className="flex items-center justify-between px-4 py-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#FFCFC9] to-[#9AE6FF] text-[#0B1020] font-black">
+              I
+            </div>
+            <div className="leading-tight">
+              <p className="text-sm font-semibold">INNOCRAFT</p>
+              <p className="text-xs text-white/60">Studio</p>
+            </div>
           </div>
 
-          <nav className="flex-1 space-y-1 overflow-y-auto px-3 pb-6">
-            {navItems.map((item) => {
-              const isActive = active === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition",
-                    "border border-transparent",
-                    isActive
-                      ? "bg-white/10 text-white border-white/15"
-                      : "text-white/70 hover:bg-white/5 hover:text-white",
-                    isCollapsed && "justify-center px-0",
-                  )}
-                >
-                  {item.icon}
-                  {!isCollapsed ? <span>{item.label}</span> : null}
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className={cn("px-4 pb-5", isCollapsed && "px-0")}> 
-            <SecondaryButton
-              onClick={() => {
-                clearStudioSessionCookie();
-                window.location.href = "/studio/login";
-              }}
-              className={cn(
-                "w-full bg-white/5 text-white border-white/10 hover:bg-white/10",
-                isCollapsed && "px-0",
-              )}
-            >
-              {!isCollapsed ? "Logout" : "Out"}
-            </SecondaryButton>
-          </div>
-        </aside>
-
-        <div className={cn("ml-64 w-full", isCollapsed && "ml-20")}>
-          <header className="sticky top-0 z-20 border-b border-white/10 bg-[#0B1020]/85 backdrop-blur">
-            <div className="flex items-center justify-between px-6 py-5">
-              <div>
-                <h1 className="text-xl font-semibold">Studio</h1>
-                <p className="text-sm text-white/60">{navItems.find((x) => x.href === active)?.label ?? "Dashboard"}</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">
-                  {navItems.find((x) => x.href === active)?.label ?? "Dashboard"}
-                </div>
-                <Link
-                  href="/studio/logout"
-                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10"
-                >
-                  Logout
-                </Link>
-              </div>
-            </div>
-          </header>
-
-          <main className="px-6 py-8">{children}</main>
+          <button
+            type="button"
+            onClick={() => setIsDrawerOpen(false)}
+            className="rounded-xl border border-white/10 bg-white/5 p-2 text-white/80 hover:bg-white/10"
+            aria-label="Close drawer"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
+
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 pb-6">
+          {navItems.map((item) => {
+            const isActive = active === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition",
+                  "border border-transparent",
+                  isActive
+                    ? "bg-white/10 text-white border-white/15"
+                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                )}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="px-4 pb-5">
+          <SecondaryButton
+            onClick={() => {
+              clearStudioSessionCookie();
+              window.location.href = "/studio/login";
+            }}
+            className="w-full bg-white/5 text-white border-white/10 hover:bg-white/10"
+          >
+            Logout
+          </SecondaryButton>
+        </div>
+      </aside>
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-white/10 lg:bg-[#0B1020]/90 lg:backdrop-blur">
+        <div className="flex items-center justify-between px-4 py-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#FFCFC9] to-[#9AE6FF] text-[#0B1020] font-black">
+              I
+            </div>
+            <div className="leading-tight">
+              <p className="text-sm font-semibold">INNOCRAFT</p>
+              <p className="text-xs text-white/60">Studio</p>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 pb-6">
+          {navItems.map((item) => {
+            const isActive = active === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition",
+                  "border border-transparent",
+                  isActive
+                    ? "bg-white/10 text-white border-white/15"
+                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                )}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="px-4 pb-5">
+          <SecondaryButton
+            onClick={() => {
+              clearStudioSessionCookie();
+              window.location.href = "/studio/login";
+            }}
+            className="w-full bg-white/5 text-white border-white/10 hover:bg-white/10"
+          >
+            Logout
+          </SecondaryButton>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="lg:ml-64">
+        {/* Header - Mobile optimized */}
+        <header className="sticky top-0 z-20 border-b border-white/10 bg-[#0B1020]/85 backdrop-blur">
+          <div className="flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5">
+            <div className="flex items-center gap-3">
+              {/* Mobile Menu Button */}
+              <button
+                type="button"
+                onClick={() => setIsDrawerOpen(true)}
+                className="rounded-xl border border-white/10 bg-white/5 p-2 text-white/80 hover:bg-white/10 lg:hidden"
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <div>
+                <h1 className="text-lg font-semibold sm:text-xl">Studio</h1>
+                <p className="text-xs text-white/60 sm:text-sm">{activeLabel}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="hidden rounded-2xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70 sm:px-4 sm:py-2 sm:text-sm md:block">
+                {activeLabel}
+              </div>
+              <Link
+                href="/studio/logout"
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 hover:bg-white/10 sm:px-4 sm:py-2 sm:text-sm"
+              >
+                Logout
+              </Link>
+            </div>
+          </div>
+        </header>
+
+        {/* Main content with responsive padding */}
+        <main className="w-full px-4 py-6 sm:px-6 sm:py-8">
+          <div className="mx-auto max-w-full lg:max-w-5xl">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
 }
-

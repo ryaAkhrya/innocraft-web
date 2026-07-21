@@ -13,6 +13,8 @@ import {
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
 import { CmsSectionShell } from "@/components/studio/cms-section-shell";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
+import { AlertCircle, CheckCircle } from "lucide-react";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
 
 export function StudioAboutEditor({
   initialData,
@@ -25,6 +27,7 @@ export function StudioAboutEditor({
   const isDirty = JSON.stringify(draft) !== JSON.stringify(saved);
 
   const [aboutRowId, setAboutRowId] = useState<string | null>(null);
+  const { isSaving, isSuccess, hasError, error, startSaving, saveSuccess, saveError } = useSaveFeedback();
 
   // Hydration-safe: first render uses default mock data.
   // After mount, load about from Supabase; insert default if empty.
@@ -112,14 +115,13 @@ export function StudioAboutEditor({
   }, [base]);
 
   function reset() {
-    const ok = confirmReset("Reset changes for Tentang?");
-    if (!ok) return;
     setDraft(saved);
   }
 
   function save() {
     // Keep existing preview behavior: update local state immediately.
     setSaved(draft);
+    startSaving();
 
     // Persist to Supabase (single-row behavior via aboutRowId + UPDATE).
     void (async () => {
@@ -140,7 +142,10 @@ export function StudioAboutEditor({
 
           const newId = inserted?.[0]?.id;
 
-          if (!newId) return;
+          if (!newId) {
+            saveError("Failed to create about row");
+            return;
+          }
           setAboutRowId(String(newId));
 
           await (await import("@/lib/supabase/client")).supabase
@@ -153,6 +158,7 @@ export function StudioAboutEditor({
             })
             .eq("id", newId);
 
+          saveSuccess();
           return;
         }
 
@@ -166,8 +172,9 @@ export function StudioAboutEditor({
             image_url: draft.imageUrl,
           })
           .eq("id", aboutRowId);
+        saveSuccess();
       } catch {
-        // Preserve existing behavior: errors are not surfaced in UI.
+        saveError("Failed to save about");
       }
     })();
   }
@@ -186,6 +193,20 @@ export function StudioAboutEditor({
               Update content and see changes instantly.
             </p>
           </div>
+
+          {hasError && (
+            <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+              <AlertCircle className="h-4 w-4" />
+              {error}
+            </div>
+          )}
+
+          {isSuccess && (
+            <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+              <CheckCircle className="h-4 w-4" />
+              Changes saved!
+            </div>
+          )}
 
           <div className="mt-6 space-y-5">
             <CmsTextInput
@@ -225,6 +246,7 @@ export function StudioAboutEditor({
             <CmsPrimaryButton
               variant="solid"
               disabled={!isDirty}
+              isLoading={isSaving}
               onClick={save}
             >
               Save Changes
@@ -232,6 +254,7 @@ export function StudioAboutEditor({
             <CmsPrimaryButton
               variant="ghost"
               disabled={!isDirty}
+              isLoading={isSaving}
               onClick={reset}
             >
               Reset Changes
@@ -251,7 +274,7 @@ export function StudioAboutEditor({
           </div>
 
           <div className="mt-6 space-y-6">
-            <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0B1020]/30">
+            <div className="rounded-3xl border border-white/10 bg-[#0B1020]/30">
               <div className="aspect-[16/9] w-full bg-[#0B1020]/40">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img

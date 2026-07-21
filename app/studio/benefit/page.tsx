@@ -15,6 +15,7 @@ import {
   CmsTextarea,
 } from "@/components/studio/cms-form-input";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 import {
   defaultStudioBenefitData,
@@ -23,6 +24,7 @@ import {
 } from "@/lib/studio/mock-benefit";
 
 import { supabase } from "@/lib/supabase/client";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
 
 
 function toStudiBenefitCard(row: {
@@ -52,6 +54,7 @@ export default function StudioBenefitPage() {
   });
 
   const isDirty = JSON.stringify(draft) !== JSON.stringify(saved);
+  const { isSaving, isSuccess, hasError, error, startSaving, saveSuccess, saveError } = useSaveFeedback();
 
   // Hardcoded icons for preview (same as public Benefits)
   const icons = [GraduationCap, Sparkles, Compass, TrendingUp];
@@ -119,6 +122,7 @@ export default function StudioBenefitPage() {
 
   async function save() {
     // Persist to Supabase - update/insert each card.
+    startSaving();
     void (async () => {
       try {
         const { supabase: client } = await import("@/lib/supabase/client");
@@ -132,6 +136,7 @@ export default function StudioBenefitPage() {
 
         if (fetchError) {
           console.error("Failed to fetch existing records:", fetchError);
+          saveError(fetchError.message);
           return;
         }
 
@@ -140,6 +145,9 @@ export default function StudioBenefitPage() {
         existingRecords?.forEach(record => {
           orderToId.set(record.display_order, record.id);
         });
+
+        // Track if any errors occurred
+        let hasAnyError = false;
 
         // Update each card - either update existing or insert new
         for (let i = 0; i < draft.cards.length; i++) {
@@ -161,6 +169,7 @@ export default function StudioBenefitPage() {
 
             if (updateError) {
               console.error(`Failed to update card ${i + 1} (id: ${existingId}):`, updateError);
+              hasAnyError = true;
             }
           } else {
             // No record at this position - insert new
@@ -176,6 +185,7 @@ export default function StudioBenefitPage() {
 
             if (insertError) {
               console.error(`Failed to insert card ${i + 1}:`, insertError);
+              hasAnyError = true;
             }
           }
         }
@@ -185,8 +195,15 @@ export default function StudioBenefitPage() {
           ...prev,
           cards: [...draft.cards],
         }));
+
+        if (hasAnyError) {
+          saveError("Some items failed to save");
+        } else {
+          saveSuccess();
+        }
       } catch (e) {
         console.error("Error saving benefits:", e);
+        saveError("Failed to save benefits");
       }
     })();
   }
@@ -216,6 +233,20 @@ export default function StudioBenefitPage() {
                   Update content and see changes instantly.
                 </p>
               </div>
+
+              {hasError && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+                  <AlertCircle className="h-4 w-4" />
+                  {error}
+                </div>
+              )}
+
+              {isSuccess && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+                  <CheckCircle className="h-4 w-4" />
+                  Changes saved!
+                </div>
+              )}
 
               <div className="mt-6 space-y-5">
                 <CmsTextInput
@@ -278,6 +309,7 @@ export default function StudioBenefitPage() {
                 <CmsPrimaryButton
                   variant="solid"
                   disabled={!isDirty}
+                  isLoading={isSaving}
                   onClick={save}
                 >
                   Save Changes
@@ -285,6 +317,7 @@ export default function StudioBenefitPage() {
                 <CmsPrimaryButton
                   variant="ghost"
                   disabled={!isDirty}
+                  isLoading={isSaving}
                   onClick={reset}
                 >
                   Reset Changes

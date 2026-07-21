@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+
 import { StudioShell } from "@/components/studio/studio-shell";
 import { CmsSectionShell } from "@/components/studio/cms-section-shell";
 import {
@@ -14,6 +15,7 @@ import {
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
 import { CmsReorderControls } from "@/components/studio/cms-reorder";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 import {
   defaultStudioProgramData,
@@ -22,6 +24,7 @@ import {
 } from "@/lib/studio/mock-program";
 
 import { supabase } from "@/lib/supabase/client";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
 
 
 function toProgramEntry(row: {
@@ -39,8 +42,7 @@ function toProgramEntry(row: {
     id: String(row.id),
     title: row.title ?? "",
     description: row.description ?? "",
-    features: [], // Not in DB schema, initialize empty
-    subtitle: "", // Not in DB schema
+    features: [],
     ctaText: row.cta_text ?? "",
     imageUrl: row.image_url ?? "",
     ageRange: row.age_range ?? "",
@@ -57,6 +59,8 @@ export default function StudioProgramPage() {
     defaultStudioProgramData.programs.map((p) => ({ ...p })),
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const { isSaving, isSuccess, hasError, error, startSaving, saveSuccess, saveError } = useSaveFeedback();
 
   // Hydration-safe: load from Supabase on mount
   useEffect(() => {
@@ -116,7 +120,8 @@ export default function StudioProgramPage() {
     ? draft.findIndex((p) => p.id === selectedId)
     : -1;
 
-   function onSave() {
+  function onSave() {
+    startSaving();
     void (async () => {
       try {
         const { supabase: client } = await import("@/lib/supabase/client");
@@ -151,6 +156,7 @@ export default function StudioProgramPage() {
         // Working copy to track UUID updates from inserts
         const updatedDraft = [...draft];
         let newSelectedId = selectedId;
+        let hasAnyError = false;
 
         // Update or insert each project
         for (let i = 0; i < updatedDraft.length; i++) {
@@ -177,10 +183,9 @@ export default function StudioProgramPage() {
 
             if (insertError) {
               console.error(`Failed to insert program ${i + 1}:`, insertError);
+              hasAnyError = true;
             } else if (insertedData && insertedData[0]) {
-              // Update working copy to use the Supabase-generated UUID
               updatedDraft[i] = { ...updatedDraft[i], id: insertedData[0].id };
-              // Also update selectedId if this was the selected project
               if (originalId === selectedId) {
                 newSelectedId = insertedData[0].id;
               }
@@ -205,6 +210,7 @@ export default function StudioProgramPage() {
 
             if (updateError) {
               console.error(`Failed to update program ${program.id}:`, updateError);
+              hasAnyError = true;
             }
           }
         }
@@ -213,8 +219,15 @@ export default function StudioProgramPage() {
         setSaved({ programs: updatedDraft.map((p) => ({ ...p })) });
         setDraft(updatedDraft);
         setSelectedId(newSelectedId);
+
+        if (hasAnyError) {
+          saveError("Some projects failed to save");
+        } else {
+          saveSuccess();
+        }
       } catch (e) {
         console.error("Error saving projects:", e);
+        saveError("Failed to save projects");
       }
     })();
   }
@@ -291,6 +304,20 @@ export default function StudioProgramPage() {
                   + Add Program
                 </CmsPrimaryButton>
               </div>
+
+              {hasError && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+                  <AlertCircle className="h-4 w-4" />
+                  {error}
+                </div>
+              )}
+
+              {isSuccess && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+                  <CheckCircle className="h-4 w-4" />
+                  Changes saved!
+                </div>
+              )}
 
               <div className="mt-5 space-y-3">
                 {draft.length === 0 ? (
@@ -374,6 +401,7 @@ export default function StudioProgramPage() {
                     <CmsPrimaryButton
                       variant="solid"
                       disabled={!isDirty}
+                      isLoading={isSaving}
                       onClick={onSave}
                     >
                       Save Changes
@@ -381,6 +409,7 @@ export default function StudioProgramPage() {
                     <CmsPrimaryButton
                       variant="ghost"
                       disabled={!isDirty}
+                      isLoading={isSaving}
                       onClick={onReset}
                     >
                       Reset Changes
@@ -565,6 +594,7 @@ export default function StudioProgramPage() {
                       <CmsPrimaryButton
                         variant="solid"
                         disabled={!isDirty}
+                        isLoading={isSaving}
                         onClick={onSave}
                       >
                         Save Changes
@@ -572,6 +602,7 @@ export default function StudioProgramPage() {
                       <CmsPrimaryButton
                         variant="ghost"
                         disabled={!isDirty}
+                        isLoading={isSaving}
                         onClick={onReset}
                       >
                         Reset Changes

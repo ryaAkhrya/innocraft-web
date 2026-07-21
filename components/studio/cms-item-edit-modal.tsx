@@ -37,22 +37,25 @@ export function CmsItemEditModal({
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl">
-        <div className="flex items-start justify-between gap-4">
+      <div className="relative flex h-full w-full flex-col sm:h-auto sm:max-h-[90vh] sm:w-full sm:max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6 shadow-xl">
+        <div className="flex items-start justify-between gap-3 sm:gap-4 flex-shrink-0">
           <div>
-            <h3 className="text-lg font-semibold text-white">{title}</h3>
+            <h3 className="text-base font-semibold text-white sm:text-lg">{title}</h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 hover:bg-white/10"
+            className="rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-white/80 hover:bg-white/10 sm:px-3 sm:py-2 sm:text-sm"
           >
             Close
           </button>
         </div>
-        <div className="mt-4">{children}</div>
+        <div className="mt-4 flex-1 overflow-y-auto">
+          <div className="sm:max-h-none h-full">
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-

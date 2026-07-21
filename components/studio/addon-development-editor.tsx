@@ -16,6 +16,8 @@ import {
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
 import { CmsSectionShell } from "@/components/studio/cms-section-shell";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
+import { AlertCircle, CheckCircle } from "lucide-react";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
 
 export function AddonDevelopmentEditor({
   initialData,
@@ -31,6 +33,7 @@ export function AddonDevelopmentEditor({
   const isDirty = JSON.stringify(draft) !== JSON.stringify(saved);
 
   const [rowId, setRowId] = useState<string | null>(null);
+  const { isSaving, isSuccess, hasError, error, startSaving, saveSuccess, saveError } = useSaveFeedback();
 
   // Hydration-safe: load from Supabase on mount; insert default if empty
   useEffect(() => {
@@ -120,6 +123,7 @@ export function AddonDevelopmentEditor({
 
   function save() {
     setSaved(draft);
+    startSaving();
 
     void (async () => {
       try {
@@ -137,10 +141,13 @@ export function AddonDevelopmentEditor({
             .limit(1);
 
           const newId = inserted?.[0]?.id;
-          if (!newId) return;
+          if (!newId) {
+            saveError("Failed to create addon development row");
+            return;
+          }
           setRowId(String(newId));
 
-          await (await import("@/lib/supabase/client")).supabase
+          const { error } = await (await import("@/lib/supabase/client")).supabase
             .from("addon_development")
             .update({
               title: draft.title,
@@ -150,11 +157,17 @@ export function AddonDevelopmentEditor({
             })
             .eq("id", newId);
 
+          if (error) {
+            saveError(error.message);
+          } else {
+            saveSuccess();
+          }
+
           return;
         }
 
         const { supabase } = await import("@/lib/supabase/client");
-        await supabase
+        const { error } = await supabase
           .from("addon_development")
           .update({
             title: draft.title,
@@ -163,8 +176,14 @@ export function AddonDevelopmentEditor({
             thumbnail_url: draft.thumbnailUrl,
           })
           .eq("id", rowId);
+
+        if (error) {
+          saveError(error.message);
+        } else {
+          saveSuccess();
+        }
       } catch {
-        // Errors not surfaced in UI
+        saveError("Failed to save addon development");
       }
     })();
   }
@@ -183,6 +202,20 @@ export function AddonDevelopmentEditor({
               Update content and see changes instantly.
             </p>
           </div>
+
+          {hasError && (
+            <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+              <AlertCircle className="h-4 w-4" />
+              {error}
+            </div>
+          )}
+
+          {isSuccess && (
+            <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+              <CheckCircle className="h-4 w-4" />
+              Changes saved!
+            </div>
+          )}
 
           <div className="mt-6 space-y-5">
             <CmsTextInput
@@ -222,6 +255,7 @@ export function AddonDevelopmentEditor({
             <CmsPrimaryButton
               variant="solid"
               disabled={!isDirty}
+              isLoading={isSaving}
               onClick={save}
             >
               Save Changes
@@ -229,6 +263,7 @@ export function AddonDevelopmentEditor({
             <CmsPrimaryButton
               variant="ghost"
               disabled={!isDirty}
+              isLoading={isSaving}
               onClick={reset}
             >
               Reset Changes

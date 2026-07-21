@@ -12,6 +12,7 @@ import { CmsTextInput, CmsTextarea } from "@/components/studio/cms-form-input";
 import { CmsReorderControls } from "@/components/studio/cms-reorder";
 import { CmsItemEditModal } from "@/components/studio/cms-item-edit-modal";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 import {
   defaultStudioRecruitmentData,
@@ -20,6 +21,8 @@ import {
 } from "@/lib/studio/mock-recruitment";
 
 import { supabase } from "@/lib/supabase/client";
+import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
+
 
 function createId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -99,6 +102,8 @@ export default function StudioRecruitmentPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
+  const { isSaving, isSuccess, hasError, error, startSaving, saveSuccess, saveError } = useSaveFeedback();
+
   // Hydration-safe: load from Supabase on mount
   useEffect(() => {
     let cancelled = false;
@@ -106,8 +111,8 @@ export default function StudioRecruitmentPage() {
     async function loadRecruitment() {
       try {
         const { data, error } = await supabase
-              .from("recruitment")
-              .select("id, title, employment_type, location, status, description, requirements, job_description, benefits, work_location, display_order")
+          .from("recruitment")
+          .select("id, title, employment_type, location, status, description, requirements, job_description, benefits, work_location, display_order")
           .eq("is_active", true)
           .order("display_order", { ascending: true });
 
@@ -162,6 +167,7 @@ export default function StudioRecruitmentPage() {
   }, [draft, saved]);
 
   function onSave() {
+    startSaving();
     void (async () => {
       try {
         const { supabase: client } = await import("@/lib/supabase/client");
@@ -196,6 +202,7 @@ export default function StudioRecruitmentPage() {
         // Working copy to track UUID updates from inserts
         const updatedDraft = [...draft.jobs];
         let newSelectedId = selectedId;
+        let hasAnyError = false;
 
         // Update or insert each job
         for (let i = 0; i < updatedDraft.length; i++) {
@@ -223,6 +230,7 @@ export default function StudioRecruitmentPage() {
 
             if (insertError) {
               console.error(`Failed to insert job ${i + 1}:`, insertError);
+              hasAnyError = true;
             } else if (insertedData && insertedData[0]) {
               updatedDraft[i] = { ...updatedDraft[i], id: insertedData[0].id };
               if (originalId === selectedId) {
@@ -250,6 +258,7 @@ export default function StudioRecruitmentPage() {
 
             if (updateError) {
               console.error(`Failed to update job ${job.id}:`, updateError);
+              hasAnyError = true;
             }
           }
         }
@@ -258,8 +267,15 @@ export default function StudioRecruitmentPage() {
         setSaved({ jobs: updatedDraft.map((j) => ({ ...j })) });
         setDraft({ jobs: updatedDraft });
         setSelectedId(newSelectedId);
+
+        if (hasAnyError) {
+          saveError("Some jobs failed to save");
+        } else {
+          saveSuccess();
+        }
       } catch (e) {
         console.error("Error saving recruitment:", e);
+        saveError("Failed to save recruitment");
       }
     })();
   }
@@ -368,6 +384,20 @@ export default function StudioRecruitmentPage() {
                 </CmsPrimaryButton>
               </div>
 
+              {hasError && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+                  <AlertCircle className="h-4 w-4" />
+                  {error}
+                </div>
+              )}
+
+              {isSuccess && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-green-400">
+                  <CheckCircle className="h-4 w-4" />
+                  Changes saved!
+                </div>
+              )}
+
               <div className="mt-5 space-y-3">
                 {draft.jobs.length === 0 ? (
                   <p className="text-sm text-white/60">No jobs yet.</p>
@@ -460,6 +490,7 @@ export default function StudioRecruitmentPage() {
                     <CmsPrimaryButton
                       variant="solid"
                       disabled={!isDirty}
+                      isLoading={isSaving}
                       onClick={onSave}
                     >
                       Save Changes
@@ -467,6 +498,7 @@ export default function StudioRecruitmentPage() {
                     <CmsPrimaryButton
                       variant="ghost"
                       disabled={!isDirty}
+                      isLoading={isSaving}
                       onClick={onReset}
                     >
                       Reset Changes
@@ -560,6 +592,7 @@ export default function StudioRecruitmentPage() {
                   <CmsPrimaryButton
                     variant="solid"
                     disabled={!isDirty}
+                    isLoading={isSaving}
                     onClick={onSave}
                   >
                     Save Changes
@@ -567,6 +600,7 @@ export default function StudioRecruitmentPage() {
                   <CmsPrimaryButton
                     variant="ghost"
                     disabled={!isDirty}
+                    isLoading={isSaving}
                     onClick={onReset}
                   >
                     Reset Changes
