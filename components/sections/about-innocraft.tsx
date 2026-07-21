@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/container";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
 import { Section } from "@/components/ui/section";
-import { SectionTitle } from "@/components/ui/section-title";
 
 import { useLanguage } from "@/lib/i18n/language-provider";
 import { defaultStudioTentangData, StudioTentangData } from "@/lib/studio/mock-tentang";
@@ -69,34 +68,64 @@ export function AboutInnocraft() {
   return (
     <Section className="py-10 sm:py-16">
       <Container>
-        <MotionWrapper className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-          <div className="rounded-[2rem] border border-border bg-white p-8 shadow-soft sm:p-10">
-            <SectionTitle
-              eyebrow={t.about.eyebrow}
-              title={aboutData.title || t.about.title}
-              description={aboutData.description || t.about.description}
-            />
+        <MotionWrapper>
+          {/* Eyebrow */}
+          <div className="mb-6 sm:mb-8">
+            <span className="inline-block rounded-full border border-border bg-white/90 px-4 py-2 text-xs font-medium uppercase tracking-wider text-heading">
+              {t.about.eyebrow}
+            </span>
           </div>
-          <div className="grid gap-4">
-            {imageUrl ? (
-              <div className="overflow-hidden rounded-[1.5rem] border border-border bg-gradient-to-br from-primaryBg/50 to-white">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={imageUrl}
-                  alt={aboutData.title || t.about.title}
-                  className="h-full w-full object-cover"
-                />
+
+          {/* Main Layout: Desktop two-column, Mobile stacked */}
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+            {/* Image Column - Hero Visual */}
+            <div className="relative order-2 lg:order-1">
+              <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-2xl">
+                {imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={imageUrl}
+                    alt={aboutData.title || t.about.title}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex aspect-[4/3] items-center justify-center">
+                    <span className="text-sm font-medium text-paragraph/50">
+                      [Brand Visual]
+                    </span>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="flex h-48 items-center justify-center rounded-[1.5rem] border border-border bg-gradient-to-br from-primaryBg/50 to-white">
-                <span className="text-sm font-medium text-heading/50">
-                  No image
-                </span>
+
+              {/* Decorative element */}
+              <div className="absolute -bottom-4 -right-4 h-16 w-16 rounded-2xl bg-gradient-to-br from-[#FFCFC9]/30 to-[#9AE6FF]/30 blur-xl" />
+            </div>
+
+            {/* Story Content Column */}
+            <div className="order-1 lg:order-2">
+              {/* Title */}
+              <h2 className="text-3xl font-bold tracking-tight text-heading sm:text-4xl lg:text-5xl">
+                {aboutData.title || t.about.title}
+              </h2>
+
+              {/* Subtitle as Tag */}
+              {aboutData.subtitle && (
+                <div className="mt-4">
+                  <span className="inline-block rounded-xl border border-border bg-white/90 px-3 py-1.5 text-sm font-medium text-paragraph">
+                    {aboutData.subtitle}
+                  </span>
+                </div>
+              )}
+
+              {/* Description with improved typography */}
+              <div className="mt-6 space-y-4">
+                <p className="text-base leading-relaxed text-paragraph sm:text-lg">
+                  {aboutData.description || t.about.description}
+                </p>
               </div>
-            )}
-            <div className="rounded-[1.5rem] border border-border bg-white/90 p-6 shadow-sm">
-              <h3 className="text-xl font-semibold text-heading">{aboutData.subtitle || t.about.eyebrow}</h3>
-              <p className="mt-3 text-sm leading-7 text-paragraph">{aboutData.description || t.about.description}</p>
+
+              {/* Decorative accent line */}
+              <div className="mt-8 h-1 w-16 rounded-full bg-gradient-to-r from-primaryBackground to-[#9AE6FF]" />
             </div>
           </div>
         </MotionWrapper>
