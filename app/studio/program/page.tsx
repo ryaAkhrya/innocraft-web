@@ -10,8 +10,8 @@ import {
 import {
   CmsTextInput,
   CmsTextarea,
-  CmsUrlHint,
 } from "@/components/studio/cms-form-input";
+import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
 import { CmsReorderControls } from "@/components/studio/cms-reorder";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
 
@@ -431,8 +431,8 @@ export default function StudioProgramPage() {
                     rows={6}
                   />
 
-                  <CmsTextInput
-                    label="Thumbnail / Image URL"
+                  <CmsFileUpload
+                    label="Thumbnail / Image"
                     value={selectedProgram.imageUrl ?? ""}
                     onChange={(v) =>
                       setDraft((d) =>
@@ -441,7 +441,8 @@ export default function StudioProgramPage() {
                         ),
                       )
                     }
-                    placeholder="/gallery/program.jpg"
+                    bucket="projects"
+                    accept="image/*"
                   />
 
                   <div className="grid gap-4 sm:grid-cols-2">
