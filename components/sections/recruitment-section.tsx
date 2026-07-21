@@ -7,7 +7,6 @@ import { MotionWrapper } from "@/components/ui/motion-wrapper";
 import { Section } from "@/components/ui/section";
 import { SectionTitle } from "@/components/ui/section-title";
 
-import { recruitmentJobsMock } from "./recruitment-mock-data";
 import type { RecruitmentJob, RecruitmentModalPayload } from "./recruitment-types";
 import { RecruitmentModal } from "./recruitment-modal";
 
@@ -27,6 +26,9 @@ function toRecruitmentJob(row: {
   status: string | null;
   description: string | null;
   requirements: string[] | null;
+  job_description: string | null;
+  benefits: string[] | null;
+  work_location: string | null;
 }): StudioJob {
   return {
     id: String(row.id),
@@ -36,6 +38,9 @@ function toRecruitmentJob(row: {
     status: row.status === "Closed" ? "Closed" : "Open",
     description: row.description ?? "",
     requirements: row.requirements ?? [],
+    jobDescription: row.job_description ?? "",
+    benefits: row.benefits ?? [],
+    workLocation: row.work_location ?? "",
   };
 }
 
@@ -97,19 +102,18 @@ function cmsStatusToRecruitment(cmsStatus: string): RecruitmentJob["status"] {
   return cmsStatus.toLowerCase() === "open" ? "open" : "closed";
 }
 
-function cmsJobToRecruitmentJob(cms: StudioJob, index: number): RecruitmentJob {
-  const mock = recruitmentJobsMock[index] ?? recruitmentJobsMock[0];
+function cmsJobToRecruitmentJob(cms: StudioJob): RecruitmentJob {
   return {
     id: cms.id,
     position: cms.position,
-    employmentType: cms.employmentType as RecruitmentJob["employmentType"],
-    location: cms.location as RecruitmentJob["location"],
+    employmentType: cms.employmentType,
+    location: cms.location,
     shortDescription: cms.description,
     status: cmsStatusToRecruitment(cms.status),
-    jobDescription: mock.jobDescription,
+    jobDescription: cms.jobDescription,
     requirements: cms.requirements,
-    benefits: mock.benefits,
-    workLocation: mock.workLocation,
+    benefits: cms.benefits,
+    workLocation: cms.workLocation,
   };
 }
 
@@ -120,7 +124,7 @@ export function RecruitmentSection() {
   );
 
   const jobs = useMemo<RecruitmentJob[]>(() => {
-    return cmsJobs.map((cms, idx) => cmsJobToRecruitmentJob(cms, idx));
+    return cmsJobs.map((cms) => cmsJobToRecruitmentJob(cms));
   }, [cmsJobs]);
 
   const [selected, setSelected] = useState<RecruitmentJob | null>(null);
@@ -134,7 +138,7 @@ export function RecruitmentSection() {
       try {
         const { data, error } = await supabase
           .from("recruitment")
-          .select("id, title, employment_type, location, status, description, requirements, display_order")
+          .select("id, title, employment_type, location, status, description, requirements, job_description, benefits, work_location, display_order")
           .eq("is_active", true)
           .order("display_order", { ascending: true });
 

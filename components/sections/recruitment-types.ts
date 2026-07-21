@@ -1,26 +1,14 @@
 export type RecruitmentStatus = "open" | "closed";
 
-export type RecruitmentEmploymentType =
-  | "Part-time"
-  | "Full-time"
-  | "Contract"
-  | "Internship";
-
-export type RecruitmentWorkLocation =
-  | "Jakarta"
-  | "Bandung"
-  | "Yogyakarta"
-  | "Surabaya"
-  | "Remote";
-
 export interface RecruitmentJob {
   id: string;
   position: string;
-  employmentType: RecruitmentEmploymentType;
-  location: RecruitmentWorkLocation;
+  employmentType: string;
+  location: string;
   shortDescription: string;
   status: RecruitmentStatus;
 
+  // CMS-driven fields (no more mock data)
   jobDescription: string;
   requirements: string[];
   benefits: string[];
@@ -30,4 +18,3 @@ export interface RecruitmentJob {
 export interface RecruitmentModalPayload {
   job: RecruitmentJob;
 }
-

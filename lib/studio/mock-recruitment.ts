@@ -8,6 +8,11 @@ export type StudioJob = {
   // Added for Lowongan CMS (backward compatible)
   location: string;
   status: "Open" | "Closed";
+
+  // Full CMS-driven detail modal fields
+  jobDescription: string;
+  benefits: string[];
+  workLocation: string;
 };
 
 export type StudioRecruitmentData = {
@@ -24,6 +29,9 @@ export const defaultStudioRecruitmentData: StudioRecruitmentData = {
       status: "Open",
       description: "Mengatur jadwal, kebutuhan kelas, dan komunikasi peserta.",
       requirements: ["Komunikasi baik", "Organisasi rapi", "Mampu koordinasi"],
+      jobDescription: "Anda akan mengelola jadwal kelas, berkomunikasi dengan orang tua peserta, dan memastikan kebutuhan operasional program berjalan lancar.",
+      benefits: ["Lingkungan kerja yang hangat", "Jam kerja fleksibel", "Pengalaman organisasi event edukasi"],
+      workLocation: "Jakarta (offline)",
     },
     {
       id: "j2",
@@ -33,8 +41,9 @@ export const defaultStudioRecruitmentData: StudioRecruitmentData = {
       status: "Closed",
       description: "Membimbing anak mengembangkan addon Minecraft.",
       requirements: ["Paham Minecraft", "Peduli edukasi", "Sabar & komunikatif"],
+      jobDescription: "Anda akan menjadi mentor yang membimbing anak-anak dalam memahami konsep addon Minecraft dan membantu mereka mewujudkan ide kreatif menjadi proyek nyata.",
+      benefits: ["Materi ajar tersedia", "Komunitas mentor", "Sertifikat pengalaman"],
+      workLocation: "Remote",
     },
   ],
 };
-
-

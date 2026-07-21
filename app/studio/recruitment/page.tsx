@@ -41,6 +41,9 @@ function toRecruitmentJob(row: {
   status: string | null;
   description: string | null;
   requirements: string[] | null;
+  job_description: string | null;
+  benefits: string[] | null;
+  work_location: string | null;
   display_order: number | null;
 }): StudioJob {
   return {
@@ -51,6 +54,9 @@ function toRecruitmentJob(row: {
     status: row.status === "Closed" ? "Closed" : "Open",
     description: row.description ?? "",
     requirements: row.requirements ?? [],
+    jobDescription: row.job_description ?? "",
+    benefits: row.benefits ?? [],
+    workLocation: row.work_location ?? "",
   };
 }
 
@@ -65,6 +71,11 @@ function normalizeJob(input: StudioJob | any): StudioJob {
     requirements: Array.isArray(input?.requirements)
       ? input.requirements.map((x: any) => String(x ?? "")).filter(Boolean)
       : [],
+    jobDescription: String(input?.jobDescription ?? ""),
+    benefits: Array.isArray(input?.benefits)
+      ? input.benefits.map((x: any) => String(x ?? "")).filter(Boolean)
+      : [],
+    workLocation: String(input?.workLocation ?? ""),
   };
 }
 
@@ -95,8 +106,8 @@ export default function StudioRecruitmentPage() {
     async function loadRecruitment() {
       try {
         const { data, error } = await supabase
-          .from("recruitment")
-          .select("id, title, employment_type, location, status, description, requirements, display_order")
+              .from("recruitment")
+              .select("id, title, employment_type, location, status, description, requirements, job_description, benefits, work_location, display_order")
           .eq("is_active", true)
           .order("display_order", { ascending: true });
 
@@ -202,6 +213,9 @@ export default function StudioRecruitmentPage() {
                 status: job.status,
                 description: job.description,
                 requirements: job.requirements,
+                job_description: job.jobDescription,
+                benefits: job.benefits,
+                work_location: job.workLocation,
                 display_order: i,
                 is_active: true,
               })
@@ -226,6 +240,9 @@ export default function StudioRecruitmentPage() {
                 status: job.status,
                 description: job.description,
                 requirements: job.requirements,
+                job_description: job.jobDescription,
+                benefits: job.benefits,
+                work_location: job.workLocation,
                 display_order: i,
                 is_active: true,
               })
@@ -264,6 +281,9 @@ export default function StudioRecruitmentPage() {
       status: "Open",
       description: "",
       requirements: [],
+      jobDescription: "",
+      benefits: [],
+      workLocation: "",
     };
 
     setDraft((d) => ({ ...d, jobs: [...d.jobs, next] }));
@@ -625,6 +645,37 @@ export default function StudioRecruitmentPage() {
                 placeholder="Job description"
                 rows={6}
               />
+
+              <CmsTextarea
+                label="Job Description (detail modal)"
+                value={selectedItem.jobDescription}
+                onChange={(v) => updateSelected({ jobDescription: v })}
+                placeholder="Detailed job description shown in modal"
+                rows={6}
+              />
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <CmsTextInput
+                  label="Work Location (detail modal)"
+                  value={selectedItem.workLocation}
+                  onChange={(v) => updateSelected({ workLocation: v })}
+                  placeholder="e.g. Jakarta (offline)"
+                />
+
+                <CmsTextInput
+                  label="Benefits (comma separated)"
+                  value={selectedItem.benefits.join(", ")}
+                  onChange={(v) =>
+                    updateSelected({
+                      benefits: v
+                        .split(",")
+                        .map((x) => x.trim())
+                        .filter(Boolean),
+                    })
+                  }
+                  placeholder="Asuransi, Transport, Sertifikat"
+                />
+              </div>
             </div>
           ) : (
             <p className="text-sm text-white/60">No job selected.</p>
