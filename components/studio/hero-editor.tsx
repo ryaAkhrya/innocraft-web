@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { StudioHeroData } from "@/lib/studio/mock-hero";
 import { defaultStudioHeroData } from "@/lib/studio/mock-hero";
 import { cn } from "@/lib/utils";
+import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
 
 function FieldCard({
   children,
@@ -37,19 +38,6 @@ function TextInput(props: {
       onChange={(e) => props.onChange(e.target.value)}
       placeholder={props.placeholder}
       className="mt-2 w-full rounded-2xl border border-white/10 bg-[#0B1020]/40 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:ring-2 focus:ring-primary/60"
-    />
-  );
-}
-
-function VideoInput(props: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <input
-      value={props.value}
-      onChange={(e) => props.onChange(e.target.value)}
-      className="mt-2 w-full rounded-2xl border border-white/10 bg-[#0B1020]/40 px-4 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-primary/60"
     />
   );
 }
@@ -222,32 +210,38 @@ export function StudioHeroEditor({
   }, [base]);
 
 
-
   function reset() {
     setDraft(saved);
   }
 
   function save() {
+    // Capture current draft values immediately to avoid closure stale value issue
+    const valuesToSave = { ...draft };
+    
+    console.log('[Hero Editor Debug] Save clicked - draft.heroVideoUrl:', draft.heroVideoUrl);
+    console.log('[Hero Editor Debug] Save clicked - valuesToSave:', valuesToSave);
+    
     // Keep existing preview behavior: update local state immediately.
-    setSaved(draft);
+    setSaved(valuesToSave);
 
     // Persist to Supabase (single-row behavior via heroRowId + UPDATE).
     void (async () => {
       try {
+        console.log('[Hero Editor Debug] Async save - heroRowId:', heroRowId);
         if (!heroRowId) {
           // Fallback: re-create row if we couldn't load id for some reason.
           const { supabase } = await import("@/lib/supabase/client");
           const { data: inserted } = await supabase
             .from("hero")
             .insert({
-              badge: draft.badge,
-              title: draft.title,
-              subtitle: draft.subtitle,
-              primary_button_text: draft.primaryButtonText,
+              badge: valuesToSave.badge,
+              title: valuesToSave.title,
+              subtitle: valuesToSave.subtitle,
+              primary_button_text: valuesToSave.primaryButtonText,
               primary_button_url: "",
-              secondary_button_text: draft.secondaryButtonText,
+              secondary_button_text: valuesToSave.secondaryButtonText,
               secondary_button_url: "",
-              hero_video_url: draft.heroVideoUrl,
+              hero_video_url: valuesToSave.heroVideoUrl,
             })
             .select("id")
             .limit(1);
@@ -260,44 +254,47 @@ export function StudioHeroEditor({
           await (await import("@/lib/supabase/client")).supabase
             .from("hero")
             .update({
-              badge: draft.badge,
-              title: draft.title,
-              subtitle: draft.subtitle,
-              primary_button_text: draft.primaryButtonText,
+              badge: valuesToSave.badge,
+              title: valuesToSave.title,
+              subtitle: valuesToSave.subtitle,
+              primary_button_text: valuesToSave.primaryButtonText,
               primary_button_url: "",
-              secondary_button_text: draft.secondaryButtonText,
+              secondary_button_text: valuesToSave.secondaryButtonText,
               secondary_button_url: "",
-              hero_video_url: draft.heroVideoUrl,
+              hero_video_url: valuesToSave.heroVideoUrl,
             })
             .eq("id", newId);
-
-
 
           return;
         }
 
-
         const { supabase } = await import("@/lib/supabase/client");
-        await supabase
+        const updatePayload = {
+          badge: valuesToSave.badge,
+          title: valuesToSave.title,
+          subtitle: valuesToSave.subtitle,
+          primary_button_text: valuesToSave.primaryButtonText,
+          primary_button_url: "",
+          secondary_button_text: valuesToSave.secondaryButtonText,
+          secondary_button_url: "",
+          hero_video_url: valuesToSave.heroVideoUrl,
+        };
+        console.log('[Hero Editor Debug] Update payload:', updatePayload);
+        const { data, error } = await supabase
           .from("hero")
-          .update({
-            badge: draft.badge,
-            title: draft.title,
-            subtitle: draft.subtitle,
-            primary_button_text: draft.primaryButtonText,
-            primary_button_url: "",
-            secondary_button_text: draft.secondaryButtonText,
-            secondary_button_url: "",
-            hero_video_url: draft.heroVideoUrl,
-          })
-          .eq("id", heroRowId);
-      } catch {
-        // Preserve existing behavior: errors are not surfaced in UI.
+          .update(updatePayload)
+          .eq("id", heroRowId)
+          .select("id, hero_video_url");
+
+        console.log('[Hero Editor Debug] Supabase response:', { data, error });
+        if (error) {
+          console.error('Hero save error:', error.message);
+        }
+      } catch (err) {
+        console.error('Hero save error:', err);
       }
     })();
   }
-
-
 
 
   return (
@@ -365,13 +362,14 @@ export function StudioHeroEditor({
 
           <div>
             <Label>Hero Video URL</Label>
-            <VideoInput
+            <CmsFileUpload
+              label=""
               value={draft.heroVideoUrl}
               onChange={(v) => setDraft((d) => ({ ...d, heroVideoUrl: v }))}
+              bucket="hero"
+              accept="video/mp4,video/webm,video/quicktime"
+              isVideo
             />
-            <p className="mt-2 text-xs text-white/50">
-              Example: <span className="text-white/70">/hero-video.mp4</span>
-            </p>
           </div>
         </div>
 
@@ -428,4 +426,3 @@ export function StudioHeroEditor({
     </div>
   );
 }
-

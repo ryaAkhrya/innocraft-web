@@ -14,17 +14,11 @@ import {
   defaultStudioHeroData,
   type StudioHeroData,
 } from "@/lib/studio/mock-hero";
-
-
-
-
-
 import { supabase } from "@/lib/supabase/client";
 
 
 
 export function Hero() {
-
   const { t } = useLanguage();
 
   // Hydration-safe: render default on first pass (SSR + initial client render).
@@ -171,8 +165,15 @@ export function Hero() {
                       );
                     }
 
+                    const videoType = videoUrl?.includes('.webm') 
+                      ? 'video/webm' 
+                      : videoUrl?.includes('.mov') 
+                      ? 'video/quicktime' 
+                      : 'video/mp4';
+                    
                     return (
                       <video
+                        key={videoUrl}
                         className="h-full min-h-[320px] w-full rounded-[1.5rem] object-cover sm:min-h-[380px] lg:min-h-[430px]"
                         autoPlay
                         muted
@@ -182,7 +183,7 @@ export function Hero() {
                         preload="metadata"
                         aria-label="Intro video preview"
                       >
-                        <source src={videoUrl} type="video/mp4" />
+                        <source src={videoUrl} type={videoType} />
                       </video>
                     );
                   })()}
@@ -199,4 +200,3 @@ export function Hero() {
     </Section>
   );
 }
-
