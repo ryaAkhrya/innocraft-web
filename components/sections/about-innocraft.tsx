@@ -87,6 +87,7 @@ export function AboutInnocraft() {
                     src={imageUrl}
                     alt={aboutData.title || t.about.title}
                     className="h-full w-full object-cover"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="flex aspect-[4/3] items-center justify-center">

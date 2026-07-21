@@ -13,7 +13,6 @@ import {
 
 import { supabase } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
 
 
 function toGalleryItem(row: {
