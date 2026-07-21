@@ -3,21 +3,29 @@
 import { useState } from "react";
 import { uploadFile } from "@/lib/supabase/storage";
 
+function isImageFile(file: File): boolean {
+  return file.type.startsWith("image/");
+}
+
+function isVideoFile(file: File): boolean {
+  return file.type.startsWith("video/");
+}
+
 export default function TestUploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [result, setResult] = useState<{ path: string; publicUrl: string } | null>(null);
+  const [result, setResult] = useState<{ url: string; path: string; isVideo: boolean } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (selectedFile && selectedFile.type.startsWith("image/")) {
+    if (selectedFile && (isImageFile(selectedFile) || isVideoFile(selectedFile))) {
       setFile(selectedFile);
       setError(null);
       setResult(null);
     } else {
       setFile(null);
-      setError("Please select a valid image file");
+      setError("Please select a valid image or video file");
     }
   };
 
@@ -29,8 +37,13 @@ export default function TestUploadPage() {
     setResult(null);
 
     try {
-      const uploadResult = await uploadFile(file, "test");
-      setResult(uploadResult);
+      const uploadType = isVideoFile(file) ? "video" : "image";
+      const uploadResult = await uploadFile("gallery", file, uploadType);
+      if (uploadResult.error) {
+        setError(uploadResult.error);
+      } else {
+        setResult({ url: uploadResult.url, path: uploadResult.path, isVideo: isVideoFile(file) });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
@@ -45,7 +58,7 @@ export default function TestUploadPage() {
       <div style={{ marginBottom: "20px" }}>
         <input
           type="file"
-          accept="image/*"
+          accept="image/*,video/*"
           onChange={handleFileChange}
           disabled={isUploading}
         />
@@ -71,13 +84,21 @@ export default function TestUploadPage() {
 
       {result && (
         <div style={{ marginTop: "20px" }}>
-          <p>✅ {result.publicUrl}</p>
-          <p>✅ {result.path}</p>
-          <img
-            src={result.publicUrl}
-            alt="Uploaded preview"
-            style={{ maxWidth: "100%", maxHeight: "300px", marginTop: "10px" }}
-          />
+          <p>✅ URL: {result.url}</p>
+          <p>✅ Path: {result.path}</p>
+          {result.isVideo ? (
+            <video
+              src={result.url}
+              controls
+              style={{ maxWidth: "100%", maxHeight: "300px", marginTop: "10px" }}
+            />
+          ) : (
+            <img
+              src={result.url}
+              alt="Uploaded preview"
+              style={{ maxWidth: "100%", maxHeight: "300px", marginTop: "10px" }}
+            />
+          )}
         </div>
       )}
     </div>
