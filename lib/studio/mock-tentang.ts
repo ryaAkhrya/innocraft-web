@@ -10,6 +10,5 @@ export const defaultStudioTentangData: StudioTentangData = {
   subtitle: "Offline Minecraft Addon Development",
   description:
     "INNOCRAFT adalah kelas offline yang membantu anak belajar pengembangan addon Minecraft dengan cara yang seru, terstruktur, dan ramah untuk pemula.",
-  imageUrl: "/gallery/hero-1.jpg",
+  imageUrl: "",
 };
-

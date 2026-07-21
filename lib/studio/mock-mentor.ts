@@ -18,7 +18,7 @@ export const defaultStudioMentorData: StudioMentorData = {
       position: "Addon Developer",
       description:
         "Membantu anak memahami alur addon dan membangun project dengan rapi.",
-      photoUrl: "/projects/mentor-1.jpg",
+      photoUrl: "",
     },
     {
       id: "m2",
@@ -26,8 +26,7 @@ export const defaultStudioMentorData: StudioMentorData = {
       position: "Education Mentor",
       description:
         "Fokus pada pembelajaran yang fun, jelas, dan mudah dipraktikkan.",
-      photoUrl: "/projects/mentor-2.jpg",
+      photoUrl: "",
     },
   ],
 };
-
