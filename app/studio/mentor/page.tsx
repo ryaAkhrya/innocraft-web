@@ -15,6 +15,7 @@ import {
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
 import { CmsReorderControls } from "@/components/studio/cms-reorder";
 import { CmsItemEditModal } from "@/components/studio/cms-item-edit-modal";
+import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
 
 import {
   defaultStudioMentorData,
@@ -146,25 +147,35 @@ export default function StudioMentorPage() {
   }, [draft, saved]);
 
   function onSave() {
+    // Capture current state immediately to avoid stale closure
+    const currentDraft = draft.mentors;
+    
+    console.log('[Mentor Debug] Save clicked - draft count:', currentDraft.length);
+    
     void (async () => {
       try {
         const { supabase: client } = await import("@/lib/supabase/client");
 
         // Fetch existing mentor IDs
-        const { data: existingRecords } = await client
+        const { data: existingRecords, error: fetchError } = await client
           .from("mentors")
           .select("id, display_order")
           .eq("is_active", true)
           .order("display_order", { ascending: true });
 
+        if (fetchError) {
+          console.error('Mentor save - failed to fetch existing:', fetchError.message);
+          return;
+        }
+
         const existingIds = new Set(existingRecords?.map((r) => r.id) ?? []);
 
         // Determine which IDs to delete: rows in Supabase but removed from draft
-        const currentIds = new Set(draft.mentors.map((m) => m.id));
+        const currentIds = new Set(currentDraft.map((m) => m.id));
         const idsToDelete = existingRecords?.filter((r) => !currentIds.has(r.id)) ?? [];
 
         if (idsToDelete.length > 0) {
-          console.log(`Deleting ${idsToDelete.length} removed mentor(s) from Supabase...`);
+          console.log(`[Mentor Debug] Deleting ${idsToDelete.length} mentor(s) from Supabase...`);
           for (const record of idsToDelete) {
             const { error: deleteError } = await client
               .from("mentors")
@@ -178,7 +189,7 @@ export default function StudioMentorPage() {
         }
 
         // Working copy to track UUID updates from inserts
-        const updatedDraft = [...draft.mentors];
+        const updatedDraft = [...currentDraft];
         let newSelectedId = selectedId;
 
         // Update or insert each mentor
@@ -199,6 +210,8 @@ export default function StudioMentorPage() {
                 is_active: true,
               })
               .select("id");
+
+            console.log('[Mentor Debug] Insert response for mentor', i, { data: insertedData, error: insertError });
 
             if (insertError) {
               console.error(`Failed to insert mentor ${i + 1}:`, insertError);
@@ -221,6 +234,8 @@ export default function StudioMentorPage() {
                 is_active: true,
               })
               .eq("id", mentor.id);
+
+            console.log('[Mentor Debug] Update response for mentor', mentor.id, { error: updateError });
 
             if (updateError) {
               console.error(`Failed to update mentor ${mentor.id}:`, updateError);
@@ -267,13 +282,19 @@ export default function StudioMentorPage() {
 
   function updateSelected(patch: Partial<StudioMentor>) {
     if (!selectedItem) return;
+    
+    console.log('[Mentor Debug] updateSelected called with patch:', patch);
 
-    setDraft((d) => ({
-      ...d,
-      mentors: d.mentors.map((m) =>
-        m.id === selectedItem.id ? { ...m, ...patch } : m,
-      ),
-    }));
+    setDraft((d) => {
+      const nextDraft = {
+        ...d,
+        mentors: d.mentors.map((m) =>
+          m.id === selectedItem.id ? { ...m, ...patch } : m,
+        ),
+      };
+      console.log('[Mentor Debug] Draft updated for item', selectedItem.id, 'new photoUrl:', nextDraft.mentors.find(m => m.id === selectedItem.id)?.photoUrl);
+      return nextDraft;
+    });
   }
 
   function onDelete(id: string) {
@@ -543,11 +564,12 @@ export default function StudioMentorPage() {
         >
           {selectedItem ? (
             <div className="space-y-5">
-              <CmsTextInput
-                label="Photo URL"
+              <CmsFileUpload
+                label="Photo"
                 value={selectedItem.photoUrl}
                 onChange={(v) => updateSelected({ photoUrl: v })}
-                placeholder="/gallery/mentor-1.jpg"
+                bucket="mentors"
+                accept="image/*"
               />
 
               <CmsTextInput
@@ -571,29 +593,6 @@ export default function StudioMentorPage() {
                 placeholder="Short description"
                 rows={6}
               />
-
-              <div>
-                <p className="mb-2 text-xs font-medium text-white/60">
-                  Photo preview
-                </p>
-
-                <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0B1020]/30">
-                  {safeTrim(selectedItem.photoUrl) ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={safeTrim(selectedItem.photoUrl)}
-                      alt={selectedItem.name || "Mentor preview"}
-                      className="h-56 w-full rounded-3xl object-cover opacity-90"
-                    />
-                  ) : (
-                    <div className="flex h-56 w-full items-center justify-center p-4">
-                      <p className="text-center text-xs text-white/50">
-                        No photo URL provided.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           ) : (
             <p className="text-sm text-white/60">No mentor selected.</p>

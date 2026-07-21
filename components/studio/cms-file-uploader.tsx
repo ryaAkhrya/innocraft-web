@@ -51,11 +51,12 @@ export function CmsFileUpload({
     const uploadType = isVideo ? "video" : "image";
     const result: UploadResult = await uploadFile(bucket, file, uploadType);
 
-    if (result.error) {
-      setError(result.error);
-    } else {
-      onChange(result.url);
-    }
+      if (result.error) {
+        setError(result.error);
+      } else {
+        console.log('[CmsFileUpload Debug] Upload result:', result);
+        onChange(result.url);
+      }
 
     setIsUploading(false);
     // Reset input
