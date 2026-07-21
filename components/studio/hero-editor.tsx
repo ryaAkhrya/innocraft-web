@@ -6,6 +6,7 @@ import { StudioHeroData } from "@/lib/studio/mock-hero";
 import { defaultStudioHeroData } from "@/lib/studio/mock-hero";
 import { cn } from "@/lib/utils";
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
+import { AlertCircle } from "lucide-react";
 
 function FieldCard({
   children,
@@ -107,6 +108,7 @@ export function StudioHeroEditor({
   const isDirty = JSON.stringify(draft) !== JSON.stringify(saved);
 
   const [heroRowId, setHeroRowId] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // Hydration-safe: first render uses default mock data.
   // After mount, load hero from Supabase; insert default if empty.
@@ -212,12 +214,15 @@ export function StudioHeroEditor({
 
   function reset() {
     setDraft(saved);
+    setSaveError(null);
   }
 
   function save() {
     // Capture current draft values immediately to avoid closure stale value issue
     const valuesToSave = { ...draft };
     
+    // Clear previous error
+    setSaveError(null);
     
     // Keep existing preview behavior: update local state immediately.
     setSaved(valuesToSave);
@@ -245,10 +250,13 @@ export function StudioHeroEditor({
 
           const newId = inserted?.[0]?.id;
 
-          if (!newId) return;
+          if (!newId) {
+            setSaveError("Failed to create hero row");
+            return;
+          }
           setHeroRowId(String(newId));
 
-          await (await import("@/lib/supabase/client")).supabase
+          const { error } = await (await import("@/lib/supabase/client")).supabase
             .from("hero")
             .update({
               badge: valuesToSave.badge,
@@ -261,6 +269,10 @@ export function StudioHeroEditor({
               hero_video_url: valuesToSave.heroVideoUrl,
             })
             .eq("id", newId);
+
+          if (error) {
+            setSaveError(error.message);
+          }
 
           return;
         }
@@ -282,10 +294,10 @@ export function StudioHeroEditor({
           .eq("id", heroRowId);
 
         if (error) {
-          console.error('Hero save error:', error.message);
+          setSaveError(error.message);
         }
       } catch (err) {
-        console.error('Hero save error:', err);
+        setSaveError(err instanceof Error ? err.message : "Failed to save hero");
       }
     })();
   }
@@ -301,6 +313,13 @@ export function StudioHeroEditor({
             Update content and preview changes instantly.
           </p>
         </div>
+
+        {saveError && (
+          <div className="mt-4 flex items-center gap-2 text-sm text-red-400">
+            <AlertCircle className="h-4 w-4" />
+            {saveError}
+          </div>
+        )}
 
         <div className="mt-6 space-y-5">
           <div>
