@@ -101,4 +101,5 @@ export const BUCKETS = {
   GALLERY: "gallery",
   MENTORS: "mentors",
   PROJECTS: "projects",
+  SECTIONS: "sections",
 } as const;

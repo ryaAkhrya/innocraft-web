@@ -1,4 +1,5 @@
 import { AboutInnocraft } from "@/components/sections/about-innocraft";
+import { AddonDevelopment } from "@/components/sections/addon-development";
 import { Benefits } from "@/components/sections/benefits";
 import { ClassInfo } from "@/components/sections/class-info";
 import { Contact } from "@/components/sections/contact";
@@ -23,6 +24,7 @@ export default function HomePage() {
         {/* Replace gallery images here */}
         {/* Replace project links here */}
         <Hero />
+        <AddonDevelopment />
         <WhyMinecraft />
         <AboutInnocraft />
         <Mentor />

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Image as ImageIcon, BookOpen, Star, LayoutGrid, Users, Briefcase, Phone, Settings, HeartHandshake } from "lucide-react";
+import { LayoutDashboard, Image as ImageIcon, BookOpen, Star, LayoutGrid, Users, Briefcase, Phone, Settings, HeartHandshake, Code } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SecondaryButton } from "@/components/ui/button";
 import { clearStudioSessionCookie } from "@/lib/studio/mock-auth";
@@ -26,6 +26,7 @@ export function StudioShell({
     () => [
       { label: "Dashboard", href: "/studio", icon: <LayoutDashboard className="h-4 w-4" /> },
       { label: "Hero", href: "/studio/hero", icon: <HeartHandshake className="h-4 w-4" /> },
+      { label: "Addon Dev", href: "/studio/addon-development", icon: <Code className="h-4 w-4" /> },
       { label: "Tentang", href: "/studio/tentang", icon: <BookOpen className="h-4 w-4" /> },
       { label: "Benefit", href: "/studio/benefit", icon: <Star className="h-4 w-4" /> },
       { label: "Program", href: "/studio/program", icon: <LayoutGrid className="h-4 w-4" /> },
