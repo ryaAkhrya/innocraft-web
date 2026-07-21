@@ -15,6 +15,7 @@ import {
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
 import { CmsReorderControls } from "@/components/studio/cms-reorder";
 import { CmsItemEditModal } from "@/components/studio/cms-item-edit-modal";
+import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
 
 import {
   defaultStudioGalleryData,
@@ -508,11 +509,12 @@ export default function StudioGalleryPage() {
         >
           {selectedItem ? (
             <div className="space-y-5">
-              <CmsTextInput
-                label="Image URL"
+              <CmsFileUpload
+                label="Image"
                 value={selectedItem.imageUrl}
                 onChange={(v) => updateSelected({ imageUrl: v })}
-                placeholder="/gallery/my-image.jpg"
+                bucket="gallery"
+                accept="image/*"
               />
 
               <CmsTextInput
@@ -529,29 +531,6 @@ export default function StudioGalleryPage() {
                 placeholder="Short description"
                 rows={6}
               />
-
-              <div>
-                <p className="mb-2 text-xs font-medium text-white/60">
-                  Image preview
-                </p>
-
-                <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0B1020]/30">
-                  {selectedItem.imageUrl?.trim() ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={selectedItem.imageUrl.trim()}
-                      alt={selectedItem.title || "Gallery preview"}
-                      className="h-56 w-full object-cover opacity-90"
-                    />
-                  ) : (
-                    <div className="flex h-56 w-full items-center justify-center p-4">
-                      <p className="text-center text-xs text-white/50">
-                        No image URL provided.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           ) : (
             <p className="text-sm text-white/60">No item selected.</p>
