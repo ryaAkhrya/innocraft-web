@@ -54,7 +54,6 @@ export function CmsFileUpload({
       if (result.error) {
         setError(result.error);
       } else {
-        console.log('[CmsFileUpload Debug] Upload result:', result);
         onChange(result.url);
       }
 

@@ -150,7 +150,6 @@ export default function StudioMentorPage() {
     // Capture current state immediately to avoid stale closure
     const currentDraft = draft.mentors;
     
-    console.log('[Mentor Debug] Save clicked - draft count:', currentDraft.length);
     
     void (async () => {
       try {
@@ -175,7 +174,7 @@ export default function StudioMentorPage() {
         const idsToDelete = existingRecords?.filter((r) => !currentIds.has(r.id)) ?? [];
 
         if (idsToDelete.length > 0) {
-          console.log(`[Mentor Debug] Deleting ${idsToDelete.length} mentor(s) from Supabase...`);
+          
           for (const record of idsToDelete) {
             const { error: deleteError } = await client
               .from("mentors")
@@ -211,8 +210,7 @@ export default function StudioMentorPage() {
               })
               .select("id");
 
-            console.log('[Mentor Debug] Insert response for mentor', i, { data: insertedData, error: insertError });
-
+            
             if (insertError) {
               console.error(`Failed to insert mentor ${i + 1}:`, insertError);
             } else if (insertedData && insertedData[0]) {
@@ -235,8 +233,7 @@ export default function StudioMentorPage() {
               })
               .eq("id", mentor.id);
 
-            console.log('[Mentor Debug] Update response for mentor', mentor.id, { error: updateError });
-
+            
             if (updateError) {
               console.error(`Failed to update mentor ${mentor.id}:`, updateError);
             }
@@ -283,7 +280,6 @@ export default function StudioMentorPage() {
   function updateSelected(patch: Partial<StudioMentor>) {
     if (!selectedItem) return;
     
-    console.log('[Mentor Debug] updateSelected called with patch:', patch);
 
     setDraft((d) => {
       const nextDraft = {
@@ -292,7 +288,6 @@ export default function StudioMentorPage() {
           m.id === selectedItem.id ? { ...m, ...patch } : m,
         ),
       };
-      console.log('[Mentor Debug] Draft updated for item', selectedItem.id, 'new photoUrl:', nextDraft.mentors.find(m => m.id === selectedItem.id)?.photoUrl);
       return nextDraft;
     });
   }

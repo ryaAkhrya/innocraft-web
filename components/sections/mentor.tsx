@@ -48,8 +48,6 @@ export function Mentor() {
           .eq("is_active", true)
           .order("display_order", { ascending: true });
 
-        console.log('[Mentor Public Debug] Supabase fetch response:', { data, error });
-
         if (cancelled) return;
 
         if (error) {

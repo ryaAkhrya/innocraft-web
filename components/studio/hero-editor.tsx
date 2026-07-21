@@ -218,8 +218,6 @@ export function StudioHeroEditor({
     // Capture current draft values immediately to avoid closure stale value issue
     const valuesToSave = { ...draft };
     
-    console.log('[Hero Editor Debug] Save clicked - draft.heroVideoUrl:', draft.heroVideoUrl);
-    console.log('[Hero Editor Debug] Save clicked - valuesToSave:', valuesToSave);
     
     // Keep existing preview behavior: update local state immediately.
     setSaved(valuesToSave);
@@ -227,7 +225,6 @@ export function StudioHeroEditor({
     // Persist to Supabase (single-row behavior via heroRowId + UPDATE).
     void (async () => {
       try {
-        console.log('[Hero Editor Debug] Async save - heroRowId:', heroRowId);
         if (!heroRowId) {
           // Fallback: re-create row if we couldn't load id for some reason.
           const { supabase } = await import("@/lib/supabase/client");
@@ -279,14 +276,11 @@ export function StudioHeroEditor({
           secondary_button_url: "",
           hero_video_url: valuesToSave.heroVideoUrl,
         };
-        console.log('[Hero Editor Debug] Update payload:', updatePayload);
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from("hero")
           .update(updatePayload)
-          .eq("id", heroRowId)
-          .select("id, hero_video_url");
+          .eq("id", heroRowId);
 
-        console.log('[Hero Editor Debug] Supabase response:', { data, error });
         if (error) {
           console.error('Hero save error:', error.message);
         }
