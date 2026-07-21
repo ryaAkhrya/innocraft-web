@@ -44,7 +44,6 @@ function toProgramEntry(row: {
   };
 }
 
-
 export function Projects() {
   const { t } = useLanguage();
 
@@ -86,6 +85,27 @@ export function Projects() {
     };
   }, []);
 
+  if (projects.length === 0) {
+    return (
+      <Section id="projects" className="py-10 sm:py-16">
+        <Container>
+          <SectionTitle
+            eyebrow="Proyek"
+            title={t.projects.title}
+            description={t.projects.description}
+          />
+          <div className="mt-8 text-center">
+            <div className="rounded-3xl border border-border bg-white p-8 shadow-soft">
+              <p className="text-base text-paragraph">
+                Projects coming soon.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
   return (
     <Section id="projects" className="py-10 sm:py-16">
       <Container>
@@ -94,7 +114,7 @@ export function Projects() {
           title={t.projects.title}
           description={t.projects.description}
         />
-        <div className="mt-8 grid gap-6 lg:grid-cols-2 items-stretch">
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
           {projects.map((item) => {
             const externalUrl =
               item.projectUrl && item.projectUrl.trim().length > 0
@@ -104,28 +124,38 @@ export function Projects() {
             return (
               <MotionWrapper
                 key={item.id}
-                className="group flex flex-col h-full rounded-[2rem] border border-border bg-white p-6 shadow-soft"
+                className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-white shadow-soft transition-all duration-300 hover:shadow-lg"
               >
-                <div className="rounded-[1.5rem] border border-border overflow-hidden">
-                  <div className="aspect-video w-full bg-gradient-to-br from-primaryBg/60 via-white to-white">
-                    {item.imageUrl && item.imageUrl.trim().length > 0 ? (
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : null}
-                  </div>
+                <div className="aspect-video overflow-hidden">
+                  {item.imageUrl && item.imageUrl.trim().length > 0 ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="h-full w-full rounded-t-3xl object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center rounded-t-3xl border-b border-border bg-gradient-to-br from-primaryBg/50 to-white">
+                      <span className="text-sm font-medium text-paragraph/60">
+                        No image available
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <div className="mt-6 flex flex-col flex-grow">
+                <div className="flex flex-grow flex-col p-6">
                   <h3 className="text-xl font-semibold text-heading">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-paragraph">
+                  <p className="mt-3 flex-grow text-sm leading-relaxed text-paragraph">
                     {item.description}
                   </p>
+                  {item.ageRange && (
+                    <div className="mt-4 text-xs text-paragraph/70">
+                      {item.ageRange} • {item.duration}
+                    </div>
+                  )}
                 </div>
-                <div className="mt-auto self-start">
+                <div className="p-6 pt-0">
                   {externalUrl ? (
                     <a
                       href={externalUrl}
@@ -140,9 +170,10 @@ export function Projects() {
                       </PrimaryButton>
                     </a>
                   ) : (
-                    <PrimaryButton asChild>
-                      <span className="inline-flex items-center opacity-50 cursor-not-allowed">
+                    <PrimaryButton asChild disabled>
+                      <span className="inline-flex items-center opacity-60">
                         {item.ctaText || "Lihat Proyek"}
+                        <ArrowUpRight className="ml-2 h-4 w-4" />
                       </span>
                     </PrimaryButton>
                   )}

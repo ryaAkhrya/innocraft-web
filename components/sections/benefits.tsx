@@ -18,8 +18,7 @@ function toStudiBenefitCard(row: {
   icon: string | null;
   title: string | null;
   description: string | null;
-  display_order: number;
-}): StudioBenefitCard {
+}) {
   return {
     id: String(row.id),
     icon: row.icon ?? "🧠",
@@ -27,7 +26,6 @@ function toStudiBenefitCard(row: {
     description: row.description ?? "",
   };
 }
-
 
 export function Benefits() {
   const { t } = useLanguage();
@@ -81,6 +79,27 @@ export function Benefits() {
 
   const icons = [GraduationCap, Sparkles, Compass, TrendingUp];
 
+  if (benefitCards.length === 0) {
+    return (
+      <Section className="py-10 sm:py-16">
+        <Container>
+          <SectionTitle
+            eyebrow={t.benefits.eyebrow}
+            title={t.benefits.title}
+            description={t.benefits.description}
+          />
+          <div className="mt-8 text-center">
+            <div className="rounded-3xl border border-border bg-white p-8 shadow-soft">
+              <p className="text-base text-paragraph">
+                Benefits coming soon.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
   return (
     <Section className="py-10 sm:py-16">
       <Container>
@@ -89,21 +108,21 @@ export function Benefits() {
           title={t.benefits.title}
           description={t.benefits.description}
         />
-        <div className="mt-8 grid gap-5 lg:grid-cols-2">
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
           {benefitCards.map((card, index) => {
             const Icon = icons[index % icons.length];
             return (
               <MotionWrapper
                 key={card.id}
-                className="rounded-[1.75rem] border border-border bg-white p-6 shadow-soft"
+                className="group rounded-3xl border border-border bg-white p-6 shadow-soft transition-all duration-300 hover:shadow-lg"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primaryBg/70 text-heading">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primaryBg/70 text-heading transition-transform duration-300 group-hover:scale-110">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="mt-4 text-xl font-semibold text-heading">
                   {card.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-paragraph">
+                <p className="mt-3 text-sm leading-relaxed text-paragraph">
                   {card.description}
                 </p>
               </MotionWrapper>

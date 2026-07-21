@@ -13,6 +13,7 @@ import {
 
 import { supabase } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 
 function toGalleryItem(row: {
@@ -20,7 +21,7 @@ function toGalleryItem(row: {
   image_url: string | null;
   title: string | null;
   description: string | null;
-}): StudioGalleryItem {
+}) {
   return {
     id: String(row.id),
     imageUrl: row.image_url ?? "",
@@ -70,6 +71,27 @@ export function Gallery() {
     };
   }, []);
 
+  if (galleryItems.length === 0) {
+    return (
+      <Section id="gallery" className="py-10 sm:py-16">
+        <Container>
+          <SectionTitle
+            eyebrow={t.gallery.eyebrow}
+            title={t.gallery.title}
+            description={t.gallery.description}
+          />
+          <div className="mt-8 text-center">
+            <div className="rounded-3xl border border-border bg-white p-8 shadow-soft">
+              <p className="text-base text-paragraph">
+                Gallery collection coming soon.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
   return (
     <Section id="gallery" className="py-10 sm:py-16">
       <Container>
@@ -78,23 +100,23 @@ export function Gallery() {
           title={t.gallery.title}
           description={t.gallery.description}
         />
-        <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {galleryItems.map((item) => (
             <MotionWrapper
               key={item.id}
-              className="group overflow-hidden rounded-[1.75rem] border border-border bg-white shadow-soft"
+              className="group overflow-hidden rounded-3xl border border-border bg-white shadow-soft transition-all duration-300 hover:shadow-lg"
             >
-              <div className="h-44 border-b border-border bg-gradient-to-br from-primaryBg/70 via-white to-white p-6">
+              <div className="aspect-[4/3] overflow-hidden rounded-t-3xl border-b border-border bg-gradient-to-br from-primaryBg/50 via-white to-white">
                 {item.imageUrl && item.imageUrl.trim().length > 0 ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={item.imageUrl}
                     alt={item.title}
-                    className="h-full w-full rounded-xl object-cover"
+                    className="h-full w-full rounded-t-3xl object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center rounded-xl bg-white/60">
-                    <span className="text-sm font-medium text-heading/50">
+                  <div className="flex h-full w-full items-center justify-center">
+                    <span className="text-sm font-medium text-paragraph/60">
                       No image
                     </span>
                   </div>
@@ -104,7 +126,7 @@ export function Gallery() {
                 <h3 className="text-lg font-semibold text-heading">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-paragraph">
+                <p className="mt-2 text-sm leading-relaxed text-paragraph">
                   {item.description}
                 </p>
               </div>
