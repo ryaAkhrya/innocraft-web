@@ -10,6 +10,7 @@ import {
   CmsTextInput,
   CmsTextarea,
 } from "@/components/studio/cms-form-input";
+import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
 import { CmsSectionShell } from "@/components/studio/cms-section-shell";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
 
@@ -211,11 +212,12 @@ export function StudioAboutEditor({
               placeholder="About description"
             />
 
-            <CmsTextInput
-              label="Image URL"
+            <CmsFileUpload
+              label="About Image"
               value={draft.imageUrl}
               onChange={(v) => setDraft((d) => ({ ...d, imageUrl: v }))}
-              placeholder="/gallery/hero-1.jpg"
+              bucket="about"
+              accept="image/*"
             />
           </div>
 
