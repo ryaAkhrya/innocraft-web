@@ -276,12 +276,18 @@ export function StudioAboutEditor({
           <div className="mt-6 space-y-6">
             <div className="rounded-3xl border border-white/10 bg-[#0B1020]/30">
               <div className="aspect-[16/9] w-full bg-[#0B1020]/40">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={draft.imageUrl}
-                  alt="Tentang"
-                  className="h-full w-full object-cover opacity-90"
-                />
+                {draft.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={draft.imageUrl}
+                    alt="Tentang"
+                    className="h-full w-full object-cover opacity-90"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center p-4">
+                    <p className="text-center text-xs text-white/50">No image selected</p>
+                  </div>
+                )}
               </div>
 
               <div className="p-6">

@@ -1,26 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
-const STUDIO_COOKIE_NAME = "inno_studio_session";
-
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Only protect studio routes (except login and logout)
-  if (pathname.startsWith("/studio")) {
-    // Allow login and logout pages without auth
-    if (pathname === "/studio/login" || pathname === "/studio/logout") {
-      return NextResponse.next();
+  if (
+    pathname.startsWith("/studio") &&
+    pathname !== "/studio/login" &&
+    pathname !== "/studio/logout"
+  ) {
+    let response = NextResponse.next({
+      request,
+    });
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              response.cookies.set(name, value, options);
+            });
+          },
+        },
+      }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.redirect(
+        new URL("/studio/login", request.url)
+      );
     }
 
-    // Check for session cookie
-    const sessionCookie = request.cookies.get(STUDIO_COOKIE_NAME);
-    const hasSession = sessionCookie?.value === "1";
-
-    if (!hasSession) {
-      // Redirect to login page
-      const loginUrl = new URL("/studio/login", request.url);
-      return NextResponse.redirect(loginUrl);
-    }
+    return response;
   }
 
   return NextResponse.next();

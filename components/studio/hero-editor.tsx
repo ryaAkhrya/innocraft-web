@@ -75,21 +75,29 @@ function PrimaryButton({
 }
 
 function VideoPreviewCard({ heroVideoUrl }: { heroVideoUrl: string }) {
+  const hasVideo = !!heroVideoUrl;
+
   return (
     <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
       <div className="aspect-[16/9] w-full bg-[#0B1020]/40">
-        <motion.video
-          key={heroVideoUrl}
-          src={heroVideoUrl}
-          className="h-full w-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          initial={{ opacity: 0.6 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.25 }}
-        />
+        {hasVideo ? (
+          <motion.video
+            key={heroVideoUrl}
+            src={heroVideoUrl}
+            className="h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            initial={{ opacity: 0.6 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center p-4">
+            <p className="text-center text-xs text-white/50">No video selected</p>
+          </div>
+        )}
       </div>
       <div className="px-4 py-3">
         <p className="text-xs text-white/60">Video Preview</p>
