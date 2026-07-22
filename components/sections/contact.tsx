@@ -81,9 +81,7 @@ export function Contact() {
     };
   }, []);
 
-  const waUrl = contactData.whatsapp
-    ? `https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, "")}?text=Halo%20INNOCRAFT,%20saya%20ingin%20menjadwalkan%20kunjungan`
-    : "";
+  const waUrl = "https://wa.me/6287878791238?text=Halo%20INNOCRAFT,%20saya%20ingin%20menjadwalkan%20kunjungan";
 
   return (
     <Section id="contact" className="py-10 sm:py-16">

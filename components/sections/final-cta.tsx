@@ -14,13 +14,13 @@ export function FinalCta() {
   return (
     <Section className="py-10 sm:py-16">
       <Container>
-        <MotionWrapper className="rounded-[2rem] border border-border bg-heading p-8 text-white shadow-soft sm:p-10">
+        <MotionWrapper className="rounded-[2rem] border border-border bg-white p-8 shadow-soft sm:p-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{t.cta.title}</h2>
-              <p className="mt-4 text-base leading-8 text-white/80">{t.cta.description}</p>
+              <h2 className="text-3xl font-semibold tracking-tight text-heading sm:text-4xl">{t.cta.title}</h2>
+              <p className="mt-4 text-base leading-8 text-paragraph">{t.cta.description}</p>
             </div>
-            <PrimaryButton asChild className="bg-white text-heading hover:bg-primaryBg">
+            <PrimaryButton asChild>
               <Link href="#contact">
                 {t.cta.action}
                 <ArrowRight className="ml-2 h-4 w-4" />
