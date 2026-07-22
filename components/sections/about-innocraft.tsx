@@ -92,7 +92,7 @@ export function AboutInnocraft() {
                 ) : (
                   <div className="flex aspect-[4/3] items-center justify-center">
                     <span className="text-sm font-medium text-paragraph/50">
-                      [Brand Visual]
+                      {aboutData.title || "INNOCRAFT"}
                     </span>
                   </div>
                 )}
