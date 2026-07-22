@@ -9,6 +9,11 @@ import { Container } from "@/components/ui/container";
 import { useLanguage } from "@/lib/i18n/language-provider";
 import { useSettings } from "@/lib/studio/settings-provider";
 import { cn } from "@/lib/utils";
+import {
+  defaultStudioContactData,
+  type StudioContactData,
+} from "@/lib/studio/mock-contact";
+import { supabase } from "@/lib/supabase/client";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,6 +28,56 @@ export function Navbar() {
 
   const { t } = useLanguage();
   const settings = useSettings();
+
+  // Hydration-safe: render default on first pass
+  const [contactData, setContactData] = useState<StudioContactData>(
+    defaultStudioContactData
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadContact() {
+      try {
+        const { data, error } = await supabase
+          .from("contact")
+          .select("id, company_name, address, whatsapp, email, maps_url, instagram, facebook, tiktok, opening_hours")
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error("Failed to load contact:", error.message, error.code, error.details);
+          return;
+        }
+
+        if (data) {
+          setContactData({
+            companyName: data.company_name ?? "",
+            address: data.address ?? "",
+            whatsapp: data.whatsapp ?? "",
+            email: data.email ?? "",
+            mapsUrl: data.maps_url ?? "",
+            instagram: data.instagram ?? "",
+            facebook: data.facebook ?? "",
+            tiktok: data.tiktok ?? "",
+            openingHours: data.opening_hours ?? "",
+          });
+        }
+      } catch (e) {
+        console.error("Error loading contact:", e);
+      }
+    }
+
+    loadContact();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const waUrl = contactData.whatsapp
+    ? `https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, "")}?text=Halo%20INNOCRAFT,%20saya%20ingin%20menjadwalkan%20kunjungan`
+    : "";
 
   const navItems = [
     { href: "#home", label: t.nav.home },
@@ -59,12 +114,21 @@ export function Navbar() {
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <PrimaryButton asChild>
-              <Link href="#contact">
-                {t.nav.cta}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </PrimaryButton>
+            {waUrl ? (
+              <PrimaryButton asChild>
+                <a href={waUrl} target="_blank" rel="noopener noreferrer">
+                  {t.nav.cta}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
+              </PrimaryButton>
+            ) : (
+              <PrimaryButton asChild>
+                <Link href="#contact">
+                  {t.nav.cta}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </PrimaryButton>
+            )}
           </div>
 
           <button
@@ -92,12 +156,21 @@ export function Navbar() {
               ))}
             </nav>
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <PrimaryButton asChild>
-                <Link href="#contact" onClick={() => setIsOpen(false)}>
-                  {t.nav.cta}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </PrimaryButton>
+              {waUrl ? (
+                <PrimaryButton asChild>
+                  <a href={waUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)}>
+                    {t.nav.cta}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </a>
+                </PrimaryButton>
+              ) : (
+                <PrimaryButton asChild>
+                  <Link href="#contact" onClick={() => setIsOpen(false)}>
+                    {t.nav.cta}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </PrimaryButton>
+              )}
             </div>
           </div>
         ) : null}
