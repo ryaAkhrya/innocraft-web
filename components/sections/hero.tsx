@@ -145,9 +145,16 @@ export function Hero() {
               transition={{ duration: 0.45, ease: "easeOut" }}
               className="order-2 lg:order-none"
             >
-              <div className="relative overflow-hidden rounded-[2rem] border border-border/80 bg-[radial-gradient(circle_at_top_left,_rgba(255,207,201,0.35),_transparent_55%)] p-3 shadow-[0_24px_70px_-28px_rgba(15,23,42,0.25)] sm:p-4">
-                <div className="absolute inset-x-6 top-6 h-24 rounded-full bg-primaryBg/30 blur-3xl" />
-                <div className="relative overflow-hidden rounded-[1.5rem] border border-white/80 bg-white/70">
+              <div className="relative overflow-hidden rounded-[2rem] border border-border/80 bg-[radial-gradient(circle_at_top_left,_rgba(255,207,201,0.35),_transparent_55%)] p-3 shadow-hero-card transition-shadow duration-500 sm:p-4 group">
+                {/* Ambient glow behind card */}
+                <div className="absolute -inset-4 rounded-[3rem] bg-gradient-to-br from-primaryBg/15 via-accentSoft/8 to-accentBlue/10 opacity-0 blur-2xl transition-all duration-700 group-hover:opacity-100 group-hover:scale-105" aria-hidden="true" />
+                {/* Animated glow ring */}
+                <div className="absolute -inset-1 rounded-[2.2rem] bg-gradient-to-br from-primaryBg/20 via-accentSoft/10 to-accentBlue/15 opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
+                {/* Inner glow pulse */}
+                <div className="absolute inset-x-6 top-6 h-24 rounded-full bg-primaryBg/30 blur-3xl animate-hero-glow" />
+                {/* Secondary ambient light */}
+                <div className="absolute inset-x-0 bottom-0 h-32 rounded-full bg-accentBlue/15 blur-3xl animate-hero-ambient" aria-hidden="true" />
+                <div className="relative overflow-hidden rounded-[1.5rem] border border-white/80 bg-white/70 shadow-inner">
                   {(() => {
                     const rawUrl = (heroData.heroVideoUrl ?? "").trim();
                     const videoUrl = rawUrl.length > 0 ? rawUrl : null;

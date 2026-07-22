@@ -33,3 +33,607 @@
     @apply bg-primaryBg/70 text-heading;
   }
 }
+
+@layer utilities {
+  /* =============================
+     Multi-layer breathing gradient
+     Warm cream + lavender + soft blue
+     ============================= */
+  .bg-breathing {
+    background:
+      linear-gradient(
+        135deg,
+        #fff8f6 0%,
+        #fdf2ef 20%,
+        #faf0f2 40%,
+        #f5ecf0 60%,
+        #eef0f4 80%,
+        #f5f0f0 100%
+      ),
+      linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(237, 228, 240, 0.15) 50%,
+        transparent 100%
+      );
+    background-blend-mode: normal, overlay;
+    background-size: 400% 400%, 100% 100%;
+    animation: breath-bg 22s ease-in-out infinite;
+  }
+
+  /* Subtle grid overlay */
+  .bg-grid-overlay {
+    background-image:
+      linear-gradient(rgba(255, 207, 201, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 207, 201, 0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  /* Depth fog layer */
+  .bg-depth-fog {
+    background:
+      radial-gradient(
+        ellipse 80% 50% at 50% 0%,
+        rgba(237, 228, 240, 0.08) 0%,
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 30% 100%,
+        rgba(255, 207, 201, 0.06) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 50% 30% at 70% 100%,
+        rgba(226, 234, 248, 0.08) 0%,
+        transparent 50%
+      );
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .bg-breathing {
+      animation: none;
+      background: #fff8f6;
+    }
+
+    .decoration-block,
+    .decoration-block-large,
+    .decoration-cube,
+    .decoration-sparkle,
+    .decoration-terrain,
+    .decoration-geometric,
+    .decoration-depth {
+      animation: none !important;
+      display: none;
+    }
+  }
+}
+
+/* =============================================
+   LAYER 1: DECORATIVE BLURRED BLOBS
+   ============================================= */
+.decoration-blob {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(140px);
+}
+
+.decoration-blob--peach {
+  width: 500px;
+  height: 500px;
+  background: #ffcfc9;
+  top: -180px;
+  left: -120px;
+  opacity: 0.12;
+  animation: hero-ambient 12s ease-in-out infinite;
+}
+
+.decoration-blob--lavender {
+  width: 400px;
+  height: 400px;
+  background: #ede4f0;
+  bottom: -120px;
+  right: -80px;
+  opacity: 0.1;
+  animation: hero-ambient 14s ease-in-out infinite reverse;
+}
+
+.decoration-blob--blue {
+  width: 350px;
+  height: 350px;
+  background: #e2eaf8;
+  top: 40%;
+  left: 60%;
+  opacity: 0.08;
+  animation: hero-ambient 16s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+/* =============================================
+   LAYER 2: FLOATING 3D CUBES (translucent)
+   Isometric-inspired cube decorations
+   ============================================= */
+.decoration-cube {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+
+/* Cube 1 - large, peach, near hero */
+.decoration-cube--1 {
+  width: 64px;
+  height: 64px;
+  top: 12%;
+  left: 4%;
+  animation: float-cube 14s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+}
+
+.decoration-cube--1 .cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 207, 201, 0.2);
+  background: rgba(255, 207, 201, 0.08);
+  box-shadow: 0 0 40px -8px rgba(255, 207, 201, 0.15);
+}
+
+.decoration-cube--1 .cube-face:nth-child(2) {
+  transform: translateZ(-6px);
+  background: rgba(255, 207, 201, 0.05);
+}
+
+/* Cube 2 - medium, lavender, right side */
+.decoration-cube--2 {
+  width: 48px;
+  height: 48px;
+  top: 25%;
+  left: 90%;
+  animation: float-cube-delayed 16s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+.decoration-cube--2 .cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  border: 1px solid rgba(237, 228, 240, 0.2);
+  background: rgba(237, 228, 240, 0.07);
+  box-shadow: 0 0 30px -6px rgba(237, 228, 240, 0.12);
+}
+
+.decoration-cube--2 .cube-face:nth-child(2) {
+  transform: translateZ(-4px);
+  background: rgba(237, 228, 240, 0.04);
+}
+
+/* Cube 3 - small, blue tint, mid-right */
+.decoration-cube--3 {
+  width: 36px;
+  height: 36px;
+  top: 60%;
+  left: 88%;
+  animation: float-cube 18s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
+.decoration-cube--3 .cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  border: 1px solid rgba(226, 234, 248, 0.2);
+  background: rgba(226, 234, 248, 0.06);
+  box-shadow: 0 0 24px -4px rgba(226, 234, 248, 0.1);
+}
+
+.decoration-cube--3 .cube-face:nth-child(2) {
+  transform: translateZ(-3px);
+  background: rgba(226, 234, 248, 0.03);
+}
+
+/* Cube 4 - medium, peach, left mid */
+.decoration-cube--4 {
+  width: 40px;
+  height: 40px;
+  top: 55%;
+  left: 2%;
+  animation: float-cube-delayed 15s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.decoration-cube--4 .cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 207, 201, 0.18);
+  background: rgba(255, 207, 201, 0.06);
+  box-shadow: 0 0 28px -4px rgba(255, 207, 201, 0.12);
+}
+
+.decoration-cube--4 .cube-face:nth-child(2) {
+  transform: translateZ(-4px);
+  background: rgba(255, 207, 201, 0.03);
+}
+
+/* =============================================
+   LAYER 3: GEOMETRIC SHAPES (pixel-inspired)
+   Abstract geometric forms for digital feel
+   ============================================= */
+.decoration-geometric {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+}
+
+/* Diamond/rhombus shape */
+.decoration-geometric--diamond {
+  width: 24px;
+  height: 24px;
+  top: 35%;
+  left: 12%;
+  border: 1px solid rgba(237, 228, 240, 0.15);
+  background: rgba(237, 228, 240, 0.04);
+  transform: rotate(45deg);
+  border-radius: 3px;
+  animation: float-block 12s ease-in-out infinite, pixel-glow 8s ease-in-out infinite;
+}
+
+/* Tiny cross/pixel-plus */
+.decoration-geometric--plus {
+  width: 16px;
+  height: 16px;
+  top: 70%;
+  left: 75%;
+  animation: float-block-delayed 11s ease-in-out infinite, pixel-glow-delayed 7s ease-in-out infinite;
+}
+
+.decoration-geometric--plus::before,
+.decoration-geometric--plus::after {
+  content: "";
+  position: absolute;
+  background: rgba(255, 207, 201, 0.1);
+  border-radius: 1px;
+}
+
+.decoration-geometric--plus::before {
+  width: 100%;
+  height: 3px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.decoration-geometric--plus::after {
+  width: 3px;
+  height: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+/* Small L-shape (like a corner bracket) */
+.decoration-geometric--lshape {
+  width: 20px;
+  height: 20px;
+  top: 18%;
+  left: 80%;
+  animation: terrain-drift 20s ease-in-out infinite, depth-pulse 9s ease-in-out infinite;
+}
+
+.decoration-geometric--lshape::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-left: 2px solid rgba(226, 234, 248, 0.12);
+  border-bottom: 2px solid rgba(226, 234, 248, 0.12);
+  border-radius: 0 0 0 3px;
+}
+
+/* Small circle ring */
+.decoration-geometric--ring {
+  width: 18px;
+  height: 18px;
+  top: 80%;
+  left: 20%;
+  border: 1.5px solid rgba(237, 228, 240, 0.1);
+  border-radius: 50%;
+  animation: float-block 13s ease-in-out infinite, pixel-glow 8s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+/* =============================================
+   LAYER 4: SMALL FLOATING BLOCKS (14-24px)
+   ============================================= */
+.decoration-block {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 6px;
+  opacity: 0;
+}
+
+.decoration-block--1 {
+  width: 24px;
+  height: 24px;
+  background: #ffcfc9;
+  top: 15%;
+  left: 8%;
+  animation: float-block 8s ease-in-out infinite, pixel-glow 6s ease-in-out infinite;
+}
+
+.decoration-block--2 {
+  width: 16px;
+  height: 16px;
+  background: #ede4f0;
+  top: 30%;
+  left: 92%;
+  animation: float-block-delayed 10s ease-in-out infinite, pixel-glow-delayed 8s ease-in-out infinite;
+}
+
+.decoration-block--3 {
+  width: 20px;
+  height: 20px;
+  background: #ffcfc9;
+  top: 60%;
+  left: 5%;
+  animation: float-block-delayed 10s ease-in-out infinite, pixel-glow 6s ease-in-out infinite;
+}
+
+.decoration-block--4 {
+  width: 14px;
+  height: 14px;
+  background: #ede4f0;
+  top: 75%;
+  left: 88%;
+  animation: float-block 8s ease-in-out infinite, pixel-glow-delayed 8s ease-in-out infinite;
+}
+
+/* =============================================
+   LAYER 5: LARGE FLOATING BLOCKS (40-72px)
+   ============================================= */
+.decoration-block-large {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 10px;
+  opacity: 0;
+}
+
+.decoration-block-large--1 {
+  width: 60px;
+  height: 60px;
+  background: #ffcfc9;
+  top: 8%;
+  left: 3%;
+  animation: float-block-large 12s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+}
+
+.decoration-block-large--2 {
+  width: 48px;
+  height: 48px;
+  background: #ede4f0;
+  top: 5%;
+  left: 85%;
+  animation: float-block 14s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.decoration-block-large--3 {
+  width: 72px;
+  height: 72px;
+  background: #ffcfc9;
+  top: 55%;
+  left: -2%;
+  animation: float-block-delayed 16s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+.decoration-block-large--4 {
+  width: 40px;
+  height: 40px;
+  background: #ede4f0;
+  top: 40%;
+  left: 95%;
+  animation: float-block-large 13s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+  animation-delay: -7s;
+}
+
+/* =============================================
+   LAYER 6: PIXEL TERRAIN ATMOSPHERE
+   ============================================= */
+.decoration-terrain {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+}
+
+.decoration-terrain--row1 {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  animation: terrain-drift 15s ease-in-out infinite;
+}
+
+.decoration-terrain--row1 span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  background: #ffcfc9;
+  border-radius: 2px;
+  opacity: 0.08;
+}
+
+.decoration-terrain--row1 span:nth-child(even) {
+  background: #ede4f0;
+  opacity: 0.06;
+  transform: translateY(4px);
+}
+
+.decoration-terrain--row1 span:nth-child(3n) {
+  transform: translateY(8px);
+  opacity: 0.04;
+}
+
+.decoration-terrain--row1 span:nth-child(5n+2) {
+  transform: translateY(12px);
+  opacity: 0.05;
+}
+
+.decoration-terrain--row2 {
+  bottom: 40px;
+  left: 10%;
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  width: 120px;
+  animation: terrain-drift-delayed 18s ease-in-out infinite;
+}
+
+.decoration-terrain--row2 span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: #ede4f0;
+  border-radius: 1px;
+  opacity: 0.06;
+}
+
+.decoration-terrain--row2 span:nth-child(2n) {
+  background: #ffcfc9;
+  opacity: 0.04;
+}
+
+.decoration-terrain--row3 {
+  bottom: 60px;
+  right: 8%;
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  width: 100px;
+  animation: terrain-drift 20s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
+.decoration-terrain--row3 span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: #ffcfc9;
+  border-radius: 1px;
+  opacity: 0.05;
+}
+
+.decoration-terrain--row3 span:nth-child(3n) {
+  background: #ede4f0;
+  opacity: 0.03;
+  transform: translateY(3px);
+}
+
+/* =============================================
+   LAYER 7: SPARKLES
+   ============================================= */
+.decoration-sparkle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.decoration-sparkle--1 {
+  background: #ffcfc9;
+  top: 20%;
+  left: 20%;
+  animation: sparkle 4s ease-in-out infinite;
+}
+
+.decoration-sparkle--2 {
+  background: #ede4f0;
+  top: 45%;
+  left: 80%;
+  animation: sparkle 5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.decoration-sparkle--3 {
+  background: #ffcfc9;
+  top: 70%;
+  left: 15%;
+  animation: sparkle 4.5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.decoration-sparkle--4 {
+  background: #ede4f0;
+  top: 85%;
+  left: 70%;
+  animation: sparkle 5.5s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.decoration-sparkle--5 {
+  background: #ffcfc9;
+  top: 10%;
+  left: 75%;
+  animation: sparkle 3.8s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+/* =============================================
+   LAYER 8: DEPTH / ATMOSPHERIC FOG LAYERS
+   ============================================= */
+.decoration-depth {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0;
+}
+
+.decoration-depth--top {
+  width: 600px;
+  height: 200px;
+  background: linear-gradient(90deg, transparent, rgba(237, 228, 240, 0.06), transparent);
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: depth-pulse 8s ease-in-out infinite;
+}
+
+.decoration-depth--mid {
+  width: 400px;
+  height: 300px;
+  background: linear-gradient(180deg, transparent, rgba(255, 207, 201, 0.04), transparent);
+  top: 40%;
+  left: 10%;
+  animation: depth-pulse 10s ease-in-out infinite reverse;
+}
+
+.decoration-depth--bottom {
+  width: 500px;
+  height: 200px;
+  background: linear-gradient(90deg, transparent, rgba(226, 234, 248, 0.05), transparent);
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: depth-pulse 9s ease-in-out infinite;
+  animation-delay: -3s;
+}
