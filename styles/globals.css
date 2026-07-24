@@ -440,7 +440,7 @@
     animation: breath-bg 45s ease-in-out infinite;
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion: reduce), (max-width: 639px) {
     .bg-breathing { animation: none; }
     .decoration-voxel, .decoration-block, .decoration-block-large,
     .decoration-cube, .decoration-sparkle, .decoration-geometric,
@@ -448,6 +448,9 @@
       animation: none !important;
       display: none;
     }
+    .hero-card:hover { transform: none; }
+    .gallery-card:hover { transform: none; }
+    .gallery-card:active { transform: none; }
   }
 }
 

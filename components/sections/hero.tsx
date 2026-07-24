@@ -155,63 +155,48 @@ export function Hero() {
                 {/* Hover-expanded ambient glow */}
                 <div className="absolute -inset-4 rounded-[3rem] bg-gradient-to-br from-primaryBg/12 via-accentSoft/6 to-accentBlue/8 opacity-0 blur-2xl transition-all duration-700 group-hover:opacity-100 group-hover:scale-105" aria-hidden="true" />
                 <div className="hero-card-inner">
-                  {/* Mobile: static poster only. Desktop: video */}
-                  <div className="md:hidden">
-                    <div
-                      className="h-full min-h-[320px] w-full rounded-[1rem] border border-white/30 bg-white/30 flex items-center justify-center"
-                      aria-label="Video preview"
-                    >
-                      <img
-                        src="/logo.png"
-                        alt="INNOCRAFT preview"
-                        className="h-32 w-32 object-contain opacity-80"
-                      />
-                    </div>
-                  </div>
-                  <div className="hidden md:block">
-                    {(() => {
-                      const rawUrl = (heroData.heroVideoUrl ?? "").trim();
-                      const videoUrl = rawUrl.length > 0 ? rawUrl : null;
+                  {(() => {
+                    const rawUrl = (heroData.heroVideoUrl ?? "").trim();
+                    const videoUrl = rawUrl.length > 0 ? rawUrl : null;
 
-                      if (!videoUrl) {
-                        return (
-                          <div
-                            className="h-full min-h-[320px] w-full rounded-[1.5rem] border border-white/30 bg-white/30 sm:min-h-[380px] lg:min-h-[430px] flex items-center justify-center"
-                            aria-label="No video selected"
-                          >
-                            <span className="px-4 text-sm font-medium text-heading/70">
-                              No video selected
-                            </span>
-                          </div>
-                        );
-                      }
-
-                      const videoType = videoUrl?.includes('.webm') 
-                        ? 'video/webm' 
-                        : videoUrl?.includes('.mov') 
-                        ? 'video/quicktime' 
-                        : 'video/mp4';
-                      
+                    if (!videoUrl) {
                       return (
-                        <div className="video-frame" style={{ minHeight: '320px' }}>
-                          <video
-                            key={videoUrl}
-                            className="h-full min-h-[320px] w-full object-cover sm:min-h-[380px] lg:min-h-[430px]"
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            controls
-                            preload="metadata"
-                            poster="/logo.png"
-                            aria-label="Intro video preview"
-                          >
-                            <source src={videoUrl} type={videoType} />
-                          </video>
+                        <div
+                          className="h-full min-h-[320px] w-full rounded-[1.5rem] border border-white/30 bg-white/30 sm:min-h-[380px] lg:min-h-[430px] flex items-center justify-center"
+                          aria-label="No video selected"
+                        >
+                          <span className="px-4 text-sm font-medium text-heading/70">
+                            No video selected
+                          </span>
                         </div>
                       );
-                    })()}
-                  </div>
+                    }
+
+                    const videoType = videoUrl?.includes('.webm') 
+                      ? 'video/webm' 
+                      : videoUrl?.includes('.mov') 
+                      ? 'video/quicktime' 
+                      : 'video/mp4';
+                    
+                    return (
+                      <div className="video-frame" style={{ minHeight: '320px' }}>
+                        <video
+                          key={videoUrl}
+                          className="h-full min-h-[320px] w-full object-cover sm:min-h-[380px] lg:min-h-[430px]"
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          controls
+                          preload="metadata"
+                          poster="/logo.png"
+                          aria-label="Intro video preview"
+                        >
+                          <source src={videoUrl} type={videoType} />
+                        </video>
+                      </div>
+                    );
+                  })()}
                 </div>
                 <div className="absolute left-6 top-6 rounded-full border border-white/70 bg-white/75 px-4 py-2 text-sm font-medium text-heading shadow-sm backdrop-blur">
                   {t.mentor.eyebrow}
