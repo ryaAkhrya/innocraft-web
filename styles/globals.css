@@ -108,6 +108,10 @@
     }
   }
 
+  @media (max-width: 639px) {
+    .hero-card-glow { display: none; }
+  }
+
   .hero-card-glow {
     position: absolute;
     border-radius: 50%;
@@ -148,16 +152,20 @@
   }
 
   /* ---- CINEMATIC SPOTLIGHT ---- */
+  @media (max-width: 639px) {
+    .hero-spotlight { display: none; }
+  }
+
   .hero-spotlight {
     position: absolute;
     border-radius: 50%;
-    filter: blur(40px);
+    filter: blur(100px);
     pointer-events: none;
-    opacity: 0.3;
+    opacity: 0.5;
   }
 
   @media (min-width: 640px) {
-    .hero-spotlight { filter: blur(100px); opacity: 0.5; }
+    .hero-spotlight { opacity: 0.5; }
   }
 
   .hero-spotlight--primary {
@@ -448,6 +456,10 @@
    ============================================================ */
 
 /* ---- AMBIENT BLOBS ---- */
+@media (max-width: 639px) {
+  .decoration-blob { display: none; }
+}
+
 .decoration-blob {
   position: fixed;
   border-radius: 50%;
@@ -751,6 +763,10 @@
 .decoration-sparkle--5 { background: #ffcfc9; top: 8%; left: 72%; opacity: 0.10; animation: sparkle 9s ease-in-out infinite; animation-delay: 4.5s; }
 
 /* ---- DEPTH FOG ---- */
+@media (max-width: 639px) {
+  .decoration-depth { display: none; }
+}
+
 .decoration-depth {
   position: fixed;
   pointer-events: none;
