@@ -111,9 +111,10 @@ export function Hero() {
         <PageTransition>
           <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
             <MotionWrapper className="max-w-2xl">
-              {/* Soft spotlight behind headline */}
+              {/* Cinematic spotlight behind headline */}
               <div className="relative">
-                <div className="absolute -top-20 -left-20 h-48 w-48 rounded-full bg-primaryBg/15 blur-3xl" aria-hidden="true" />
+                <div className="hero-spotlight hero-spotlight--primary" aria-hidden="true" />
+                <div className="hero-spotlight hero-spotlight--secondary" aria-hidden="true" />
                 <p className="relative text-sm font-semibold uppercase tracking-[0.35em] text-heading/70">
                   {heroData.badge || t.hero.eyebrow}
                 </p>
@@ -179,19 +180,21 @@ export function Hero() {
                       : 'video/mp4';
                     
                     return (
-                      <video
-                        key={videoUrl}
-                        className="h-full min-h-[320px] w-full rounded-[1.5rem] object-cover sm:min-h-[380px] lg:min-h-[430px]"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        controls
-                        preload="metadata"
-                        aria-label="Intro video preview"
-                      >
-                        <source src={videoUrl} type={videoType} />
-                      </video>
+                      <div className="video-frame" style={{ minHeight: '320px' }}>
+                        <video
+                          key={videoUrl}
+                          className="h-full min-h-[320px] w-full object-cover sm:min-h-[380px] lg:min-h-[430px]"
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          controls
+                          preload="metadata"
+                          aria-label="Intro video preview"
+                        >
+                          <source src={videoUrl} type={videoType} />
+                        </video>
+                      </div>
                     );
                   })()}
 
