@@ -101,36 +101,33 @@ export function Gallery() {
         />
         <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {galleryItems.map((item) => (
-            <MotionWrapper
-              key={item.id}
-              className="group overflow-hidden rounded-3xl border border-border bg-white shadow-soft transition-all duration-300 hover:shadow-lg"
-            >
-              <div className="aspect-[4/3] overflow-hidden rounded-t-3xl border-b border-border bg-gradient-to-br from-primaryBg/50 via-white to-white">
-                {item.imageUrl && item.imageUrl.trim().length > 0 ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-<img
-  src={item.imageUrl}
-  alt={item.title}
-  className="h-full w-full rounded-t-3xl object-cover transition-transform duration-500 group-hover:scale-105"
-  loading="lazy"
-/>
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center">
-                    <span className="text-sm font-medium text-paragraph/60">
-                      No image
-                    </span>
+              <MotionWrapper
+                key={item.id}
+                className="gallery-card"
+              >
+                <div className="gallery-card-inner">
+                  <div className="gallery-image-wrap">
+                    {item.imageUrl && item.imageUrl.trim().length > 0 ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <span className="text-sm font-medium text-paragraph/60">
+                          No image
+                        </span>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-heading">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-paragraph">
-                  {item.description}
-                </p>
-              </div>
-            </MotionWrapper>
+                  <div className="gallery-content">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
+                </div>
+              </MotionWrapper>
           ))}
         </div>
       </Container>

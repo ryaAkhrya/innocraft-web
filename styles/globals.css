@@ -4,6 +4,9 @@
 
 :root {
   color-scheme: light;
+  --glow-peach: rgba(255, 207, 201, 0.6);
+  --glow-lavender: rgba(237, 228, 240, 0.5);
+  --glow-blue: rgba(226, 234, 248, 0.4);
 }
 
 @layer base {
@@ -16,16 +19,11 @@
   }
 
   body {
-    @apply min-h-screen bg-websiteBg text-paragraph antialiased;
+    @apply min-h-screen text-paragraph antialiased;
     font-family: var(--font-inter), system-ui, sans-serif;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-display text-heading;
   }
 
@@ -34,606 +32,721 @@
   }
 }
 
+/* ============================================================
+   COMPONENT LAYER
+   Premium "kids technology academy" aesthetic
+   ============================================================ */
+@layer components {
+  /* ---- HERO CARD — floating showcase ---- */
+  .hero-card {
+    position: relative;
+    border-radius: 2rem;
+    background: radial-gradient(
+      circle at top left,
+      rgba(255, 207, 201, 0.30) 0%,
+      transparent 55%
+    );
+    padding: 0.75rem;
+    box-shadow:
+      0 30px 80px -20px rgba(15, 23, 42, 0.25),
+      0 0 0 1px rgba(255, 207, 201, 0.12);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hero-card::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: calc(2rem + 1px);
+    padding: 1.5px;
+    background: linear-gradient(
+      145deg,
+      rgba(255, 207, 201, 0.25) 0%,
+      transparent 35%,
+      transparent 65%,
+      rgba(226, 234, 248, 0.20) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .hero-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow:
+      0 40px 100px -24px rgba(15, 23, 42, 0.30),
+      0 0 0 1px rgba(255, 207, 201, 0.20);
+  }
+
+  .hero-card-inner {
+    position: relative;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.80);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  /* Glow effects behind hero card */
+  .hero-card-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.6;
+    transition: opacity 0.8s ease;
+  }
+
+  .hero-card-glow--primary {
+    width: 200px;
+    height: 200px;
+    background: var(--glow-peach);
+    top: -60px;
+    left: -40px;
+    animation: hero-glow-pulse 6s ease-in-out infinite;
+  }
+
+  .hero-card-glow--secondary {
+    width: 160px;
+    height: 160px;
+    background: var(--glow-blue);
+    bottom: -40px;
+    right: -30px;
+    animation: hero-glow-pulse 8s ease-in-out infinite reverse;
+  }
+
+  /* ---- GALLERY CARD — physical digital artifact ---- */
+  .gallery-card {
+    position: relative;
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(243, 231, 229, 0.55);
+    box-shadow:
+      0 2px 4px -2px rgba(15, 23, 42, 0.02),
+      0 8px 16px -6px rgba(15, 23, 42, 0.04),
+      0 0 0 1px rgba(255, 207, 201, 0.05);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+  }
+
+  .gallery-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 1.5rem;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 207, 201, 0.10) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(226, 234, 248, 0.08) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .gallery-card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 4px 8px -4px rgba(15, 23, 42, 0.04),
+      0 16px 32px -10px rgba(15, 23, 42, 0.08),
+      0 32px 64px -16px rgba(15, 23, 42, 0.10),
+      0 0 0 1px rgba(255, 207, 201, 0.14);
+  }
+
+  .gallery-card-inner {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    margin: 3px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .gallery-image-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #fff8f6 0%, #fdf2ef 50%, #fff8f6 100%);
+  }
+
+  .gallery-image-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      transparent 55%,
+      rgba(255, 255, 255, 0.5) 100%
+    );
+    pointer-events: none;
+  }
+
+  .gallery-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .gallery-card:hover .gallery-image-wrap img {
+    transform: scale(1.06);
+  }
+
+  .gallery-content {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+
+  .gallery-content h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #0F172A;
+    line-height: 1.4;
+  }
+
+  .gallery-content p {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #6B7280;
+  }
+
+  /* ---- PREMIUM SECTION CONTAINER ---- */
+  .section-premium {
+    border-radius: 2.5rem;
+    border: 1px solid rgba(243, 231, 229, 0.40);
+    background: rgba(255, 255, 255, 0.50);
+    box-shadow:
+      0 4px 8px -4px rgba(15, 23, 42, 0.02),
+      0 24px 48px -16px rgba(15, 23, 42, 0.04),
+      0 0 0 1px rgba(255, 207, 201, 0.04);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 2rem;
+    position: relative;
+  }
+
+  .section-premium::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 2.5rem;
+    padding: 1px;
+    background: linear-gradient(
+      160deg,
+      rgba(255, 207, 201, 0.08) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(226, 234, 248, 0.06) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @media (min-width: 640px) {
+    .section-premium { padding: 2.75rem; }
+  }
+
+  /* ---- IMAGE FRAME ---- */
+  .image-frame-premium {
+    border-radius: 1.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(243, 231, 229, 0.45);
+    box-shadow:
+      0 4px 8px -4px rgba(15, 23, 42, 0.04),
+      0 24px 48px -16px rgba(15, 23, 42, 0.08),
+      0 0 0 1px rgba(255, 207, 201, 0.05);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .image-frame-premium:hover {
+    box-shadow:
+      0 8px 16px -6px rgba(15, 23, 42, 0.06),
+      0 32px 64px -20px rgba(15, 23, 42, 0.12),
+      0 0 0 1px rgba(255, 207, 201, 0.10);
+  }
+}
+
 @layer utilities {
-  /* =============================
-     Multi-layer breathing gradient
-     Warm cream + lavender + soft blue
-     ============================= */
+  /* ============================================================
+     CINEMATIC BACKGROUND SYSTEM
+     "Digital classroom floating in a creative world"
+     ============================================================ */
   .bg-breathing {
     background:
+      /* Layer 1: Warm cream gradient */
       linear-gradient(
-        135deg,
+        155deg,
         #fff8f6 0%,
-        #fdf2ef 20%,
-        #faf0f2 40%,
-        #f5ecf0 60%,
-        #eef0f4 80%,
+        #fdf2ef 18%,
+        #faf0f2 38%,
+        #f5ecf0 58%,
+        #eef0f4 78%,
         #f5f0f0 100%
       ),
-      linear-gradient(
-        180deg,
-        transparent 0%,
-        rgba(237, 228, 240, 0.15) 50%,
-        transparent 100%
-      );
-    background-blend-mode: normal, overlay;
-    background-size: 400% 400%, 100% 100%;
-    animation: breath-bg 22s ease-in-out infinite;
-  }
-
-  /* Subtle grid overlay */
-  .bg-grid-overlay {
-    background-image:
-      linear-gradient(rgba(255, 207, 201, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 207, 201, 0.04) 1px, transparent 1px);
-    background-size: 80px 80px;
-  }
-
-  /* Depth fog layer */
-  .bg-depth-fog {
-    background:
+      /* Layer 2: Subtle pixel grid */
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 79px,
+        rgba(255, 207, 201, 0.035) 79px,
+        rgba(255, 207, 201, 0.035) 80px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 79px,
+        rgba(255, 207, 201, 0.035) 79px,
+        rgba(255, 207, 201, 0.035) 80px
+      ),
+      /* Layer 3: Peach top-left glow — warm */
       radial-gradient(
-        ellipse 80% 50% at 50% 0%,
-        rgba(237, 228, 240, 0.08) 0%,
+        ellipse 65% 55% at 12% 8%,
+        rgba(255, 207, 201, 0.14) 0%,
         transparent 70%
       ),
+      /* Layer 4: Cool blue bottom-right — tech */
       radial-gradient(
-        ellipse 60% 40% at 30% 100%,
-        rgba(255, 207, 201, 0.06) 0%,
-        transparent 60%
+        ellipse 55% 45% at 88% 88%,
+        rgba(226, 234, 248, 0.10) 0%,
+        transparent 65%
       ),
+      /* Layer 5: Lavender center ambient */
       radial-gradient(
-        ellipse 50% 30% at 70% 100%,
-        rgba(226, 234, 248, 0.08) 0%,
-        transparent 50%
+        ellipse 45% 45% at 50% 50%,
+        rgba(237, 228, 240, 0.05) 0%,
+        transparent 65%
+      ),
+      /* Layer 6: Deep navy tech accent (very subtle) */
+      radial-gradient(
+        ellipse 30% 25% at 80% 20%,
+        rgba(15, 23, 42, 0.02) 0%,
+        transparent 60%
       );
+    background-blend-mode: normal, normal, normal, normal, normal, normal, normal;
+    background-size: 100% 100%, 80px 80px, 80px 80px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    animation: breath-bg 40s ease-in-out infinite;
   }
 
-  /* Respect reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
-    .bg-breathing {
-      animation: none;
-      background: #fff8f6;
-    }
-
+    .bg-breathing { animation: none; }
+    .decoration-voxel,
     .decoration-block,
     .decoration-block-large,
     .decoration-cube,
     .decoration-sparkle,
-    .decoration-terrain,
     .decoration-geometric,
-    .decoration-depth {
+    .decoration-depth,
+    .hero-card-glow--primary,
+    .hero-card-glow--secondary {
       animation: none !important;
       display: none;
     }
   }
 }
 
-/* =============================================
-   LAYER 1: DECORATIVE BLURRED BLOBS
-   ============================================= */
+/* ============================================================
+   DECORATION SYSTEM — Atmospheric particles
+   ============================================================ */
+
+/* ---- AMBIENT BLOBS (cinematic scale) ---- */
 .decoration-blob {
   position: fixed;
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
-  filter: blur(140px);
+  filter: blur(180px);
 }
 
 .decoration-blob--peach {
-  width: 500px;
-  height: 500px;
+  width: 800px; height: 800px;
   background: #ffcfc9;
-  top: -180px;
-  left: -120px;
+  top: -300px; left: -200px;
   opacity: 0.12;
-  animation: hero-ambient 12s ease-in-out infinite;
+  animation: blob-drift 22s ease-in-out infinite;
 }
 
 .decoration-blob--lavender {
-  width: 400px;
-  height: 400px;
+  width: 650px; height: 650px;
   background: #ede4f0;
-  bottom: -120px;
-  right: -80px;
-  opacity: 0.1;
-  animation: hero-ambient 14s ease-in-out infinite reverse;
+  bottom: -250px; right: -180px;
+  opacity: 0.08;
+  animation: blob-drift 24s ease-in-out infinite reverse;
 }
 
 .decoration-blob--blue {
-  width: 350px;
-  height: 350px;
+  width: 500px; height: 500px;
   background: #e2eaf8;
-  top: 40%;
-  left: 60%;
-  opacity: 0.08;
-  animation: hero-ambient 16s ease-in-out infinite;
-  animation-delay: -5s;
+  top: 25%; left: 55%;
+  opacity: 0.06;
+  animation: blob-drift 26s ease-in-out infinite;
+  animation-delay: -10s;
 }
 
-/* =============================================
-   LAYER 2: FLOATING 3D CUBES (translucent)
-   Isometric-inspired cube decorations
-   ============================================= */
+/* ---- FLOATING 3D CUBES ---- */
 .decoration-cube {
   position: fixed;
   pointer-events: none;
   z-index: 0;
-  opacity: 0;
   transform-style: preserve-3d;
   perspective: 800px;
 }
 
-/* Cube 1 - large, peach, near hero */
 .decoration-cube--1 {
-  width: 64px;
-  height: 64px;
-  top: 12%;
-  left: 4%;
-  animation: float-cube 14s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
+  width: 80px; height: 80px;
+  top: 8%; left: 4%;
+  opacity: 0.12;
+  animation: float-cube 22s ease-in-out infinite;
 }
-
 .decoration-cube--1 .cube-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: absolute; width: 100%; height: 100%;
   border-radius: 8px;
-  border: 1px solid rgba(255, 207, 201, 0.2);
-  background: rgba(255, 207, 201, 0.08);
-  box-shadow: 0 0 40px -8px rgba(255, 207, 201, 0.15);
-}
-
-.decoration-cube--1 .cube-face:nth-child(2) {
-  transform: translateZ(-6px);
-  background: rgba(255, 207, 201, 0.05);
-}
-
-/* Cube 2 - medium, lavender, right side */
-.decoration-cube--2 {
-  width: 48px;
-  height: 48px;
-  top: 25%;
-  left: 90%;
-  animation: float-cube-delayed 16s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
-  animation-delay: -4s;
-}
-
-.decoration-cube--2 .cube-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 6px;
-  border: 1px solid rgba(237, 228, 240, 0.2);
-  background: rgba(237, 228, 240, 0.07);
-  box-shadow: 0 0 30px -6px rgba(237, 228, 240, 0.12);
-}
-
-.decoration-cube--2 .cube-face:nth-child(2) {
-  transform: translateZ(-4px);
-  background: rgba(237, 228, 240, 0.04);
-}
-
-/* Cube 3 - small, blue tint, mid-right */
-.decoration-cube--3 {
-  width: 36px;
-  height: 36px;
-  top: 60%;
-  left: 88%;
-  animation: float-cube 18s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
-  animation-delay: -8s;
-}
-
-.decoration-cube--3 .cube-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  border: 1px solid rgba(226, 234, 248, 0.2);
-  background: rgba(226, 234, 248, 0.06);
-  box-shadow: 0 0 24px -4px rgba(226, 234, 248, 0.1);
-}
-
-.decoration-cube--3 .cube-face:nth-child(2) {
-  transform: translateZ(-3px);
-  background: rgba(226, 234, 248, 0.03);
-}
-
-/* Cube 4 - medium, peach, left mid */
-.decoration-cube--4 {
-  width: 40px;
-  height: 40px;
-  top: 55%;
-  left: 2%;
-  animation: float-cube-delayed 15s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
-  animation-delay: -2s;
-}
-
-.decoration-cube--4 .cube-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
   border: 1px solid rgba(255, 207, 201, 0.18);
-  background: rgba(255, 207, 201, 0.06);
-  box-shadow: 0 0 28px -4px rgba(255, 207, 201, 0.12);
+  background: rgba(255, 207, 201, 0.05);
+  box-shadow: 0 0 60px -12px rgba(255, 207, 201, 0.12);
 }
-
-.decoration-cube--4 .cube-face:nth-child(2) {
-  transform: translateZ(-4px);
+.decoration-cube--1 .cube-face:nth-child(2) {
+  transform: translateZ(-8px);
   background: rgba(255, 207, 201, 0.03);
 }
 
-/* =============================================
-   LAYER 3: GEOMETRIC SHAPES (pixel-inspired)
-   Abstract geometric forms for digital feel
-   ============================================= */
+.decoration-cube--2 {
+  width: 60px; height: 60px;
+  top: 20%; left: 90%;
+  opacity: 0.11;
+  animation: float-cube-delayed 24s ease-in-out infinite;
+  animation-delay: -6s;
+}
+.decoration-cube--2 .cube-face {
+  position: absolute; width: 100%; height: 100%;
+  border-radius: 7px;
+  border: 1px solid rgba(237, 228, 240, 0.18);
+  background: rgba(237, 228, 240, 0.05);
+  box-shadow: 0 0 40px -10px rgba(237, 228, 240, 0.12);
+}
+.decoration-cube--2 .cube-face:nth-child(2) {
+  transform: translateZ(-6px);
+  background: rgba(237, 228, 240, 0.03);
+}
+
+.decoration-cube--3 {
+  width: 45px; height: 45px;
+  top: 55%; left: 92%;
+  opacity: 0.10;
+  animation: float-cube 26s ease-in-out infinite;
+  animation-delay: -12s;
+}
+.decoration-cube--3 .cube-face {
+  position: absolute; width: 100%; height: 100%;
+  border-radius: 5px;
+  border: 1px solid rgba(226, 234, 248, 0.18);
+  background: rgba(226, 234, 248, 0.04);
+  box-shadow: 0 0 30px -8px rgba(226, 234, 248, 0.10);
+}
+.decoration-cube--3 .cube-face:nth-child(2) {
+  transform: translateZ(-4px);
+  background: rgba(226, 234, 248, 0.02);
+}
+
+.decoration-cube--4 {
+  width: 52px; height: 52px;
+  top: 48%; left: 2%;
+  opacity: 0.12;
+  animation: float-cube-delayed 23s ease-in-out infinite;
+  animation-delay: -4s;
+}
+.decoration-cube--4 .cube-face {
+  position: absolute; width: 100%; height: 100%;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 207, 201, 0.16);
+  background: rgba(255, 207, 201, 0.04);
+  box-shadow: 0 0 35px -10px rgba(255, 207, 201, 0.10);
+}
+.decoration-cube--4 .cube-face:nth-child(2) {
+  transform: translateZ(-5px);
+  background: rgba(255, 207, 201, 0.02);
+}
+
+/* ---- ATMOSPHERIC VOXEL RAIN ----
+   Floating creative building blocks in a digital space.
+   3 depth layers with blur for parallax perception.
+   ============================================================ */
+.decoration-voxel {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url('/blok.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+  will-change: transform, opacity;
+}
+
+/* Far background — small, blurred, slow */
+.decoration-voxel--1 { width: 24px; height: 24px; left: 8%;  opacity: 0; filter: blur(4px);  animation: voxel-drift-1 30s linear infinite; }
+.decoration-voxel--2 { width: 32px; height: 32px; left: 38%; opacity: 0; filter: blur(3px);  animation: voxel-drift-2 34s linear infinite; animation-delay: -8s; }
+.decoration-voxel--3 { width: 20px; height: 20px; left: 68%; opacity: 0; filter: blur(5px);  animation: voxel-drift-3 38s linear infinite; animation-delay: -16s; }
+
+/* Mid layer — medium, soft blur */
+.decoration-voxel--4 { width: 40px; height: 40px; left: 18%; opacity: 0; filter: blur(2px);  animation: voxel-drift-1 24s linear infinite; animation-delay: -5s; }
+.decoration-voxel--5 { width: 48px; height: 48px; left: 52%; opacity: 0; filter: blur(1.5px); animation: voxel-drift-2 27s linear infinite; animation-delay: -12s; }
+.decoration-voxel--6 { width: 34px; height: 34px; left: 78%; opacity: 0; filter: blur(2px);  animation: voxel-drift-3 22s linear infinite; animation-delay: -7s; }
+
+/* Near foreground — sharp, larger, faster */
+.decoration-voxel--7 { width: 60px; height: 60px; left: 3%;  opacity: 0; animation: voxel-drift-1 20s linear infinite; animation-delay: -3s; }
+.decoration-voxel--8 { width: 68px; height: 68px; left: 30%; opacity: 0; animation: voxel-drift-2 23s linear infinite; animation-delay: -14s; }
+.decoration-voxel--9 { width: 52px; height: 52px; left: 60%; opacity: 0; animation: voxel-drift-3 18s linear infinite; animation-delay: -10s; }
+.decoration-voxel--10 { width: 76px; height: 76px; left: 88%; opacity: 0; animation: voxel-drift-1 26s linear infinite; animation-delay: -18s; }
+
+/* ---- GEOMETRIC SHAPES ---- */
 .decoration-geometric {
   position: fixed;
   pointer-events: none;
   z-index: 0;
-  opacity: 0;
 }
 
-/* Diamond/rhombus shape */
 .decoration-geometric--diamond {
-  width: 24px;
-  height: 24px;
-  top: 35%;
-  left: 12%;
-  border: 1px solid rgba(237, 228, 240, 0.15);
+  width: 28px; height: 28px;
+  top: 33%; left: 14%;
+  border: 1.5px solid rgba(237, 228, 240, 0.14);
   background: rgba(237, 228, 240, 0.04);
   transform: rotate(45deg);
-  border-radius: 3px;
-  animation: float-block 12s ease-in-out infinite, pixel-glow 8s ease-in-out infinite;
+  border-radius: 4px;
+  opacity: 0.12;
+  animation: float-block 20s ease-in-out infinite;
 }
 
-/* Tiny cross/pixel-plus */
 .decoration-geometric--plus {
-  width: 16px;
-  height: 16px;
-  top: 70%;
-  left: 75%;
-  animation: float-block-delayed 11s ease-in-out infinite, pixel-glow-delayed 7s ease-in-out infinite;
+  width: 18px; height: 18px;
+  top: 68%; left: 77%;
+  opacity: 0.10;
+  animation: float-block-delayed 19s ease-in-out infinite;
 }
-
 .decoration-geometric--plus::before,
 .decoration-geometric--plus::after {
   content: "";
   position: absolute;
-  background: rgba(255, 207, 201, 0.1);
+  background: rgba(255, 207, 201, 0.10);
   border-radius: 1px;
 }
-
 .decoration-geometric--plus::before {
-  width: 100%;
-  height: 3px;
-  top: 50%;
-  left: 0;
+  width: 100%; height: 3px;
+  top: 50%; left: 0;
   transform: translateY(-50%);
 }
-
 .decoration-geometric--plus::after {
-  width: 3px;
-  height: 100%;
-  left: 50%;
-  top: 0;
+  width: 3px; height: 100%;
+  left: 50%; top: 0;
   transform: translateX(-50%);
 }
 
-/* Small L-shape (like a corner bracket) */
 .decoration-geometric--lshape {
-  width: 20px;
-  height: 20px;
-  top: 18%;
-  left: 80%;
-  animation: terrain-drift 20s ease-in-out infinite, depth-pulse 9s ease-in-out infinite;
+  width: 22px; height: 22px;
+  top: 16%; left: 82%;
+  opacity: 0.10;
+  animation: block-drift 28s ease-in-out infinite;
 }
-
 .decoration-geometric--lshape::before {
   content: "";
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border-left: 2px solid rgba(226, 234, 248, 0.12);
-  border-bottom: 2px solid rgba(226, 234, 248, 0.12);
+  width: 16px; height: 16px;
+  border-left: 2px solid rgba(226, 234, 248, 0.11);
+  border-bottom: 2px solid rgba(226, 234, 248, 0.11);
   border-radius: 0 0 0 3px;
 }
 
-/* Small circle ring */
 .decoration-geometric--ring {
-  width: 18px;
-  height: 18px;
-  top: 80%;
-  left: 20%;
-  border: 1.5px solid rgba(237, 228, 240, 0.1);
+  width: 22px; height: 22px;
+  top: 82%; left: 22%;
+  border: 2px solid rgba(237, 228, 240, 0.09);
   border-radius: 50%;
-  animation: float-block 13s ease-in-out infinite, pixel-glow 8s ease-in-out infinite;
-  animation-delay: -3s;
+  opacity: 0.10;
+  animation: float-block 21s ease-in-out infinite;
+  animation-delay: -6s;
 }
 
-/* =============================================
-   LAYER 4: SMALL FLOATING BLOCKS (14-24px)
-   ============================================= */
+/* ---- SMALL FLOATING BLOCKS ---- */
 .decoration-block {
   position: fixed;
   pointer-events: none;
   z-index: 0;
   border-radius: 6px;
-  opacity: 0;
 }
 
-.decoration-block--1 {
-  width: 24px;
-  height: 24px;
-  background: #ffcfc9;
-  top: 15%;
-  left: 8%;
-  animation: float-block 8s ease-in-out infinite, pixel-glow 6s ease-in-out infinite;
-}
+.decoration-block--1 { width: 28px; height: 28px; background: #ffcfc9; top: 14%; left: 10%; opacity: 0.14; animation: float-block 16s ease-in-out infinite; }
+.decoration-block--2 { width: 18px; height: 18px; background: #ede4f0; top: 28%; left: 94%; opacity: 0.12; animation: float-block-delayed 18s ease-in-out infinite; }
+.decoration-block--3 { width: 22px; height: 22px; background: #ffcfc9; top: 58%; left: 7%; opacity: 0.12; animation: float-block-delayed 18s ease-in-out infinite; }
+.decoration-block--4 { width: 16px; height: 16px; background: #ede4f0; top: 78%; left: 86%; opacity: 0.10; animation: float-block 16s ease-in-out infinite; }
 
-.decoration-block--2 {
-  width: 16px;
-  height: 16px;
-  background: #ede4f0;
-  top: 30%;
-  left: 92%;
-  animation: float-block-delayed 10s ease-in-out infinite, pixel-glow-delayed 8s ease-in-out infinite;
-}
-
-.decoration-block--3 {
-  width: 20px;
-  height: 20px;
-  background: #ffcfc9;
-  top: 60%;
-  left: 5%;
-  animation: float-block-delayed 10s ease-in-out infinite, pixel-glow 6s ease-in-out infinite;
-}
-
-.decoration-block--4 {
-  width: 14px;
-  height: 14px;
-  background: #ede4f0;
-  top: 75%;
-  left: 88%;
-  animation: float-block 8s ease-in-out infinite, pixel-glow-delayed 8s ease-in-out infinite;
-}
-
-/* =============================================
-   LAYER 5: LARGE FLOATING BLOCKS (40-72px)
-   ============================================= */
+/* ---- LARGE FLOATING BLOCKS ---- */
 .decoration-block-large {
   position: fixed;
   pointer-events: none;
   z-index: 0;
   border-radius: 10px;
-  opacity: 0;
 }
 
-.decoration-block-large--1 {
-  width: 60px;
-  height: 60px;
-  background: #ffcfc9;
-  top: 8%;
-  left: 3%;
-  animation: float-block-large 12s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
-}
+.decoration-block-large--1 { width: 72px; height: 72px; background: #ffcfc9; top: 7%; left: 2%; opacity: 0.10; animation: float-block-large 20s ease-in-out infinite; }
+.decoration-block-large--2 { width: 56px; height: 56px; background: #ede4f0; top: 4%; left: 87%; opacity: 0.08; animation: float-block 22s ease-in-out infinite; animation-delay: -6s; }
+.decoration-block-large--3 { width: 84px; height: 84px; background: #ffcfc9; top: 52%; left: -1%; opacity: 0.09; animation: float-block-delayed 24s ease-in-out infinite; animation-delay: -8s; }
+.decoration-block-large--4 { width: 48px; height: 48px; background: #ede4f0; top: 38%; left: 97%; opacity: 0.08; animation: float-block-large 21s ease-in-out infinite; animation-delay: -10s; }
 
-.decoration-block-large--2 {
-  width: 48px;
-  height: 48px;
-  background: #ede4f0;
-  top: 5%;
-  left: 85%;
-  animation: float-block 14s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
-  animation-delay: -3s;
-}
-
-.decoration-block-large--3 {
-  width: 72px;
-  height: 72px;
-  background: #ffcfc9;
-  top: 55%;
-  left: -2%;
-  animation: float-block-delayed 16s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
-  animation-delay: -5s;
-}
-
-.decoration-block-large--4 {
-  width: 40px;
-  height: 40px;
-  background: #ede4f0;
-  top: 40%;
-  left: 95%;
-  animation: float-block-large 13s ease-in-out infinite, pixel-glow-large 10s ease-in-out infinite;
-  animation-delay: -7s;
-}
-
-/* =============================================
-   LAYER 6: PIXEL TERRAIN ATMOSPHERE
-   ============================================= */
-.decoration-terrain {
-  position: fixed;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-}
-
-.decoration-terrain--row1 {
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 32px;
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  animation: terrain-drift 15s ease-in-out infinite;
-}
-
-.decoration-terrain--row1 span {
-  display: block;
-  width: 8px;
-  height: 8px;
-  background: #ffcfc9;
-  border-radius: 2px;
-  opacity: 0.08;
-}
-
-.decoration-terrain--row1 span:nth-child(even) {
-  background: #ede4f0;
-  opacity: 0.06;
-  transform: translateY(4px);
-}
-
-.decoration-terrain--row1 span:nth-child(3n) {
-  transform: translateY(8px);
-  opacity: 0.04;
-}
-
-.decoration-terrain--row1 span:nth-child(5n+2) {
-  transform: translateY(12px);
-  opacity: 0.05;
-}
-
-.decoration-terrain--row2 {
-  bottom: 40px;
-  left: 10%;
-  display: flex;
-  gap: 3px;
-  flex-wrap: wrap;
-  width: 120px;
-  animation: terrain-drift-delayed 18s ease-in-out infinite;
-}
-
-.decoration-terrain--row2 span {
-  display: block;
-  width: 6px;
-  height: 6px;
-  background: #ede4f0;
-  border-radius: 1px;
-  opacity: 0.06;
-}
-
-.decoration-terrain--row2 span:nth-child(2n) {
-  background: #ffcfc9;
-  opacity: 0.04;
-}
-
-.decoration-terrain--row3 {
-  bottom: 60px;
-  right: 8%;
-  display: flex;
-  gap: 3px;
-  flex-wrap: wrap;
-  width: 100px;
-  animation: terrain-drift 20s ease-in-out infinite;
-  animation-delay: -8s;
-}
-
-.decoration-terrain--row3 span {
-  display: block;
-  width: 6px;
-  height: 6px;
-  background: #ffcfc9;
-  border-radius: 1px;
-  opacity: 0.05;
-}
-
-.decoration-terrain--row3 span:nth-child(3n) {
-  background: #ede4f0;
-  opacity: 0.03;
-  transform: translateY(3px);
-}
-
-/* =============================================
-   LAYER 7: SPARKLES
-   ============================================= */
+/* ---- SPARKLES ---- */
 .decoration-sparkle {
   position: fixed;
   pointer-events: none;
   z-index: 0;
-  width: 4px;
-  height: 4px;
+  width: 4px; height: 4px;
   border-radius: 50%;
-  opacity: 0;
 }
 
-.decoration-sparkle--1 {
-  background: #ffcfc9;
-  top: 20%;
-  left: 20%;
-  animation: sparkle 4s ease-in-out infinite;
-}
+.decoration-sparkle--1 { background: #ffcfc9; top: 18%; left: 22%; opacity: 0.12; animation: sparkle 8s ease-in-out infinite; }
+.decoration-sparkle--2 { background: #ede4f0; top: 42%; left: 78%; opacity: 0.10; animation: sparkle 9s ease-in-out infinite; animation-delay: 2.5s; }
+.decoration-sparkle--3 { background: #ffcfc9; top: 68%; left: 17%; opacity: 0.10; animation: sparkle 8.5s ease-in-out infinite; animation-delay: 5s; }
+.decoration-sparkle--4 { background: #ede4f0; top: 88%; left: 72%; opacity: 0.08; animation: sparkle 9.5s ease-in-out infinite; animation-delay: 1.5s; }
+.decoration-sparkle--5 { background: #ffcfc9; top: 8%; left: 72%; opacity: 0.12; animation: sparkle 7.5s ease-in-out infinite; animation-delay: 3.5s; }
 
-.decoration-sparkle--2 {
-  background: #ede4f0;
-  top: 45%;
-  left: 80%;
-  animation: sparkle 5s ease-in-out infinite;
-  animation-delay: 1s;
-}
-
-.decoration-sparkle--3 {
-  background: #ffcfc9;
-  top: 70%;
-  left: 15%;
-  animation: sparkle 4.5s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
-.decoration-sparkle--4 {
-  background: #ede4f0;
-  top: 85%;
-  left: 70%;
-  animation: sparkle 5.5s ease-in-out infinite;
-  animation-delay: 0.5s;
-}
-
-.decoration-sparkle--5 {
-  background: #ffcfc9;
-  top: 10%;
-  left: 75%;
-  animation: sparkle 3.8s ease-in-out infinite;
-  animation-delay: 1.5s;
-}
-
-/* =============================================
-   LAYER 8: DEPTH / ATMOSPHERIC FOG LAYERS
-   ============================================= */
+/* ---- DEPTH / FOG LAYERS ---- */
 .decoration-depth {
   position: fixed;
   pointer-events: none;
   z-index: 0;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0;
+  filter: blur(150px);
 }
 
 .decoration-depth--top {
-  width: 600px;
-  height: 200px;
-  background: linear-gradient(90deg, transparent, rgba(237, 228, 240, 0.06), transparent);
-  top: -60px;
-  left: 50%;
+  width: 900px; height: 350px;
+  background: linear-gradient(90deg, transparent, rgba(237, 228, 240, 0.07), transparent);
+  top: -120px; left: 50%;
   transform: translateX(-50%);
-  animation: depth-pulse 8s ease-in-out infinite;
+  opacity: 0.16;
+  animation: depth-pulse 16s ease-in-out infinite;
 }
 
 .decoration-depth--mid {
-  width: 400px;
-  height: 300px;
+  width: 700px; height: 450px;
   background: linear-gradient(180deg, transparent, rgba(255, 207, 201, 0.04), transparent);
-  top: 40%;
-  left: 10%;
-  animation: depth-pulse 10s ease-in-out infinite reverse;
+  top: 28%; left: 5%;
+  opacity: 0.12;
+  animation: depth-pulse 18s ease-in-out infinite reverse;
 }
 
 .decoration-depth--bottom {
-  width: 500px;
-  height: 200px;
+  width: 800px; height: 350px;
   background: linear-gradient(90deg, transparent, rgba(226, 234, 248, 0.05), transparent);
-  bottom: 40px;
-  left: 50%;
+  bottom: 10px; left: 50%;
   transform: translateX(-50%);
-  animation: depth-pulse 9s ease-in-out infinite;
-  animation-delay: -3s;
+  opacity: 0.14;
+  animation: depth-pulse 17s ease-in-out infinite;
+  animation-delay: -6s;
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+/* Voxel drift — atmospheric fall with gentle rotation */
+@keyframes voxel-drift-1 {
+  0% { transform: translateY(-80px) rotate(0deg); opacity: 0; }
+  8% { opacity: 0.12; }
+  25% { transform: translateY(25vh) rotate(25deg); opacity: 0.15; }
+  50% { transform: translateY(55vh) rotate(55deg); opacity: 0.12; }
+  75% { transform: translateY(75vh) rotate(110deg); opacity: 0.06; }
+  92% { opacity: 0; }
+  100% { transform: translateY(105vh) rotate(160deg); opacity: 0; }
+}
+
+@keyframes voxel-drift-2 {
+  0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+  6% { opacity: 0.10; }
+  30% { transform: translateY(30vh) rotate(-20deg); opacity: 0.13; }
+  55% { transform: translateY(60vh) rotate(-55deg); opacity: 0.10; }
+  80% { transform: translateY(80vh) rotate(-110deg); opacity: 0.05; }
+  90% { opacity: 0; }
+  100% { transform: translateY(110vh) rotate(-180deg); opacity: 0; }
+}
+
+@keyframes voxel-drift-3 {
+  0% { transform: translateY(-60px) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.08; }
+  20% { transform: translateY(20vh) rotate(40deg); opacity: 0.12; }
+  50% { transform: translateY(50vh) rotate(90deg); opacity: 0.08; }
+  70% { transform: translateY(70vh) rotate(140deg); opacity: 0.05; }
+  93% { opacity: 0; }
+  100% { transform: translateY(108vh) rotate(220deg); opacity: 0; }
+}
+
+/* Background breathing — slow gradient shift */
+@keyframes breath-bg {
+  0%, 100% { background-position: 0% 50%, 0 0, 0 0, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+  50% { background-position: 100% 50%, 0 0, 0 0, 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+}
+
+/* Blob drift — gentle floating */
+@keyframes blob-drift {
+  0%, 100% { transform: translate(0px, 0px); }
+  33% { transform: translate(16px, -16px); }
+  66% { transform: translate(-10px, 10px); }
+}
+
+/* Block floating */
+@keyframes float-block {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+@keyframes float-block-delayed {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-2deg); }
+}
+@keyframes float-block-large {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  33% { transform: translateY(-8px) rotate(1deg) scale(1.02); }
+  66% { transform: translateY(-4px) rotate(-1deg) scale(0.98); }
+}
+
+/* Block drift */
+@keyframes block-drift {
+  0%, 100% { transform: translateX(0px) translateY(0px); }
+  50% { transform: translateX(8px) translateY(-5px); }
+}
+
+/* Cube floating with 3D rotation */
+@keyframes float-cube {
+  0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); opacity: 0.12; }
+  25% { transform: translateY(-6px) rotateX(2deg) rotateY(4deg); opacity: 0.17; }
+  50% { transform: translateY(-12px) rotateX(0deg) rotateY(8deg); opacity: 0.12; }
+  75% { transform: translateY(-3px) rotateX(-2deg) rotateY(4deg); opacity: 0.17; }
+}
+@keyframes float-cube-delayed {
+  0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); opacity: 0.11; }
+  25% { transform: translateY(-5px) rotateX(-3deg) rotateY(-4deg); opacity: 0.16; }
+  50% { transform: translateY(-8px) rotateX(0deg) rotateY(-8deg); opacity: 0.11; }
+  75% { transform: translateY(-2px) rotateX(3deg) rotateY(-4deg); opacity: 0.16; }
+}
+
+/* Hero glow pulse */
+@keyframes hero-glow-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* Sparkle */
+@keyframes sparkle {
+  0%, 100% { opacity: 0.05; transform: scale(0.5); }
+  50% { opacity: 0.15; transform: scale(1.3); }
+}
+
+/* Depth fog */
+@keyframes depth-pulse {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.20; }
 }

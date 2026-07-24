@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import { LanguageProvider } from "@/lib/i18n/language-provider";
 import { SettingsProvider } from "@/lib/studio/settings-provider";
-import "@/styles/globals.css";
+import "../styles/globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -108,20 +108,17 @@ export default function RootLayout({
         <div className="decoration-geometric decoration-geometric--lshape" aria-hidden="true" />
         <div className="decoration-geometric decoration-geometric--ring" aria-hidden="true" />
 
-        {/* Pixel terrain atmosphere */}
-        <div className="decoration-terrain decoration-terrain--row1" aria-hidden="true">
-          <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
-          <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
-          <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
-        </div>
-        <div className="decoration-terrain decoration-terrain--row2" aria-hidden="true">
-          <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
-          <span /><span /><span /><span /><span />
-        </div>
-        <div className="decoration-terrain decoration-terrain--row3" aria-hidden="true">
-          <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
-          <span /><span />
-        </div>
+        {/* Floating voxels (blok.png) — gentle voxel rain */}
+        <div className="decoration-voxel decoration-voxel--1" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--2" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--3" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--4" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--5" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--6" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--7" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--8" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--9" aria-hidden="true" />
+        <div className="decoration-voxel decoration-voxel--10" aria-hidden="true" />
 
         {/* Sparkles */}
         <div className="decoration-sparkle decoration-sparkle--1" aria-hidden="true" />

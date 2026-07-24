@@ -69,6 +69,7 @@ export function AboutInnocraft() {
     <Section className="py-10 sm:py-16">
       <Container>
         <MotionWrapper>
+          <div className="section-premium">
           {/* Eyebrow */}
           <div className="mb-6 sm:mb-8">
             <span className="inline-block rounded-full border border-border bg-white/90 px-4 py-2 text-xs font-medium uppercase tracking-wider text-heading">
@@ -80,7 +81,7 @@ export function AboutInnocraft() {
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
             {/* Image Column - Hero Visual */}
             <div className="relative order-2 lg:order-1">
-              <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-2xl">
+              <div className="image-frame-premium">
                 {imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -128,6 +129,7 @@ export function AboutInnocraft() {
               {/* Decorative accent line */}
               <div className="mt-8 h-1 w-16 rounded-full bg-gradient-to-r from-primaryBackground to-[#9AE6FF]" />
             </div>
+          </div>
           </div>
         </MotionWrapper>
       </Container>

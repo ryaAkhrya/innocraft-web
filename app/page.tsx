@@ -16,7 +16,7 @@ import { Navbar } from "@/components/layout/navbar";
 
 export default function HomePage() {
   return (
-    <div className="bg-websiteBg">
+    <div>
       <Navbar />
       <main id="home">
         {/* Replace intro video here */}

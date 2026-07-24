@@ -111,13 +111,16 @@ export function Hero() {
         <PageTransition>
           <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
             <MotionWrapper className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-heading/70">
-                {/* Prefer CMS badge; fallback to i18n eyebrow */}
-                {heroData.badge || t.hero.eyebrow}
-              </p>
-              <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight text-heading sm:text-5xl lg:text-6xl">
-                {heroData.title || t.hero.title}
-              </h1>
+              {/* Soft spotlight behind headline */}
+              <div className="relative">
+                <div className="absolute -top-20 -left-20 h-48 w-48 rounded-full bg-primaryBg/15 blur-3xl" aria-hidden="true" />
+                <p className="relative text-sm font-semibold uppercase tracking-[0.35em] text-heading/70">
+                  {heroData.badge || t.hero.eyebrow}
+                </p>
+                <h1 className="relative mt-4 text-4xl font-semibold leading-tight tracking-tight text-heading sm:text-5xl lg:text-6xl">
+                  {heroData.title || t.hero.title}
+                </h1>
+              </div>
               <p className="mt-6 text-lg leading-8 text-paragraph">
                 {heroData.subtitle || t.hero.description}
               </p>
@@ -145,16 +148,13 @@ export function Hero() {
               transition={{ duration: 0.45, ease: "easeOut" }}
               className="order-2 lg:order-none"
             >
-              <div className="relative overflow-hidden rounded-[2rem] border border-border/80 bg-[radial-gradient(circle_at_top_left,_rgba(255,207,201,0.35),_transparent_55%)] p-3 shadow-hero-card transition-shadow duration-500 sm:p-4 group">
-                {/* Ambient glow behind card */}
-                <div className="absolute -inset-4 rounded-[3rem] bg-gradient-to-br from-primaryBg/15 via-accentSoft/8 to-accentBlue/10 opacity-0 blur-2xl transition-all duration-700 group-hover:opacity-100 group-hover:scale-105" aria-hidden="true" />
-                {/* Animated glow ring */}
-                <div className="absolute -inset-1 rounded-[2.2rem] bg-gradient-to-br from-primaryBg/20 via-accentSoft/10 to-accentBlue/15 opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
-                {/* Inner glow pulse */}
-                <div className="absolute inset-x-6 top-6 h-24 rounded-full bg-primaryBg/30 blur-3xl animate-hero-glow" />
-                {/* Secondary ambient light */}
-                <div className="absolute inset-x-0 bottom-0 h-32 rounded-full bg-accentBlue/15 blur-3xl animate-hero-ambient" aria-hidden="true" />
-                <div className="relative overflow-hidden rounded-[1.5rem] border border-white/80 bg-white/70 shadow-inner">
+              <div className="hero-card group">
+                {/* Ambient glow — always visible, pulses */}
+                <div className="hero-card-glow hero-card-glow--primary" aria-hidden="true" />
+                <div className="hero-card-glow hero-card-glow--secondary" aria-hidden="true" />
+                {/* Hover-expanded ambient glow */}
+                <div className="absolute -inset-4 rounded-[3rem] bg-gradient-to-br from-primaryBg/12 via-accentSoft/6 to-accentBlue/8 opacity-0 blur-2xl transition-all duration-700 group-hover:opacity-100 group-hover:scale-105" aria-hidden="true" />
+                <div className="hero-card-inner">
                   {(() => {
                     const rawUrl = (heroData.heroVideoUrl ?? "").trim();
                     const videoUrl = rawUrl.length > 0 ? rawUrl : null;
