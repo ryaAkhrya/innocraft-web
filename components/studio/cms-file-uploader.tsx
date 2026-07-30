@@ -11,6 +11,7 @@ type CmsFileUploadProps = {
   bucket: string;
   accept?: string;
   isVideo?: boolean;
+  showPreview?: boolean;
 };
 
 function isImageFile(file: File): boolean {
@@ -36,6 +37,7 @@ export function CmsFileUpload({
   bucket,
   accept = "image/*,video/*",
   isVideo: isVideoProp,
+  showPreview = true,
 }: CmsFileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -155,7 +157,7 @@ export function CmsFileUpload({
         </div>
       </div>
 
-      {hasUrl && (
+      {hasUrl && showPreview && (
         <div className="mt-3 overflow-hidden rounded-2xl border border-white/10">
           <div className="aspect-video w-full max-w-full bg-[#0B1020]/30 sm:max-w-sm">
             {isVideoFile ? (

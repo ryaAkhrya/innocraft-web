@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, PlayCircle } from "lucide-react";
 import { PrimaryButton, SecondaryButton } from "@/components/ui/button";
+import { ClickToPlayVideo } from "@/components/ui/click-to-play-video";
 import { Container } from "@/components/ui/container";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
 import { PageTransition } from "@/components/ui/page-transition";
@@ -172,28 +173,16 @@ export function Hero() {
                       );
                     }
 
-                    const videoType = videoUrl?.includes('.webm') 
-                      ? 'video/webm' 
-                      : videoUrl?.includes('.mov') 
-                      ? 'video/quicktime' 
-                      : 'video/mp4';
-                    
                     return (
-                      <div className="video-frame" style={{ minHeight: '320px' }}>
-                        <video
+                      <div className="video-frame min-h-[320px] sm:min-h-[380px] lg:min-h-[430px]">
+                        <ClickToPlayVideo
                           key={videoUrl}
-                          className="h-full min-h-[320px] w-full object-cover sm:min-h-[380px] lg:min-h-[430px]"
-                          autoPlay
-                          muted
-                          loop
-                          playsInline
-                          controls
-                          preload="metadata"
-                          poster="/logo.png"
-                          aria-label="Intro video preview"
-                        >
-                          <source src={videoUrl} type={videoType} />
-                        </video>
+                          videoUrl={videoUrl}
+                          thumbnailUrl="/logo.png"
+                          title={heroData.title || "INNOCRAFT introduction"}
+                          className="absolute inset-0"
+                          preferYouTubeThumbnail
+                        />
                       </div>
                     );
                   })()}

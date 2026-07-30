@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { StudioHeroData } from "@/lib/studio/mock-hero";
 import { defaultStudioHeroData } from "@/lib/studio/mock-hero";
 import { cn } from "@/lib/utils";
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
+import { ClickToPlayVideo } from "@/components/ui/click-to-play-video";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
 
@@ -81,17 +81,13 @@ function VideoPreviewCard({ heroVideoUrl }: { heroVideoUrl: string }) {
     <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
       <div className="aspect-[16/9] w-full bg-[#0B1020]/40">
         {hasVideo ? (
-          <motion.video
+          <ClickToPlayVideo
             key={heroVideoUrl}
-            src={heroVideoUrl}
+            videoUrl={heroVideoUrl}
+            thumbnailUrl="/logo.png"
+            title="Hero video preview"
             className="h-full w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            initial={{ opacity: 0.6 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.25 }}
+            preferYouTubeThumbnail
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center p-4">
@@ -394,14 +390,27 @@ export function StudioHeroEditor({
 
           <div>
             <Label>Hero Video URL</Label>
-            <CmsFileUpload
-              label=""
+            <TextInput
               value={draft.heroVideoUrl}
               onChange={(v) => setDraft((d) => ({ ...d, heroVideoUrl: v }))}
-              bucket="hero"
-              accept="video/mp4,video/webm,video/quicktime"
-              isVideo
+              placeholder="Paste a YouTube URL or use the upload button below"
             />
+            <p className="mt-2 text-xs text-white/50">
+              Supports YouTube watch, share, embed, and Shorts URLs.
+            </p>
+            <div className="mt-3">
+              <CmsFileUpload
+                label=""
+                value={draft.heroVideoUrl}
+                onChange={(v) =>
+                  setDraft((d) => ({ ...d, heroVideoUrl: v }))
+                }
+                bucket="hero"
+                accept="video/mp4,video/webm,video/quicktime"
+                isVideo
+                showPreview={false}
+              />
+            </div>
           </div>
         </div>
 

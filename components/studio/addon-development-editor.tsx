@@ -14,6 +14,7 @@ import {
   CmsTextarea,
 } from "@/components/studio/cms-form-input";
 import { CmsFileUpload } from "@/components/studio/cms-file-uploader";
+import { ClickToPlayVideo } from "@/components/ui/click-to-play-video";
 import { CmsSectionShell } from "@/components/studio/cms-section-shell";
 import { confirmReset } from "@/components/studio/cms-confirm-reset";
 import { AlertCircle, CheckCircle } from "lucide-react";
@@ -240,7 +241,18 @@ export function AddonDevelopmentEditor({
               bucket="sections"
               accept="video/mp4,video/webm,video/quicktime"
               isVideo
+              showPreview={false}
             />
+
+            <CmsTextInput
+              label="Video URL (optional)"
+              value={draft.videoUrl}
+              onChange={(v) => setDraft((d) => ({ ...d, videoUrl: v }))}
+              placeholder="Paste a YouTube URL or keep the uploaded video URL"
+            />
+            <p className="-mt-3 text-xs text-white/50">
+              Supports YouTube watch, share, embed, and Shorts URLs.
+            </p>
 
             <CmsFileUpload
               label="Thumbnail Image"
@@ -286,14 +298,12 @@ export function AddonDevelopmentEditor({
             <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0B1020]/30">
               <div className="aspect-[16/9] w-full bg-[#0B1020]/40">
                 {draft.videoUrl ? (
-                  <video
+                  <ClickToPlayVideo
                     key={draft.videoUrl}
-                    src={draft.videoUrl}
+                    videoUrl={draft.videoUrl}
+                    thumbnailUrl={draft.thumbnailUrl || undefined}
+                    title={draft.title || "Addon development preview"}
                     className="h-full w-full object-cover"
-                    controls
-                    muted
-                    playsInline
-                    poster={draft.thumbnailUrl || undefined}
                   />
                 ) : draft.thumbnailUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element

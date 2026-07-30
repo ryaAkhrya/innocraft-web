@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
 
+import { ClickToPlayVideo } from "@/components/ui/click-to-play-video";
 import { Container } from "@/components/ui/container";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
 import { Section } from "@/components/ui/section";
@@ -79,24 +80,21 @@ export function AddonDevelopment() {
               <div className="relative min-h-[320px] sm:min-h-[420px] lg:min-h-[500px] overflow-hidden bg-gradient-to-br from-primaryBg/20 via-white to-white p-4 sm:p-5">
                 <div className="relative h-full w-full overflow-hidden rounded-[1.75rem] border border-white/60 bg-white/50">
                   {hasVideo ? (
-<video
-  key={data.videoUrl}
-  src={data.videoUrl}
-  className="h-full w-full object-cover"
-  controls
-  muted
-  playsInline
-  preload="metadata"
-  poster={data.thumbnailUrl || undefined}
-/>
+                    <ClickToPlayVideo
+                      key={data.videoUrl}
+                      videoUrl={data.videoUrl}
+                      thumbnailUrl={data.thumbnailUrl || undefined}
+                      title={data.title || "Addon development"}
+                      className="absolute inset-0"
+                    />
                   ) : hasThumbnail ? (
                     // eslint-disable-next-line @next/next/no-img-element
-<img
-  src={data.thumbnailUrl}
-  alt={data.title || "Addon development"}
-  className="h-full w-full object-cover"
-  loading="lazy"
-/>
+                    <img
+                      src={data.thumbnailUrl}
+                      alt={data.title || "Addon development"}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
                       <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-heading/10 bg-white/60">
