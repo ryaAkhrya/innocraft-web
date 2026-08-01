@@ -201,7 +201,7 @@ export function Hero() {
                           videoUrl={videoUrl}
                           thumbnailUrl={thumbnailUrl}
                           title={heroData.title || "INNOCRAFT introduction"}
-                          className="absolute inset-0 h-full w-full object-cover"
+                          className="absolute inset-0 h-full w-full"
                         />
                       </div>
                     );

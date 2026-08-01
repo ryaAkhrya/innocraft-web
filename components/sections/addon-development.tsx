@@ -85,7 +85,7 @@ export function AddonDevelopment() {
                       videoUrl={data.videoUrl}
                       thumbnailUrl={data.thumbnailUrl || undefined}
                       title={data.title || "Addon development"}
-                      className="absolute inset-0"
+                      className="h-full w-full"
                     />
                   ) : hasThumbnail ? (
                     // eslint-disable-next-line @next/next/no-img-element

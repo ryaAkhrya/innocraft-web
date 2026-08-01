@@ -125,7 +125,7 @@ function VideoPreviewCard({
             videoUrl={heroVideoUrl}
             thumbnailUrl={hasCustomThumbnail ? thumbnailUrl : undefined}
             title="Hero video preview"
-            className="h-full w-full object-cover"
+            className="h-full w-full"
           />
         ) : hasCustomThumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
