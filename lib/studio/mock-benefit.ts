@@ -12,6 +12,43 @@ export type StudioBenefitData = {
   cards: StudioBenefitCard[];
 };
 
+/**
+ * Generate a unique ID for a new benefit card.
+ * Uses crypto.randomUUID when available, otherwise falls back to a
+ * timestamp + random string.
+ */
+export function createBenefitId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (crypto as any).randomUUID() as string;
+  }
+  return `b_${Math.random().toString(16).slice(2)}_${Date.now()}`;
+}
+
+/**
+ * Create a new empty benefit card with sensible defaults.
+ */
+export function createEmptyBenefitCard(): StudioBenefitCard {
+  return {
+    id: createBenefitId(),
+    icon: "⭐",
+    title: "",
+    description: "",
+  };
+}
+
+/**
+ * Normalize a benefit card from arbitrary input (e.g. Supabase row or draft).
+ */
+export function normalizeBenefitCard(input: Partial<StudioBenefitCard> | Record<string, unknown>): StudioBenefitCard {
+  return {
+    id: String(input?.id ?? createBenefitId()),
+    icon: String(input?.icon ?? "⭐"),
+    title: String(input?.title ?? ""),
+    description: String(input?.description ?? ""),
+  };
+}
+
 export const defaultStudioBenefitData: StudioBenefitData = {
   badge: "BENEFIT",
   title: "Kenapa INNOCRAFT?",
@@ -44,4 +81,3 @@ export const defaultStudioBenefitData: StudioBenefitData = {
     },
   ],
 };
-
