@@ -43,15 +43,25 @@ export function ClickToPlayVideo({
 
   if (hasStarted) {
     if (embedUrl) {
+      // Wrap iframe in an overflow-hidden container and scale it up slightly
+      // to crop YouTube's letterbox black bars when the container aspect ratio
+      // differs from 16:9. This ensures the video always covers the full area.
       return (
-        <iframe
-          src={embedUrl}
-          title={title}
-          className={cn("h-full w-full border-0", className)}
-          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-          allowFullScreen
-          referrerPolicy="strict-origin-when-cross-origin"
-        />
+        <div className="absolute inset-0 h-full w-full overflow-hidden">
+          <iframe
+            src={embedUrl}
+            title={title}
+            className={cn(
+              "absolute inset-0 h-full w-full border-0",
+              "scale-[1.08]",
+              className,
+            )}
+            style={{ aspectRatio: "16 / 9" }}
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
+        </div>
       );
     }
 

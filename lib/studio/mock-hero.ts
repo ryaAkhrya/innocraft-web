@@ -5,6 +5,7 @@ export type StudioHeroData = {
   primaryButtonText: string;
   secondaryButtonText: string;
   heroVideoUrl: string;
+  thumbnailUrl: string;
 };
 
 export const defaultStudioHeroData: StudioHeroData = {
@@ -15,4 +16,5 @@ export const defaultStudioHeroData: StudioHeroData = {
   primaryButtonText: "Daftar Kelas",
   secondaryButtonText: "Lihat Program",
   heroVideoUrl: "",
+  thumbnailUrl: "",
 };

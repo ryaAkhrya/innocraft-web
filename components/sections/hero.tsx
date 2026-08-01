@@ -34,7 +34,7 @@ export function Hero() {
       try {
         const { data, error } = await supabase
           .from("hero")
-          .select("*")
+          .select("id, badge, title, subtitle, primary_button_text, secondary_button_text, hero_video_url, thumbnail_url")
           .limit(1);
 
         if (cancelled) return;
@@ -56,8 +56,9 @@ export function Hero() {
               secondary_button_text: defaultStudioHeroData.secondaryButtonText,
               secondary_button_url: "",
               hero_video_url: defaultStudioHeroData.heroVideoUrl,
+              thumbnail_url: defaultStudioHeroData.thumbnailUrl,
             })
-            .select("*")
+            .select("id, badge, title, subtitle, primary_button_text, secondary_button_text, hero_video_url, thumbnail_url")
             .limit(1);
 
           if (cancelled) return;
@@ -78,6 +79,7 @@ export function Hero() {
               row.secondary_button_text ??
               defaultStudioHeroData.secondaryButtonText,
             heroVideoUrl: row.hero_video_url ?? defaultStudioHeroData.heroVideoUrl,
+            thumbnailUrl: row.thumbnail_url ?? defaultStudioHeroData.thumbnailUrl,
           });
           return;
         }
@@ -92,6 +94,7 @@ export function Hero() {
           secondaryButtonText:
             row.secondary_button_text ?? defaultStudioHeroData.secondaryButtonText,
           heroVideoUrl: row.hero_video_url ?? defaultStudioHeroData.heroVideoUrl,
+          thumbnailUrl: row.thumbnail_url ?? defaultStudioHeroData.thumbnailUrl,
         });
       } catch {
         if (!cancelled) setHeroData(defaultStudioHeroData);
@@ -159,8 +162,26 @@ export function Hero() {
                   {(() => {
                     const rawUrl = (heroData.heroVideoUrl ?? "").trim();
                     const videoUrl = rawUrl.length > 0 ? rawUrl : null;
+                    const customThumbnail = (heroData.thumbnailUrl ?? "").trim();
+                    const thumbnailUrl = customThumbnail.length > 0 ? customThumbnail : undefined;
 
                     if (!videoUrl) {
+                      // If we have a custom thumbnail but no video, show the thumbnail
+                      if (thumbnailUrl) {
+                        return (
+                          <div
+                            className="h-full min-h-[320px] w-full overflow-hidden rounded-[1.5rem] sm:min-h-[380px] lg:min-h-[430px]"
+                            aria-label="Hero thumbnail"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={thumbnailUrl}
+                              alt={heroData.title || "INNOCRAFT"}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                        );
+                      }
                       return (
                         <div
                           className="h-full min-h-[320px] w-full rounded-[1.5rem] border border-white/30 bg-white/30 sm:min-h-[380px] lg:min-h-[430px] flex items-center justify-center"
@@ -178,10 +199,9 @@ export function Hero() {
                         <ClickToPlayVideo
                           key={videoUrl}
                           videoUrl={videoUrl}
-                          thumbnailUrl="/logo.png"
+                          thumbnailUrl={thumbnailUrl}
                           title={heroData.title || "INNOCRAFT introduction"}
-                          className="absolute inset-0"
-                          preferYouTubeThumbnail
+                          className="absolute inset-0 h-full w-full object-cover"
                         />
                       </div>
                     );

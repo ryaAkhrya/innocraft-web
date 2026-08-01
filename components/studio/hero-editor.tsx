@@ -9,6 +9,38 @@ import { ClickToPlayVideo } from "@/components/ui/click-to-play-video";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import { useSaveFeedback } from "@/lib/studio/cms-save-feedback";
 
+// ---- Thumbnail Preview Card ------------------------------------------------
+
+function ThumbnailPreviewCard({ thumbnailUrl }: { thumbnailUrl: string }) {
+  const hasThumbnail = !!thumbnailUrl;
+
+  return (
+    <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
+      <div className="aspect-video w-full bg-[#0B1020]/40">
+        {hasThumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={thumbnailUrl}
+            alt="Hero thumbnail preview"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center p-4">
+            <p className="text-center text-xs text-white/50">
+              No custom thumbnail uploaded
+            </p>
+          </div>
+        )}
+      </div>
+      <div className="px-4 py-3">
+        <p className="text-xs text-white/60">
+          {hasThumbnail ? "Custom Thumbnail" : "Will use YouTube thumbnail as fallback"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function FieldCard({
   children,
   className,
@@ -74,20 +106,33 @@ function PrimaryButton({
   );
 }
 
-function VideoPreviewCard({ heroVideoUrl }: { heroVideoUrl: string }) {
+function VideoPreviewCard({
+  heroVideoUrl,
+  thumbnailUrl,
+}: {
+  heroVideoUrl: string;
+  thumbnailUrl: string;
+}) {
   const hasVideo = !!heroVideoUrl;
+  const hasCustomThumbnail = !!thumbnailUrl;
 
   return (
     <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5">
-      <div className="aspect-[16/9] w-full bg-[#0B1020]/40">
+      <div className="aspect-[16/9] w-full overflow-hidden bg-[#0B1020]/40">
         {hasVideo ? (
           <ClickToPlayVideo
             key={heroVideoUrl}
             videoUrl={heroVideoUrl}
-            thumbnailUrl="/logo.png"
+            thumbnailUrl={hasCustomThumbnail ? thumbnailUrl : undefined}
             title="Hero video preview"
             className="h-full w-full object-cover"
-            preferYouTubeThumbnail
+          />
+        ) : hasCustomThumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={thumbnailUrl}
+            alt="Hero thumbnail preview"
+            className="h-full w-full object-cover"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center p-4">
@@ -96,7 +141,13 @@ function VideoPreviewCard({ heroVideoUrl }: { heroVideoUrl: string }) {
         )}
       </div>
       <div className="px-4 py-3">
-        <p className="text-xs text-white/60">Video Preview</p>
+        <p className="text-xs text-white/60">
+          {hasVideo
+            ? hasCustomThumbnail
+              ? "Video Preview (custom thumbnail)"
+              : "Video Preview (YouTube thumbnail)"
+            : "Thumbnail Preview"}
+        </p>
       </div>
     </div>
   );
@@ -126,7 +177,7 @@ export function StudioHeroEditor({
 
         const { data, error } = await supabase
           .from("hero")
-          .select("id, badge, title, subtitle, primary_button_text, secondary_button_text, hero_video_url")
+          .select("id, badge, title, subtitle, primary_button_text, secondary_button_text, hero_video_url, thumbnail_url")
           .limit(1);
 
         if (cancelled) return;
@@ -149,8 +200,9 @@ export function StudioHeroEditor({
               secondary_button_text: base.secondaryButtonText,
               secondary_button_url: "",
               hero_video_url: base.heroVideoUrl,
+              thumbnail_url: base.thumbnailUrl,
             })
-            .select("id, badge, title, subtitle, primary_button_text, secondary_button_text, hero_video_url")
+            .select("id, badge, title, subtitle, primary_button_text, secondary_button_text, hero_video_url, thumbnail_url")
             .limit(1);
 
           if (cancelled) return;
@@ -172,6 +224,7 @@ export function StudioHeroEditor({
             secondaryButtonText:
               row.secondary_button_text ?? base.secondaryButtonText,
             heroVideoUrl: row.hero_video_url ?? base.heroVideoUrl,
+            thumbnailUrl: row.thumbnail_url ?? base.thumbnailUrl,
           });
           setDraft({
             badge: row.badge ?? base.badge,
@@ -182,6 +235,7 @@ export function StudioHeroEditor({
             secondaryButtonText:
               row.secondary_button_text ?? base.secondaryButtonText,
             heroVideoUrl: row.hero_video_url ?? base.heroVideoUrl,
+            thumbnailUrl: row.thumbnail_url ?? base.thumbnailUrl,
           });
 
           return;
@@ -198,6 +252,7 @@ export function StudioHeroEditor({
           secondaryButtonText:
             row.secondary_button_text ?? base.secondaryButtonText,
           heroVideoUrl: row.hero_video_url ?? base.heroVideoUrl,
+          thumbnailUrl: row.thumbnail_url ?? base.thumbnailUrl,
         };
 
         setSaved(mapped);
@@ -248,6 +303,7 @@ export function StudioHeroEditor({
               secondary_button_text: valuesToSave.secondaryButtonText,
               secondary_button_url: "",
               hero_video_url: valuesToSave.heroVideoUrl,
+              thumbnail_url: valuesToSave.thumbnailUrl,
             })
             .select("id")
             .limit(1);
@@ -271,6 +327,7 @@ export function StudioHeroEditor({
               secondary_button_text: valuesToSave.secondaryButtonText,
               secondary_button_url: "",
               hero_video_url: valuesToSave.heroVideoUrl,
+              thumbnail_url: valuesToSave.thumbnailUrl,
             })
             .eq("id", newId);
 
@@ -293,6 +350,7 @@ export function StudioHeroEditor({
           secondary_button_text: valuesToSave.secondaryButtonText,
           secondary_button_url: "",
           hero_video_url: valuesToSave.heroVideoUrl,
+          thumbnail_url: valuesToSave.thumbnailUrl,
         };
         const { error } = await supabase
           .from("hero")
@@ -412,6 +470,25 @@ export function StudioHeroEditor({
               />
             </div>
           </div>
+
+          {/* Thumbnail Image Upload */}
+          <div>
+            <Label>Thumbnail Image (optional)</Label>
+            <p className="mt-1 text-xs text-white/50">
+              Upload a custom thumbnail for the video. If empty, YouTube thumbnail is used as fallback.
+            </p>
+            <div className="mt-3">
+              <CmsFileUpload
+                label=""
+                value={draft.thumbnailUrl}
+                onChange={(v) =>
+                  setDraft((d) => ({ ...d, thumbnailUrl: v }))
+                }
+                bucket="hero"
+                accept="image/*"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -461,7 +538,10 @@ export function StudioHeroEditor({
             </div>
           </div>
 
-          <VideoPreviewCard heroVideoUrl={draft.heroVideoUrl} />
+          <VideoPreviewCard
+            heroVideoUrl={draft.heroVideoUrl}
+            thumbnailUrl={draft.thumbnailUrl}
+          />
         </div>
       </FieldCard>
     </div>
