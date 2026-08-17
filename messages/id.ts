@@ -114,7 +114,7 @@ export const idMessages = {
     schedule: "Jadwal",
     time: "Sesi berlangsung pada jam yang fleksibel sesuai kebutuhan kelas.",
     age: "Usia peserta: 8-16 tahun",
-    facilities: ["Ruangan nyaman", "Laptop", "Internet stabil", "Mentor interaktif"],
+    facilities: ["Ruangan nyaman", "Fasilitas Laptop", "Internet stabil", "Mentor interaktif"],
     note: "Lokasi kelas dapat disesuaikan untuk kebutuhan program.",
   },
   cta: {

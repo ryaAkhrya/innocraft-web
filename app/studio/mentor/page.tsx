@@ -43,6 +43,8 @@ function toMentor(row: {
   name: string | null;
   position: string | null;
   description: string | null;
+  instagram_url?: string | null;
+  whatsapp_url?: string | null;
 }) {
   return {
     id: String(row.id),
@@ -50,6 +52,8 @@ function toMentor(row: {
     name: row.name ?? "",
     position: row.position ?? "",
     description: row.description ?? "",
+    instagramUrl: row.instagram_url ?? "",
+    whatsappUrl: row.whatsapp_url ?? "",
   };
 }
 
@@ -60,6 +64,8 @@ function normalizeItem(input: StudioMentor | any): StudioMentor {
     name: String(input?.name ?? ""),
     position: String(input?.position ?? ""),
     description: String(input?.description ?? ""),
+    instagramUrl: input?.instagramUrl ?? "",
+    whatsappUrl: input?.whatsappUrl ?? "",
   };
 }
 
@@ -97,7 +103,7 @@ export default function StudioMentorPage() {
       try {
         const { data, error } = await supabase
           .from("mentors")
-          .select("id, photo_url, name, position, description, display_order")
+          .select("id, photo_url, name, position, description, display_order, instagram_url, whatsapp_url")
           .eq("is_active", true)
           .order("display_order", { ascending: true });
 
@@ -212,6 +218,8 @@ export default function StudioMentorPage() {
                 name: mentor.name,
                 position: mentor.position,
                 description: mentor.description,
+                instagram_url: mentor.instagramUrl,
+                whatsapp_url: mentor.whatsappUrl,
                 display_order: i,
                 is_active: true,
               })
@@ -235,6 +243,8 @@ export default function StudioMentorPage() {
                 name: mentor.name,
                 position: mentor.position,
                 description: mentor.description,
+                instagram_url: mentor.instagramUrl,
+                whatsapp_url: mentor.whatsappUrl,
                 display_order: i,
                 is_active: true,
               })
@@ -279,6 +289,8 @@ export default function StudioMentorPage() {
       name: "",
       position: "",
       description: "",
+      instagramUrl: "",
+      whatsappUrl: "",
     };
 
     setDraft((d) => ({ ...d, mentors: [...d.mentors, next] }));
@@ -617,6 +629,20 @@ export default function StudioMentorPage() {
                 onChange={(v) => updateSelected({ description: v })}
                 placeholder="Short description"
                 rows={6}
+              />
+
+              <CmsTextInput
+                label="Instagram URL"
+                value={selectedItem.instagramUrl ?? ""}
+                onChange={(v) => updateSelected({ instagramUrl: v })}
+                placeholder="https://instagram.com/..."
+              />
+
+              <CmsTextInput
+                label="WhatsApp URL"
+                value={selectedItem.whatsappUrl ?? ""}
+                onChange={(v) => updateSelected({ whatsappUrl: v })}
+                placeholder="https://wa.me/..."
               />
             </div>
           ) : (

@@ -114,7 +114,7 @@ export const enMessages = {
     schedule: "Schedule",
     time: "Sessions are arranged on a flexible schedule based on class needs.",
     age: "Participant age: 8-16",
-    facilities: ["Comfortable room", "Laptop", "Stable internet", "Interactive mentor"],
+    facilities: ["Comfortable room", "Laptop facility", "Stable internet", "Interactive mentor"],
     note: "The class location can be adjusted based on program needs.",
   },
   cta: {

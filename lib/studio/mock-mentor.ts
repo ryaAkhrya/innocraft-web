@@ -4,6 +4,8 @@ export type StudioMentor = {
   position: string;
   description: string;
   photoUrl: string;
+  instagramUrl?: string | null;
+  whatsappUrl?: string | null;
 };
 
 export type StudioMentorData = {

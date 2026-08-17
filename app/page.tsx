@@ -11,6 +11,7 @@ import { Opportunities } from "@/components/sections/opportunities";
 import { Projects } from "@/components/sections/projects";
 import { Testimonials } from "@/components/sections/testimonials";
 import { WhyMinecraft } from "@/components/sections/why-minecraft";
+import { CurriculumSection } from "@/components/sections/curriculum-section";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 
@@ -25,6 +26,7 @@ export default function HomePage() {
         {/* Replace project links here */}
         <Hero />
         <AddonDevelopment />
+        <CurriculumSection />
         <WhyMinecraft />
         <AboutInnocraft />
         <Mentor />
@@ -32,7 +34,7 @@ export default function HomePage() {
         <Gallery />
         <Benefits />
         <Opportunities />
-        <Testimonials />
+        {false && <Testimonials />}
         <ClassInfo />
         <FinalCta />
         <Contact />
