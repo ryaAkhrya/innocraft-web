@@ -28,7 +28,7 @@ export const defaultStudioProgramData: StudioProgramData = {
         "Belajar fondasi addon Minecraft: komponen, alur kerja, dan membuat konten sederhana.",
       features: [
         "Materi step-by-step",
-        "Latihan langsung di sesi",
+        "Disediakan Laptop",
         "Output yang bisa dibawa pulang",
       ],
       ctaText: "Daftar Program",
