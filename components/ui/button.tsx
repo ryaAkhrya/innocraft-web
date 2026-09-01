@@ -6,13 +6,13 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-full border px-5 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading focus-visible:ring-offset-2",
+  "inline-flex items-center justify-center rounded-[0.75rem] border-2 px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading focus-visible:ring-offset-2 hover:-translate-y-[2px] active:translate-y-[1px]",
   {
     variants: {
       variant: {
-        default: "border-buttonBg bg-buttonBg text-white hover:bg-buttonHover",
-        secondary: "border-border bg-white text-heading hover:bg-primaryBg/20",
-        ghost: "border-transparent bg-transparent text-heading hover:bg-primaryBg/20",
+        default: "border-buttonBg bg-buttonBg text-white hover:bg-buttonHover hover:shadow-[0_4px_12px_rgba(15,23,42,0.25)] active:shadow-none",
+        secondary: "border-border bg-white text-heading hover:bg-primaryBg/20 hover:border-primaryBg hover:shadow-[0_4px_12px_rgba(255,207,201,0.4)] active:shadow-none",
+        ghost: "border-transparent bg-transparent text-heading hover:bg-primaryBg/20 hover:text-heading active:bg-primaryBg/30",
       },
       size: {
         default: "h-11",

@@ -90,60 +90,68 @@ export function Mentor() {
   if (mentors.length === 1) {
     const mentor = mentors[0];
     return (
-      <Section className="py-10 sm:py-16">
+      <Section className="py-12 sm:py-20 bg-websiteBg">
         <Container>
-          <MotionWrapper className="rounded-3xl border border-border bg-white p-8 shadow-soft sm:p-10">
-            <div className="text-center lg:text-left">
-              <SectionTitle
-                eyebrow={t.mentor.eyebrow}
-                title={t.mentor.title}
-                description={t.mentor.description}
-              />
-            </div>
-            <div className="mt-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
-              <MotionWrapper className="overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primaryBg/50 via-white to-white p-4">
-                {mentor?.photoUrl?.trim() ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-<img
-  src={mentor.photoUrl}
-  alt={mentor.name}
-  className="h-full w-full rounded-xl object-cover"
-  loading="lazy"
-/>
-                ) : (
-                  <div className="flex h-80 items-center justify-center rounded-xl border border-white/70 bg-white/80">
-                    <span className="text-sm font-medium text-paragraph/70">
-                      No photo
-                    </span>
+          <MotionWrapper className="relative mx-auto max-w-5xl">
+            <div className="absolute inset-0 -z-10 rounded-[2.5rem] bg-accentEnergy/20 translate-x-2 translate-y-3" />
+            <div className="rounded-[2.5rem] border-2 border-border bg-white p-8 shadow-sm sm:p-12">
+              <div className="text-center lg:text-left mb-8">
+                <SectionTitle
+                  eyebrow={t.mentor.eyebrow}
+                  title={t.mentor.title}
+                  description={t.mentor.description}
+                />
+              </div>
+              <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
+                <MotionWrapper className="relative">
+                  <div className="absolute inset-0 rounded-[1.5rem] bg-primaryBg rotate-3 scale-105" />
+                  <div className="relative overflow-hidden rounded-[1.5rem] border-4 border-white bg-white shadow-lg">
+                    {mentor?.photoUrl?.trim() ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={mentor.photoUrl}
+                        alt={mentor.name}
+                        className="h-full w-full aspect-[4/5] object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-80 items-center justify-center bg-gray-100">
+                        <span className="text-sm font-medium text-paragraph/70">No photo</span>
+                      </div>
+                    )}
                   </div>
-                )}
-              </MotionWrapper>
-              <div className="text-center lg:text-left">
-                <h3 className="text-2xl font-semibold text-heading sm:text-3xl">
-                  {mentor?.name || "Untitled"}
-                </h3>
-                <p className="mt-2 text-lg font-medium text-primary">
-                  {mentor?.position || "No position"}
-                </p>
-                {mentor?.description && (
-                  <p className="mt-4 text-base leading-relaxed text-paragraph">
-                    {mentor.description}
+                </MotionWrapper>
+                <div className="text-center lg:text-left">
+                  <div className="mb-4 inline-flex items-center gap-2 rounded-full border-2 border-border bg-white px-4 py-1.5 shadow-sm">
+                    <span className="h-2 w-2 rounded-full bg-accentEnergy animate-pulse" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-heading">{t.mentor.eyebrow}</span>
+                  </div>
+                  <h3 className="text-3xl font-extrabold text-heading sm:text-4xl">
+                    {mentor?.name || "Untitled"}
+                  </h3>
+                  <p className="mt-3 text-lg font-bold text-accentEnergy">
+                    {mentor?.position || "No position"}
                   </p>
-                )}
-                {(mentor?.instagramUrl || mentor?.whatsappUrl) && (
-                  <div className="flex items-center gap-4 mt-5 justify-center lg:justify-start">
-                    {mentor.instagramUrl && (
-                      <a href={mentor.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-heading hover:opacity-80 transition-opacity">
-                        <InstagramIcon className="w-8 h-8" />
-                      </a>
-                    )}
-                    {mentor.whatsappUrl && (
-                      <a href={mentor.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-heading hover:opacity-80 transition-opacity">
-                        <WhatsappIcon className="w-8 h-8" />
-                      </a>
-                    )}
-                  </div>
-                )}
+                  {mentor?.description && (
+                    <p className="mt-5 text-base leading-relaxed text-paragraph">
+                      {mentor.description}
+                    </p>
+                  )}
+                  {(mentor?.instagramUrl || mentor?.whatsappUrl) && (
+                    <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
+                      {mentor.instagramUrl && (
+                        <a href={mentor.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-border bg-white text-heading hover:-translate-y-1 hover:border-primaryBg hover:shadow-sm transition-all">
+                          <InstagramIcon className="w-6 h-6" />
+                        </a>
+                      )}
+                      {mentor.whatsappUrl && (
+                        <a href={mentor.whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-border bg-white text-heading hover:-translate-y-1 hover:border-accentEnergy hover:shadow-sm transition-all">
+                          <WhatsappIcon className="w-6 h-6" />
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </MotionWrapper>
@@ -154,13 +162,17 @@ export function Mentor() {
 
   // Two or more mentors: responsive grid
   return (
-    <Section className="py-10 sm:py-16">
+    <Section className="py-12 sm:py-20 bg-websiteBg">
       <Container>
-        <SectionTitle
-          eyebrow={t.mentor.eyebrow}
-          title={t.mentor.title}
-          description={t.mentor.description}
-        />
+        <div className="text-center mb-12">
+          <SectionTitle
+            eyebrow={t.mentor.eyebrow}
+            title={t.mentor.title}
+            description={t.mentor.description}
+            className="mx-auto"
+          />
+        </div>
+        
         {mentors.length === 0 ? (
           <div className="mt-8 text-center">
             <div className="rounded-3xl border border-border bg-white p-8 shadow-soft">
@@ -170,56 +182,61 @@ export function Mentor() {
             </div>
           </div>
         ) : (
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {mentors.map((mentor) => (
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {mentors.map((mentor, i) => {
+              const bgColors = ["bg-accentEnergy", "bg-primaryBg", "bg-accentDigitalBlue", "bg-accentSage"];
+              const offsetColor = bgColors[i % bgColors.length];
+              
+              return (
               <MotionWrapper
                 key={mentor.id}
-                className="group overflow-hidden rounded-3xl border border-border bg-white shadow-soft transition-all duration-300 hover:shadow-lg"
+                className="group relative"
               >
-                <div className="aspect-[4/3] overflow-hidden">
-                  {mentor.photoUrl?.trim() ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-<img
-  src={mentor.photoUrl}
-  alt={mentor.name}
-  className="h-full w-full rounded-t-3xl object-cover transition-transform duration-500 group-hover:scale-105"
-  loading="lazy"
-/>
-                  ) : (
-                    <div className="flex h-full items-center justify-center rounded-t-3xl border-b border-border bg-gradient-to-br from-primaryBg/50 to-white">
-                      <span className="text-sm font-medium text-paragraph/60">
-                        No photo
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-heading">{mentor.name || "Untitled"}</h3>
-                  <p className="mt-1 text-base font-medium text-primary">
-                    {mentor.position || "No position"}
-                  </p>
-                  {mentor.description && (
-                    <p className="mt-3 text-sm leading-relaxed text-paragraph">
-                      {mentor.description}
+                <div className={`absolute inset-0 -z-10 rounded-[2rem] ${offsetColor} translate-x-1.5 translate-y-2 opacity-30 transition-transform group-hover:translate-x-3 group-hover:translate-y-4`} />
+                <div className="h-full flex flex-col overflow-hidden rounded-[2rem] border-2 border-border bg-white p-4 shadow-sm transition-transform group-hover:-translate-y-1">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-gray-100">
+                    {mentor.photoUrl?.trim() ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={mentor.photoUrl}
+                        alt={mentor.name}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                        <span className="text-sm font-medium text-paragraph/60">No photo</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col flex-1 px-2 py-6 text-center">
+                    <h3 className="text-xl font-bold text-heading">{mentor.name || "Untitled"}</h3>
+                    <p className="mt-1 text-sm font-bold text-paragraph/60 uppercase tracking-widest">
+                      {mentor.position || "No position"}
                     </p>
-                  )}
-                  {(mentor.instagramUrl || mentor.whatsappUrl) && (
-                    <div className="flex gap-4 mt-5">
-                      {mentor.instagramUrl && (
-                        <a href={mentor.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-heading hover:opacity-80 transition-opacity">
-                          <InstagramIcon className="w-8 h-8" />
-                        </a>
-                      )}
-                      {mentor.whatsappUrl && (
-                        <a href={mentor.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-heading hover:opacity-80 transition-opacity">
-                          <WhatsappIcon className="w-8 h-8" />
-                        </a>
-                      )}
-                    </div>
-                  )}
+                    {mentor.description && (
+                      <p className="mt-4 text-sm leading-relaxed text-paragraph line-clamp-3">
+                        {mentor.description}
+                      </p>
+                    )}
+                    {(mentor.instagramUrl || mentor.whatsappUrl) && (
+                      <div className="mt-auto pt-6 flex gap-3 justify-center">
+                        {mentor.instagramUrl && (
+                          <a href={mentor.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-border bg-white text-heading hover:-translate-y-1 hover:border-primaryBg transition-all">
+                            <InstagramIcon className="w-5 h-5" />
+                          </a>
+                        )}
+                        {mentor.whatsappUrl && (
+                          <a href={mentor.whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-border bg-white text-heading hover:-translate-y-1 hover:border-primaryBg transition-all">
+                            <WhatsappIcon className="w-5 h-5" />
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </MotionWrapper>
-            ))}
+            )})}
           </div>
         )}
       </Container>

@@ -114,36 +114,59 @@ export function Hero() {
       <Container>
         <PageTransition>
           <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-            <MotionWrapper className="max-w-2xl">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              className="max-w-2xl"
+            >
               {/* Cinematic spotlight behind headline */}
               <div className="relative">
                 <div className="hero-spotlight hero-spotlight--primary" aria-hidden="true" />
                 <div className="hero-spotlight hero-spotlight--secondary" aria-hidden="true" />
-                <p className="relative text-sm font-semibold uppercase tracking-[0.35em] text-heading/70">
-                  {heroData.badge || t.hero.eyebrow}
-                </p>
-                <h1 className="relative mt-4 text-4xl font-semibold leading-tight tracking-tight text-heading sm:text-5xl lg:text-6xl">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } } }}
+                >
+                  <p className="relative inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-heading/70">
+                    <span className="h-1.5 w-1.5 bg-primaryBg" />
+                    {heroData.badge || t.hero.eyebrow}
+                  </p>
+                </motion.div>
+                <motion.h1
+                  initial={{ opacity: 0, y: 15 }}
+                  variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 } } }}
+                  className="relative mt-4 text-4xl font-extrabold leading-[1.1] tracking-tight text-heading sm:text-5xl lg:text-[4rem]"
+                >
                   {heroData.title || t.hero.title}
-                </h1>
+                </motion.h1>
               </div>
-              <p className="mt-6 text-lg leading-8 text-paragraph">
+              <motion.p
+                initial={{ opacity: 0, y: 15 }}
+                variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", delay: 0.22 } } }}
+                className="mt-6 text-lg leading-relaxed text-paragraph lg:text-xl"
+              >
                 {heroData.subtitle || t.hero.description}
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", delay: 0.32 } } }}
+                className="mt-8 flex flex-wrap gap-4"
+              >
                 <PrimaryButton asChild>
-                  <Link href="#contact">
+                  <Link href="#contact" className="group">
                     {heroData.primaryButtonText || t.hero.primaryAction}
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </PrimaryButton>
                 <SecondaryButton asChild>
-                  <Link href="#about" className="flex items-center gap-2">
-                    <PlayCircle className="h-4 w-4" />
+                  <Link href="#about" className="group flex items-center gap-2">
+                    <PlayCircle className="h-4 w-4 text-primaryBg transition-colors group-hover:text-heading" />
                     {heroData.secondaryButtonText || t.hero.secondaryAction}
                   </Link>
                 </SecondaryButton>
-              </div>
-            </MotionWrapper>
+              </motion.div>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}

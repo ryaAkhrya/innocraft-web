@@ -46,16 +46,17 @@ export function Navbar() {
       )}
     >
       <Container className="py-4 sm:py-5">
-        <div className="flex items-center justify-between rounded-full border border-border bg-white/75 px-3 py-3 shadow-soft backdrop-blur">
-          <Link href="/#home" className="flex items-center gap-2" aria-label={`${settings.websiteName} home`}>
-            <Image src={logoUrl} alt={`${settings.websiteName} logo`} width={28} height={28} className="h-7 w-7 object-contain" />
-            <span className="text-sm font-semibold uppercase tracking-[0.25em] text-heading">{settings.websiteName}</span>
+        <div className="mx-auto flex max-w-5xl items-center justify-between rounded-[1.25rem] border-2 border-border bg-white/90 px-4 py-3 shadow-[0_8px_32px_-12px_rgba(15,23,42,0.12)] backdrop-blur-md">
+          <Link href="/#home" className="flex items-center gap-3 transition-opacity hover:opacity-80" aria-label={`${settings.websiteName} home`}>
+            <Image src={logoUrl} alt={`${settings.websiteName} logo`} width={32} height={32} className="h-8 w-8 object-contain" />
+            <span className="text-sm font-bold uppercase tracking-[0.25em] text-heading">{settings.websiteName}</span>
           </Link>
 
-          <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary navigation">
+          <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary navigation">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="text-sm font-medium text-paragraph transition hover:text-heading">
+              <Link key={item.href} href={item.href} className="relative text-sm font-semibold text-paragraph transition-colors hover:text-heading group">
                 {item.label}
+                <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-primaryBg transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </nav>

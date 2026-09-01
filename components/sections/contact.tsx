@@ -84,178 +84,125 @@ export function Contact() {
   const waUrl = "https://wa.me/6287878791238?text=Halo%20INNOCRAFT,%20saya%20ingin%20menjadwalkan%20kunjungan";
 
   return (
-    <Section id="contact" className="py-10 sm:py-16">
-      <Container>
-        <div className="grid gap-6 lg:grid-cols-[1fr]">
-          <MotionWrapper className="rounded-[2rem] border border-border bg-white p-8 shadow-soft sm:p-10">
-            <SectionTitle
-              eyebrow={t.contact.eyebrow}
-              title="Hubungi kami untuk pertanyaan, kunjungan, atau informasi kelas."
-              description={t.contact.description}
-            />
+    <Section id="contact" className="py-12 sm:py-24 bg-white relative overflow-hidden">
+      <div className="absolute left-0 bottom-0 w-[500px] h-[500px] bg-accentSage/10 rounded-full blur-[100px] -translate-x-1/2 translate-y-1/2" />
+      <Container className="relative">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] items-start">
+          <MotionWrapper className="relative flex flex-col justify-between h-full rounded-[2.5rem] border-4 border-heading bg-[#FAF9F8] p-8 sm:p-12 shadow-[12px_12px_0_rgba(15,23,42,1)]">
+            <div>
+              <SectionTitle
+                eyebrow={t.contact.eyebrow}
+                title="Hubungi kami untuk pertanyaan, kunjungan, atau informasi kelas."
+                description={t.contact.description}
+              />
 
-            <div className="mt-8">
-              <div className="rounded-[1.75rem] border border-border bg-primaryBg/20 p-7 shadow-sm sm:p-8">
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div className="mt-12 space-y-8">
+                <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-heading shadow-[4px_4px_0_rgba(15,23,42,1)]">
+                    <MessageCircle className="h-8 w-8 text-heading" />
+                  </div>
                   <div>
-                    <div className="flex items-center gap-3">
-                      <MessageCircle className="h-5 w-5 text-heading" />
-                      <h3 className="text-lg font-semibold text-heading">
-                        Booking via WhatsApp
-                      </h3>
-                    </div>
-                    <p className="mt-3 text-sm leading-7 text-paragraph">
-                      Klik tombol di bawah untuk langsung menghubungi tim INNOCRAFT dan menjadwalkan kunjungan.
-                    </p>
+                    <h3 className="text-xl font-bold text-heading">Booking via WhatsApp</h3>
+                    <p className="mt-2 text-base text-paragraph">Klik tombol di bawah untuk langsung menghubungi tim INNOCRAFT.</p>
                   </div>
+                </div>
 
-                  <div className="sm:pt-1">
-                    {waUrl ? (
-                      <a
-                        href={waUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex w-full items-center justify-center rounded-full border border-buttonBg bg-buttonBg px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-buttonHover sm:w-auto"
-                      >
-                        Jadwalkan Kunjungan Sekarang
-                      </a>
-                    ) : (
-                      <span className="inline-flex w-full items-center justify-center rounded-full border border-border bg-white/60 px-6 py-3 text-sm font-semibold text-paragraph shadow-soft sm:w-auto">
-                        Jadwalkan Kunjungan Sekarang
-                      </span>
-                    )}
-                  </div>
+                <div className="pt-4">
+                  {waUrl ? (
+                    <a
+                      href={waUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border-2 border-heading bg-[#25D366] px-8 py-4 text-base font-bold text-white shadow-[0_6px_0_rgba(21,128,61,1)] transition-all hover:-translate-y-1 hover:shadow-[0_8px_0_rgba(21,128,61,1)] active:translate-y-[6px] active:shadow-none"
+                    >
+                      Jadwalkan Kunjungan Sekarang
+                    </a>
+                  ) : (
+                    <span className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border-2 border-heading bg-gray-200 px-8 py-4 text-base font-bold text-gray-500 shadow-[0_6px_0_rgba(15,23,42,0.2)] cursor-not-allowed">
+                      Jadwalkan Kunjungan Sekarang
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
           </MotionWrapper>
 
-          <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-            <MotionWrapper className="rounded-[1.75rem] border border-border bg-white p-6 shadow-soft sm:p-7">
-              <div className="space-y-4 text-sm text-paragraph">
-                <div className="flex items-start gap-3">
-                  <MessageCircle className="mt-1 h-5 w-5 text-heading" />
-                  <div>
-                    <p className="font-semibold text-heading">WhatsApp</p>
+          <div className="grid gap-6">
+            <MotionWrapper className="rounded-[2rem] border-2 border-border bg-white p-6 sm:p-8 shadow-sm">
+              <h3 className="mb-6 font-bold text-heading text-lg uppercase tracking-wider">Social Media & Email</h3>
+              <div className="space-y-4 text-sm text-paragraph font-medium">
+                <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-700">
+                    <MessageCircle className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">WhatsApp</p>
                     {contactData.whatsapp ? (
-                      <a
-                        href={`https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, "")}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block text-paragraph hover:text-heading"
-                      >
+                      <a href={`https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" rel="noreferrer" className="text-heading hover:text-primaryBg transition-colors">
                         {contactData.whatsapp}
                       </a>
-                    ) : (
-                      <p className="mt-1 text-paragraph">{t.contact.whatsapp}</p>
-                    )}
+                    ) : <p>{t.contact.whatsapp}</p>}
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Mail className="mt-1 h-5 w-5 text-heading" />
-                  <div>
-                    <p className="font-semibold text-heading">Email</p>
+                <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Email</p>
                     {contactData.email ? (
-                      <a
-                        href={`mailto:${contactData.email}`}
-                        className="mt-1 block text-paragraph hover:text-heading"
-                      >
+                      <a href={`mailto:${contactData.email}`} className="text-heading hover:text-primaryBg transition-colors">
                         {contactData.email}
                       </a>
-                    ) : (
-                      <p className="mt-1 text-paragraph">{t.contact.email}</p>
-                    )}
+                    ) : <p>{t.contact.email}</p>}
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Send className="mt-1 h-5 w-5 text-heading" />
-                  <div>
-                    <p className="font-semibold text-heading">Instagram</p>
+                <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-pink-100 text-pink-700">
+                    <Send className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Instagram</p>
                     {contactData.instagram ? (
-                      <a
-                        href={contactData.instagram}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block text-paragraph hover:text-heading"
-                      >
+                      <a href={contactData.instagram} target="_blank" rel="noreferrer" className="text-heading hover:text-primaryBg transition-colors">
                         {contactData.instagram}
                       </a>
-                    ) : (
-                      <p className="mt-1 text-paragraph">{t.contact.instagram}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Send className="mt-1 h-5 w-5 text-heading" />
-                  <div>
-                    <p className="font-semibold text-heading">TikTok</p>
-                    {contactData.tiktok ? (
-                      <a
-                        href={contactData.tiktok}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block text-paragraph hover:text-heading"
-                      >
-                        {contactData.tiktok}
-                      </a>
-                    ) : (
-                      <p className="mt-1 text-paragraph">{t.contact.tiktok}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Send className="mt-1 h-5 w-5 text-heading" />
-                  <div>
-                    <p className="font-semibold text-heading">Facebook</p>
-                    {contactData.facebook ? (
-                      <a
-                        href={contactData.facebook}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block text-paragraph hover:text-heading"
-                      >
-                        {contactData.facebook}
-                      </a>
-                    ) : (
-                      <p className="mt-1 text-paragraph">
-                        {"https://facebook.com/innocraft.id"}
-                      </p>
-                    )}
+                    ) : <p>{t.contact.instagram}</p>}
                   </div>
                 </div>
               </div>
             </MotionWrapper>
 
-            <MotionWrapper className="rounded-[1.75rem] border border-border bg-cardBg p-6 shadow-soft sm:p-7">
-              <div className="flex items-start gap-3">
-                <MapPin className="mt-1 h-5 w-5 text-heading" />
-                <div>
-                  <p className="font-semibold text-heading">{t.contact.maps}</p>
-                  {contactData.mapsUrl ? (
-                    <a
-                      href={contactData.mapsUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-1 block text-paragraph hover:text-heading"
-                    >
-                      {contactData.address}
-                    </a>
-                  ) : (
-                    <p className="mt-1 text-paragraph">{contactData.address || t.contact.address}</p>
-                  )}
+            <MotionWrapper className="rounded-[2rem] border-2 border-border bg-primaryBg/5 p-6 sm:p-8 shadow-sm">
+              <h3 className="mb-6 font-bold text-heading text-lg uppercase tracking-wider">Lokasi & Waktu</h3>
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white border border-border shadow-sm text-heading">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{t.contact.maps}</p>
+                    {contactData.mapsUrl ? (
+                      <a href={contactData.mapsUrl} target="_blank" rel="noreferrer" className="text-sm font-semibold text-heading hover:text-primaryBg transition-colors">
+                        {contactData.address}
+                      </a>
+                    ) : (
+                      <p className="text-sm font-semibold text-heading">{contactData.address || t.contact.address}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="mt-6 flex items-start gap-3">
-                <Clock3 className="mt-1 h-5 w-5 text-heading" />
-                <div>
-                  <p className="font-semibold text-heading">Business hours</p>
-                  <p className="mt-1 text-sm leading-7 text-paragraph">
-                    {contactData.openingHours || t.contact.hours}
-                  </p>
+                <div className="flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white border border-border shadow-sm text-heading">
+                    <Clock3 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Business Hours</p>
+                    <p className="text-sm font-semibold text-heading">
+                      {contactData.openingHours || t.contact.hours}
+                    </p>
+                  </div>
                 </div>
               </div>
             </MotionWrapper>

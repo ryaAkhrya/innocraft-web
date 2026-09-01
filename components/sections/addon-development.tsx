@@ -67,18 +67,17 @@ export function AddonDevelopment() {
   if (!hasContent) return null;
 
   return (
-    <Section id="addon-development" className="py-12 sm:py-20">
+    <Section id="addon-development" className="py-12 sm:py-20 relative">
+      <div className="absolute inset-0 bg-websiteBg/40 -z-10" />
       <Container>
         <MotionWrapper>
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-border/80 bg-white shadow-[0_24px_70px_-28px_rgba(15,23,42,0.2)]">
-            {/* Glow ornament */}
-            <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-primaryBg/20 blur-3xl" />
-            <div className="absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-primaryBg/10 blur-3xl" />
+          <div className="relative overflow-hidden rounded-[2rem] border-2 border-border bg-white shadow-[0_8px_0_rgba(243,231,229,1)] lg:shadow-[0_12px_0_rgba(243,231,229,1)]">
+            <div className="absolute top-0 right-0 h-16 w-16 bg-primaryBg/10" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)' }} />
 
             <div className="relative grid lg:grid-cols-[1.1fr_0.9fr] items-stretch">
               {/* Visual — video / thumbnail */}
-              <div className="relative min-h-[320px] sm:min-h-[420px] lg:min-h-[500px] overflow-hidden bg-gradient-to-br from-primaryBg/20 via-white to-white p-4 sm:p-5">
-                <div className="relative h-full w-full overflow-hidden rounded-[1.75rem] border border-white/60 bg-white/50">
+              <div className="relative min-h-[320px] sm:min-h-[420px] lg:min-h-[500px] overflow-hidden bg-accentSoft/30 p-6 sm:p-8 border-b-2 lg:border-b-0 lg:border-r-2 border-border">
+                <div className="relative h-full w-full overflow-hidden rounded-[1rem] border-2 border-white shadow-md bg-white">
                   {hasVideo ? (
                     <ClickToPlayVideo
                       key={data.videoUrl}
@@ -92,13 +91,13 @@ export function AddonDevelopment() {
                     <img
                       src={data.thumbnailUrl}
                       alt={data.title || "Addon development"}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.02]"
                       loading="lazy"
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-heading/10 bg-white/60">
-                        <Play className="h-8 w-8 text-heading/30 ml-0.5" />
+                      <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-border bg-white shadow-sm">
+                        <Play className="h-8 w-8 text-paragraph ml-1" />
                       </div>
                     </div>
                   )}
@@ -106,23 +105,32 @@ export function AddonDevelopment() {
               </div>
 
               {/* Content */}
-              <div className="flex flex-col justify-center px-8 py-12 sm:px-12 lg:px-16 lg:py-16">
+              <div className="flex flex-col justify-center px-8 py-12 sm:px-12 lg:px-16 lg:py-16 relative">
+                <div className="inline-flex items-center gap-2 mb-6">
+                  <div className="h-2 w-2 bg-primaryBg" />
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-heading/60">Creative Process</p>
+                </div>
                 {data.title ? (
-                  <h2 className="text-3xl font-semibold tracking-tight text-heading sm:text-4xl lg:text-5xl leading-tight">
+                  <h2 className="text-3xl font-extrabold tracking-tight text-heading sm:text-4xl lg:text-[2.5rem] leading-[1.15]">
                     {data.title}
                   </h2>
                 ) : null}
 
                 {data.description ? (
                   <div className="mt-6 sm:mt-8">
-                    <p className="text-base leading-7 text-paragraph sm:text-lg sm:leading-8">
+                    <p className="text-base leading-relaxed text-paragraph sm:text-lg sm:leading-relaxed">
                       {data.description}
                     </p>
                   </div>
                 ) : null}
 
-                {/* Decorative divider */}
-                <div className="mt-10 h-1 w-20 rounded-full bg-gradient-to-r from-primaryBg to-primaryBg/30" />
+                {/* Pixel decorative element */}
+                <div className="mt-12 flex gap-1">
+                  <div className="h-1.5 w-1.5 bg-primaryBg/40" />
+                  <div className="h-1.5 w-1.5 bg-primaryBg/60" />
+                  <div className="h-1.5 w-1.5 bg-primaryBg" />
+                  <div className="h-1.5 w-8 bg-primaryBg" />
+                </div>
               </div>
             </div>
           </div>

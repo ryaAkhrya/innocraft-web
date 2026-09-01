@@ -14,8 +14,13 @@ const config: Config = {
         websiteBgEnd: "#FFEFE8",
         accentSoft: "#EDE4F0",
         accentBlue: "#E2EAF8",
+        // New controlled muted accents
+        accentSage: "#E3E9DD",
+        accentDigitalBlue: "#E5F0FF",
+        accentEnergy: "#FFF4D4",
+        accentLavender: "#F1EBFA",
         heading: "#0F172A",
-        paragraph: "#6B7280",
+        paragraph: "#475569", // slightly darker than 6B7280 for better contrast
         cardBg: "#FFFFFF",
         border: "#F3E7E5",
         buttonBg: "#0F172A",

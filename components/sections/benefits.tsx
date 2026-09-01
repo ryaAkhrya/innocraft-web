@@ -142,35 +142,51 @@ export function Benefits() {
   }
 
   return (
-    <Section className="py-10 sm:py-16">
-      <Container>
+    <Section className="py-12 sm:py-24 relative overflow-hidden bg-white">
+      {/* Decorative background geometry */}
+      <div className="absolute inset-0 bg-grid-subtle opacity-[0.15] bg-[length:40px_40px]" />
+      
+      <Container className="relative">
         <SectionTitle
           eyebrow={badge}
           title={title}
           description={subtitle}
         />
-        <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          {benefitCards.map((card) => (
-            <MotionWrapper
-              key={card.id}
-              className="group rounded-3xl border border-border bg-white p-6 shadow-soft transition-all duration-300 hover:shadow-lg"
-            >
-              <div className="flex items-start gap-4">
-                {/* Text-based icon (emoji / string) rendered consistently */}
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primaryBg/70 text-2xl transition-transform duration-300 group-hover:scale-110">
-                  <span aria-hidden="true">{card.icon || "⭐"}</span>
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          {benefitCards.map((card, i) => {
+            const accents = ["bg-accentSage/20 border-accentSage/50", "bg-accentDigitalBlue/20 border-accentDigitalBlue/50", "bg-accentEnergy/20 border-accentEnergy/50", "bg-accentLavender/20 border-accentLavender/50"];
+            const iconAccents = ["bg-accentSage text-[#4A5D23]", "bg-accentDigitalBlue text-[#1E3A8A]", "bg-accentEnergy text-[#92400E]", "bg-accentLavender text-[#6B21A8]"];
+            const accent = accents[i % accents.length];
+            const iconAccent = iconAccents[i % iconAccents.length];
+
+            return (
+              <MotionWrapper
+                key={card.id}
+                className={`group relative rounded-[2rem] border-2 p-6 sm:p-8 transition-transform duration-300 hover:-translate-y-1 ${accent}`}
+              >
+                <div className="absolute top-0 right-0 p-6 opacity-10">
+                  <span className="text-6xl font-bold font-display italic">
+                    0{i + 1}
+                  </span>
                 </div>
-                <div className="min-w-0">
-                  <h3 className="text-xl font-semibold text-heading">
-                    {card.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-paragraph">
-                    {card.description}
-                  </p>
+                
+                <div className="relative z-10 flex flex-col sm:flex-row items-start gap-6">
+                  {/* Text-based icon (emoji / string) rendered consistently */}
+                  <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl transition-transform duration-300 group-hover:scale-110 shadow-sm ${iconAccent}`}>
+                    <span aria-hidden="true">{card.icon || "⭐"}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xl font-bold text-heading">
+                      {card.title}
+                    </h3>
+                    <p className="mt-3 text-base leading-relaxed text-paragraph">
+                      {card.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </MotionWrapper>
-          ))}
+              </MotionWrapper>
+            );
+          })}
         </div>
       </Container>
     </Section>
