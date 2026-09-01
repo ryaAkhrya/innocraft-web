@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,8 +11,8 @@ const config: Config = {
     extend: {
       colors: {
         primaryBg: "#FF7F73", // Coral
-        websiteBg: "#FFF7F2", // Warm Cream
-        websiteBgEnd: "#FFF2EC", // Soft Background
+        websiteBg: "var(--color-website-bg)", // Warm Cream
+        websiteBgEnd: "var(--color-website-bg-end)", // Soft Background
         
         // V4 Modern Playful Color-Block Palette
         peach: "#FFB4A9",
@@ -29,12 +30,12 @@ const config: Config = {
         softYellow: "#FFD66B",
         paleYellow: "#FFF0B8",
         
-        heading: "#101B35", // Dark Navy
-        paragraph: "#475569", 
-        cardBg: "#FFFFFF",
-        border: "rgba(16, 27, 53, 0.08)",
-        buttonBg: "#101B35",
-        buttonHover: "#1E293B",
+        heading: "var(--color-heading)", // Dark Navy
+        paragraph: "var(--color-paragraph)", 
+        cardBg: "var(--color-card-bg)",
+        border: "var(--color-border)",
+        buttonBg: "var(--color-button-bg)",
+        buttonHover: "var(--color-button-hover)",
       },
       boxShadow: {
         soft: "0 8px 24px rgba(16, 27, 53, 0.06)", // Gentle depth

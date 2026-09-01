@@ -158,7 +158,7 @@ export function Hero() {
                 <motion.h1
                   initial={{ opacity: 0, y: 16 }}
                   variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 } } }}
-                  className="mt-6 text-[2.75rem] font-display font-extrabold leading-[1.1] tracking-tight text-heading sm:text-6xl lg:text-[4.25rem]"
+                  className="mt-6 text-4xl sm:text-[2.75rem] md:text-5xl font-display font-extrabold leading-[1.1] tracking-tight text-heading lg:text-[4.25rem]"
                 >
                   {(() => {
                     const titleText = heroData.title || t.hero.title;

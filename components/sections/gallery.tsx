@@ -99,20 +99,32 @@ export function Gallery() {
           title={t.gallery.title}
           description={t.gallery.description}
         />
-        <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {galleryItems.map((item) => (
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {galleryItems.map((item, index) => {
+            const colors = [
+              "bg-softBlue",
+              "bg-softYellow",
+              "bg-peach",
+              "bg-softGreen",
+              "bg-softLavender"
+            ];
+            const backingColor = colors[index % colors.length];
+
+            return (
               <MotionWrapper
                 key={item.id}
-                className="gallery-card"
+                className="relative group h-full flex flex-col"
               >
-                <div className="gallery-card-inner">
-                  <div className="gallery-image-wrap">
+                <div className={`absolute inset-0 translate-x-3 translate-y-3 rounded-[2rem] border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4 ${backingColor}`} />
+                <div className="relative z-10 flex flex-col flex-1 rounded-[2rem] border-4 border-white bg-white shadow-soft-lg overflow-hidden transition-transform duration-500 group-hover:-translate-y-2">
+                  <div className="relative aspect-video w-full overflow-hidden bg-websiteBgEnd">
                     {item.imageUrl && item.imageUrl.trim().length > 0 ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={item.imageUrl}
                         alt={item.title}
                         loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center">
@@ -122,13 +134,18 @@ export function Gallery() {
                       </div>
                     )}
                   </div>
-                  <div className="gallery-content">
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
+                  <div className="flex flex-col flex-1 p-6 sm:p-8">
+                    <h3 className="text-xl font-display font-bold text-heading leading-tight">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 text-sm sm:text-base text-paragraph/80 leading-relaxed flex-1">
+                      {item.description}
+                    </p>
                   </div>
                 </div>
               </MotionWrapper>
-          ))}
+            );
+          })}
         </div>
       </Container>
     </Section>

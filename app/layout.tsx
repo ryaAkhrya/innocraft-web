@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import { LanguageProvider } from "@/lib/i18n/language-provider";
 import { SettingsProvider } from "@/lib/studio/settings-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import "../styles/globals.css";
 
 const inter = Inter({
@@ -61,7 +62,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className={`${inter.variable} ${poppins.variable} min-h-screen bg-breathing text-paragraph`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('theme') === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className={`${inter.variable} ${poppins.variable} min-h-screen bg-breathing text-paragraph transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200`}>
         {/* Decorative background elements */}
         <div className="decoration-blob decoration-blob--peach" aria-hidden="true" />
         <div className="decoration-blob decoration-blob--lavender" aria-hidden="true" />
@@ -128,9 +144,11 @@ export default function RootLayout({
         <div className="decoration-sparkle decoration-sparkle--5" aria-hidden="true" />
 
         <div className="relative z-10">
-          <LanguageProvider>
-            <SettingsProvider>{children}</SettingsProvider>
-          </LanguageProvider>
+          <ThemeProvider>
+            <LanguageProvider>
+              <SettingsProvider>{children}</SettingsProvider>
+            </LanguageProvider>
+          </ThemeProvider>
         </div>
       </body>
     </html>

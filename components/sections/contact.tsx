@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock3, Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import { Clock3, Mail, MapPin, MessageCircle, Send, Facebook } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
 import { Section } from "@/components/ui/section";
@@ -173,12 +173,42 @@ export function Contact() {
                     <div className="flex-1">
                       <p className="text-xs font-bold text-heading/50 uppercase tracking-widest mb-1.5">Instagram</p>
                       {contactData.instagram ? (
-                        <a href={contactData.instagram} target="_blank" rel="noreferrer" className="text-lg font-display font-bold hover:text-coral transition-colors">
+                        <a href={contactData.instagram} target="_blank" rel="noopener noreferrer" className="text-lg font-display font-bold hover:text-coral transition-colors">
                           {contactData.instagram}
                         </a>
                       ) : <p className="text-lg font-display font-bold">{t.contact.instagram}</p>}
                     </div>
                   </div>
+
+                  {contactData.facebook && (
+                    <div className="flex items-center gap-6 p-4 rounded-3xl hover:bg-softBlue/40 transition-colors group/item">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-[#1877F2] group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                        <Facebook className="h-7 w-7 stroke-[2.5]" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-bold text-heading/50 uppercase tracking-widest mb-1.5">Facebook</p>
+                        <a href={contactData.facebook} target="_blank" rel="noopener noreferrer" className="text-lg font-display font-bold hover:text-[#1877F2] transition-colors break-all">
+                          {contactData.facebook}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {contactData.tiktok && (
+                    <div className="flex items-center gap-6 p-4 rounded-3xl hover:bg-gray-100 transition-colors group/item">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-heading group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                        <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.68a6.34 6.34 0 0 0 6.27 6.36 6.37 6.37 0 0 0 6.33-6.23V8.8a8.27 8.27 0 0 0 4.14 2.21V7.55a4.8 4.8 0 0 1-2.15-.86z"/>
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-bold text-heading/50 uppercase tracking-widest mb-1.5">TikTok</p>
+                        <a href={contactData.tiktok} target="_blank" rel="noopener noreferrer" className="text-lg font-display font-bold hover:text-heading transition-colors break-all">
+                          {contactData.tiktok}
+                        </a>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </MotionWrapper>

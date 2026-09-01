@@ -62,7 +62,7 @@ export function SectionTitle({
           <p className="text-sm font-bold uppercase tracking-[0.25em] text-heading/70">{eyebrow}</p>
         </div>
       ) : null}
-      <h2 className="text-[2.5rem] font-display font-extrabold tracking-tight text-heading sm:text-5xl lg:text-6xl lg:leading-[1.15] max-w-3xl">
+      <h2 className="text-4xl sm:text-[2.5rem] md:text-5xl lg:text-6xl font-display font-extrabold tracking-tight text-heading leading-[1.15] max-w-3xl">
         {renderTitle()}
       </h2>
       {description ? (

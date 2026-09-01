@@ -11,6 +11,27 @@
   --shadow-md: 0 8px 16px -6px rgba(15, 23, 42, 0.04);
   --shadow-lg: 0 24px 48px -16px rgba(15, 23, 42, 0.06);
   --shadow-xl: 0 32px 64px -20px rgba(15, 23, 42, 0.08);
+  
+  --color-website-bg: #FFF7F2;
+  --color-website-bg-end: #FFF2EC;
+  --color-heading: #101B35;
+  --color-paragraph: #475569;
+  --color-card-bg: #FFFFFF;
+  --color-border: rgba(16, 27, 53, 0.08);
+  --color-button-bg: #101B35;
+  --color-button-hover: #1E293B;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-website-bg: #0B1120;
+  --color-website-bg-end: #0F172A;
+  --color-heading: #F8FAFC;
+  --color-paragraph: #CBD5E1;
+  --color-card-bg: #1E293B;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-button-bg: #334155;
+  --color-button-hover: #475569;
 }
 
 @layer base {
@@ -561,6 +582,20 @@
     .gallery-card:hover { transform: none; }
     .gallery-card:active { transform: none; }
   }
+
+  /* Dark mode smart overrides for hardcoded Tailwind classes */
+  .dark .bg-white {
+    background-color: var(--color-card-bg);
+  }
+  .dark .border-white {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  .dark .text-heading {
+    color: var(--color-heading);
+  }
+  .dark .bg-websiteBg {
+    background-color: var(--color-website-bg);
+  }
 }
 
 /* ============================================================
@@ -723,31 +758,30 @@
   will-change: transform, opacity;
 }
 
-/* Mobile: reduce to 5 voxels, smaller sizes, lower opacity */
+/* Mobile: reduce to 4 voxels, smaller sizes */
 @media (max-width: 639px) {
   .decoration-voxel--2, .decoration-voxel--3,
   .decoration-voxel--5, .decoration-voxel--6,
-  .decoration-voxel--9 { display: none; }
+  .decoration-voxel--8, .decoration-voxel--9 { display: none; }
 
-  .decoration-voxel--1 { width: 14px; height: 14px; left: 8%; filter: blur(3px); animation: voxel-far-1 60s ease-in-out infinite; }
-  .decoration-voxel--4 { width: 24px; height: 24px; left: 20%; filter: blur(1.5px); animation: voxel-mid-1 45s ease-in-out infinite; animation-delay: -7s; }
-  .decoration-voxel--7 { width: 36px; height: 36px; left: 4%; animation: voxel-near-1 35s ease-in-out infinite; animation-delay: -4s; }
-  .decoration-voxel--8 { width: 40px; height: 40px; left: 70%; animation: voxel-near-2 40s ease-in-out infinite; animation-delay: -18s; }
-  .decoration-voxel--10 { width: 44px; height: 44px; left: 50%; animation: voxel-near-1 45s ease-in-out infinite; animation-delay: -24s; }
+  .decoration-voxel--1 { width: 24px; height: 24px; top: 15%; left: 8%; opacity: 0.15; animation: float-block 8s ease-in-out infinite; }
+  .decoration-voxel--4 { width: 32px; height: 32px; top: 40%; left: 85%; opacity: 0.12; animation: float-block-delayed 10s ease-in-out infinite; animation-delay: -2s; }
+  .decoration-voxel--7 { width: 40px; height: 40px; top: 75%; left: 10%; opacity: 0.18; animation: float-block-large 12s ease-in-out infinite; animation-delay: -5s; }
+  .decoration-voxel--10 { width: 28px; height: 28px; top: 85%; left: 80%; opacity: 0.10; animation: float-block 9s ease-in-out infinite; animation-delay: -1s; }
 }
 
-/* Desktop: full set, desktop sizes retained */
+/* Desktop: 10 scattered voxels */
 @media (min-width: 640px) {
-  .decoration-voxel--1 { width: 20px; height: 20px; left: 6%;  opacity: 0; filter: blur(5px);  animation: voxel-far-1 45s ease-in-out infinite; }
-  .decoration-voxel--2 { width: 28px; height: 28px; left: 35%; opacity: 0; filter: blur(4px);  animation: voxel-far-2 50s ease-in-out infinite; animation-delay: -12s; }
-  .decoration-voxel--3 { width: 18px; height: 18px; left: 65%; opacity: 0; filter: blur(6px);  animation: voxel-far-3 55s ease-in-out infinite; animation-delay: -22s; }
-  .decoration-voxel--4 { width: 36px; height: 36px; left: 16%; opacity: 0; filter: blur(2px);  animation: voxel-mid-1 35s ease-in-out infinite; animation-delay: -7s; }
-  .decoration-voxel--5 { width: 44px; height: 44px; left: 48%; opacity: 0; filter: blur(1.5px); animation: voxel-mid-2 40s ease-in-out infinite; animation-delay: -16s; }
-  .decoration-voxel--6 { width: 30px; height: 30px; left: 75%; opacity: 0; filter: blur(2.5px); animation: voxel-mid-3 32s ease-in-out infinite; animation-delay: -10s; }
-  .decoration-voxel--7 { width: 56px; height: 56px; left: 2%;  opacity: 0; animation: voxel-near-1 28s ease-in-out infinite; animation-delay: -4s; }
-  .decoration-voxel--8 { width: 64px; height: 64px; left: 26%; opacity: 0; animation: voxel-near-2 32s ease-in-out infinite; animation-delay: -18s; }
-  .decoration-voxel--9 { width: 48px; height: 48px; left: 56%; opacity: 0; animation: voxel-near-3 24s ease-in-out infinite; animation-delay: -13s; }
-  .decoration-voxel--10 { width: 72px; height: 72px; left: 85%; opacity: 0; animation: voxel-near-1 36s ease-in-out infinite; animation-delay: -24s; }
+  .decoration-voxel--1 { width: 32px; height: 32px; top: 12%; left: 6%; opacity: 0.15; filter: blur(1px); animation: float-block 8s ease-in-out infinite; }
+  .decoration-voxel--2 { width: 44px; height: 44px; top: 8%; left: 45%; opacity: 0.12; animation: float-block-delayed 11s ease-in-out infinite; animation-delay: -3s; }
+  .decoration-voxel--3 { width: 28px; height: 28px; top: 18%; left: 85%; opacity: 0.10; filter: blur(2px); animation: float-block-large 9s ease-in-out infinite; animation-delay: -1s; }
+  .decoration-voxel--4 { width: 56px; height: 56px; top: 35%; left: 12%; opacity: 0.18; animation: float-block 12s ease-in-out infinite; animation-delay: -5s; }
+  .decoration-voxel--5 { width: 36px; height: 36px; top: 45%; left: 75%; opacity: 0.14; animation: float-block-delayed 10s ease-in-out infinite; animation-delay: -4s; }
+  .decoration-voxel--6 { width: 48px; height: 48px; top: 55%; left: 35%; opacity: 0.08; filter: blur(3px); animation: float-block-large 11s ease-in-out infinite; animation-delay: -2s; }
+  .decoration-voxel--7 { width: 64px; height: 64px; top: 65%; left: 5%; opacity: 0.20; animation: float-block 9s ease-in-out infinite; animation-delay: -6s; }
+  .decoration-voxel--8 { width: 72px; height: 72px; top: 75%; left: 88%; opacity: 0.15; animation: float-block-delayed 12s ease-in-out infinite; animation-delay: -3s; }
+  .decoration-voxel--9 { width: 40px; height: 40px; top: 85%; left: 45%; opacity: 0.12; filter: blur(1px); animation: float-block-large 8s ease-in-out infinite; animation-delay: -1s; }
+  .decoration-voxel--10 { width: 52px; height: 52px; top: 92%; left: 20%; opacity: 0.16; animation: float-block 10s ease-in-out infinite; animation-delay: -7s; }
 }
 
 /* ---- GEOMETRIC SHAPES ---- */
