@@ -87,7 +87,7 @@ export function Projects() {
 
   if (projects.length === 0) {
     return (
-      <Section id="projects" className="py-10 sm:py-16">
+      <Section id="projects" className="py-20 sm:py-32">
         <Container>
           <SectionTitle
             eyebrow="Proyek"
@@ -95,8 +95,8 @@ export function Projects() {
             description={t.projects.description}
           />
           <div className="mt-8 text-center">
-            <div className="rounded-3xl border border-border bg-white p-8 shadow-soft">
-              <p className="text-base text-paragraph">
+            <div className="rounded-[3rem] border-4 border-white bg-white p-8 shadow-soft-lg">
+              <p className="text-base font-medium text-paragraph">
                 Projects coming soon.
               </p>
             </div>
@@ -107,13 +107,19 @@ export function Projects() {
   }
 
   return (
-    <Section id="projects" className="py-12 sm:py-24 bg-[#FAF9F8]">
-      <Container>
-        <div className="mb-12">
+    <Section id="projects" className="py-20 sm:py-32 bg-websiteBgEnd relative">
+      {/* Playful scattered blobs */}
+      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-peach/30 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-0 w-[500px] h-[500px] bg-softBlue/30 rounded-full blur-[100px] pointer-events-none" />
+
+      <Container className="relative z-10">
+        <div className="mb-16">
           <SectionTitle
             eyebrow="Proyek"
             title={t.projects.title}
             description={t.projects.description}
+            highlightWord="proses"
+            highlightColor="peach"
           />
         </div>
         <div className="mt-12 grid gap-10 lg:grid-cols-2">
@@ -123,68 +129,86 @@ export function Projects() {
                 ? item.projectUrl
                 : null;
 
-            // Alternate colors for the offset shadow
-            const shadows = [
-              "shadow-[8px_8px_0_rgba(146,64,14,1)]", // Energy (Orange/Brown)
-              "shadow-[8px_8px_0_rgba(30,58,138,1)]", // Blue
-              "shadow-[8px_8px_0_rgba(74,93,35,1)]",  // Sage (Green)
-              "shadow-[8px_8px_0_rgba(107,33,168,1)]" // Lavender (Purple)
+            // V4 Playful Solid Color Variants
+            const cardColors = [
+              "bg-peach", 
+              "bg-softBlue", 
+              "bg-softYellow", 
+              "bg-softGreen" 
             ];
-            const shadow = shadows[index % shadows.length];
+            const badgeColors = [
+              "bg-white text-coral border-2 border-white",
+              "bg-white text-skyBlue border-2 border-white",
+              "bg-white text-heading border-2 border-white",
+              "bg-white text-freshGreen border-2 border-white"
+            ];
+            
+            const cardBg = cardColors[index % cardColors.length];
+            const badgeBg = badgeColors[index % badgeColors.length];
 
             return (
               <MotionWrapper
                 key={item.id}
-                className={`group flex flex-col overflow-hidden rounded-[2rem] border-4 border-heading bg-white transition-all duration-300 hover:-translate-y-2 hover:translate-x-1 ${shadow}`}
+                className="group relative"
               >
-                <div className="aspect-[4/3] sm:aspect-video overflow-hidden border-b-4 border-heading relative">
-                  <div className="absolute inset-0 bg-heading/5 z-10 transition-opacity group-hover:opacity-0" />
-                  {item.imageUrl && item.imageUrl.trim().length > 0 ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={item.imageUrl}
-                      alt={item.title}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-gray-100">
-                      <span className="text-sm font-medium text-paragraph/60">
-                        No image available
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-grow flex-col p-6 sm:p-8">
-                  <h3 className="text-2xl font-bold text-heading">
-                    {item.title}
-                  </h3>
-                  {item.ageRange && (
-                    <div className="mt-2 text-sm font-bold tracking-widest uppercase text-heading/50">
-                      {item.ageRange} • {item.duration}
-                    </div>
-                  )}
-                  <p className="mt-4 flex-grow text-base leading-relaxed text-paragraph">
-                    {item.description}
-                  </p>
-                </div>
-                <div className="p-6 sm:p-8 pt-0 mt-4">
-                  {externalUrl ? (
-                    <a
-                      href={externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border-2 border-heading bg-white px-6 py-3.5 text-sm font-bold text-heading transition-all hover:bg-primaryBg hover:shadow-[0_4px_0_rgba(15,23,42,1)] hover:-translate-y-1 active:translate-y-0 active:shadow-none"
-                    >
-                      {item.ctaText || "Lihat Proyek"}
-                      <ArrowUpRight className="ml-2 h-4 w-4" />
-                    </a>
-                  ) : (
-                    <button disabled className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border-2 border-border bg-gray-50 px-6 py-3.5 text-sm font-bold text-paragraph/50 cursor-not-allowed">
-                      {item.ctaText || "Lihat Proyek"}
-                      <ArrowUpRight className="ml-2 h-4 w-4" />
-                    </button>
-                  )}
+                {/* V4 offset playful shadow block */}
+                <div className={`absolute inset-0 translate-x-3 translate-y-3 rounded-[3rem] border-2 border-white ${cardBg} pointer-events-none transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4`} />
+
+                <div className="relative flex flex-col overflow-hidden rounded-[3rem] border-4 border-white bg-white transition-transform duration-500 hover:-translate-y-2 z-10 h-full shadow-soft-sm">
+                  <div className={`aspect-[4/3] sm:aspect-video overflow-hidden border-b-4 border-white relative ${cardBg}`}>
+                    {item.imageUrl && item.imageUrl.trim().length > 0 ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                        <span className="text-sm font-medium text-heading/50">
+                          Tidak ada gambar
+                        </span>
+                      </div>
+                    )}
+                    {/* Category Badge */}
+                    {item.category && (
+                      <div className={`absolute top-6 left-6 z-10 rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-sm ${badgeBg}`}>
+                        {item.category}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-grow flex-col p-8 sm:p-10 bg-white">
+                    <h3 className="text-3xl font-display font-extrabold text-heading">
+                      {item.title}
+                    </h3>
+                    {item.ageRange && (
+                      <div className="mt-4 text-sm font-bold tracking-widest uppercase text-skyBlue">
+                        {item.ageRange} • {item.duration}
+                      </div>
+                    )}
+                    <p className="mt-5 flex-grow text-lg font-medium leading-relaxed text-paragraph">
+                      {item.description}
+                    </p>
+                  </div>
+                  <div className="p-8 sm:p-10 pt-0 bg-white">
+                    {externalUrl ? (
+                      <a
+                        href={externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex w-full sm:w-auto items-center justify-center rounded-2xl border-2 border-white ${cardBg} px-8 py-4 text-sm font-bold uppercase tracking-widest text-heading transition-all hover:brightness-105 shadow-soft-sm hover:-translate-y-1 hover:shadow-soft`}
+                      >
+                        {item.ctaText || "Lihat Proyek"}
+                        <ArrowUpRight className="ml-3 h-5 w-5" />
+                      </a>
+                    ) : (
+                      <button disabled className="inline-flex w-full sm:w-auto items-center justify-center rounded-2xl border-2 border-border/50 bg-websiteBgEnd px-8 py-4 text-sm font-bold uppercase tracking-widest text-heading/30 cursor-not-allowed">
+                        {item.ctaText || "Lihat Proyek"}
+                        <ArrowUpRight className="ml-3 h-5 w-5 opacity-50" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </MotionWrapper>
             );

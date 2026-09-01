@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface SectionTitleProps {
@@ -5,6 +8,8 @@ interface SectionTitleProps {
   title: string;
   description?: string;
   className?: string;
+  highlightWord?: string;
+  highlightColor?: "peach" | "coral" | "green" | "blue" | "yellow" | "lavender";
 }
 
 export function SectionTitle({
@@ -12,17 +17,59 @@ export function SectionTitle({
   title,
   description,
   className,
+  highlightWord,
+  highlightColor = "peach",
 }: SectionTitleProps) {
+  const colorMap = {
+    peach: "bg-peach text-heading",
+    coral: "bg-coral text-white",
+    green: "bg-freshGreen text-heading",
+    blue: "bg-skyBlue text-heading",
+    yellow: "bg-softYellow text-heading",
+    lavender: "bg-lavender text-heading",
+  };
+
+  const renderTitle = () => {
+    if (!highlightWord || !title.includes(highlightWord)) return title;
+
+    const parts = title.split(highlightWord);
+    return (
+      <>
+        {parts[0]}
+        <span className="relative inline-block whitespace-nowrap px-3 mx-1">
+          <span className="relative z-10">{highlightWord}</span>
+          <motion.span
+            initial={{ scale: 0.9, opacity: 0, rotate: -2 }}
+            whileInView={{ scale: 1, opacity: 1, rotate: -2 }}
+            viewport={{ once: true, amount: 0.8 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className={cn(
+              "absolute inset-0 -z-10 rounded-2xl shadow-soft-sm",
+              colorMap[highlightColor]
+            )}
+          />
+        </span>
+        {parts[1]}
+      </>
+    );
+  };
+
   return (
-    <div className={cn("max-w-3xl", className)}>
+    <div className={cn("max-w-4xl", className)}>
       {eyebrow ? (
-        <div className="inline-flex items-center gap-2 mb-3">
-          <div className="h-1.5 w-1.5 bg-primaryBg" />
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-heading/70">{eyebrow}</p>
+        <div className="inline-flex items-center gap-4 mb-6">
+          <div className="h-3 w-3 rounded-full bg-coral animate-pulse" />
+          <p className="text-sm font-bold uppercase tracking-[0.25em] text-heading/70">{eyebrow}</p>
         </div>
       ) : null}
-      <h2 className="mt-1 text-3xl font-bold tracking-tight text-heading sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">{title}</h2>
-      {description ? <p className="mt-5 text-lg leading-relaxed text-paragraph">{description}</p> : null}
+      <h2 className="text-[2.5rem] font-display font-extrabold tracking-tight text-heading sm:text-5xl lg:text-6xl lg:leading-[1.15] max-w-3xl">
+        {renderTitle()}
+      </h2>
+      {description ? (
+        <p className="mt-8 text-lg sm:text-xl leading-relaxed text-paragraph max-w-2xl font-medium">
+          {description}
+        </p>
+      ) : null}
     </div>
   );
 }

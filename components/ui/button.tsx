@@ -6,18 +6,19 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-[0.75rem] border-2 px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading focus-visible:ring-offset-2 hover:-translate-y-[2px] active:translate-y-[1px]",
+  "inline-flex items-center justify-center rounded-2xl px-8 py-4 text-[15px] font-bold transition-all duration-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-peach/50 focus-visible:ring-offset-2 [&_svg]:transition-transform [&_svg]:duration-400 group relative overflow-hidden",
   {
     variants: {
       variant: {
-        default: "border-buttonBg bg-buttonBg text-white hover:bg-buttonHover hover:shadow-[0_4px_12px_rgba(15,23,42,0.25)] active:shadow-none",
-        secondary: "border-border bg-white text-heading hover:bg-primaryBg/20 hover:border-primaryBg hover:shadow-[0_4px_12px_rgba(255,207,201,0.4)] active:shadow-none",
-        ghost: "border-transparent bg-transparent text-heading hover:bg-primaryBg/20 hover:text-heading active:bg-primaryBg/30",
+        default: "border border-transparent bg-coral text-white shadow-color-peach hover:bg-[#ff7165] hover:shadow-lg hover:-translate-y-1 active:translate-y-0 active:shadow-md [&_svg]:hover:translate-x-1",
+        secondary: "border-2 border-softBlue bg-white text-heading shadow-soft hover:border-skyBlue hover:bg-softBlue/20 hover:shadow-soft-lg hover:-translate-y-1 active:translate-y-0 active:shadow-soft-sm [&_svg]:hover:translate-x-1",
+        ghost: "border-2 border-transparent bg-transparent text-heading hover:bg-softBlue/40 hover:text-heading active:bg-softBlue/60 [&_svg]:hover:translate-x-1",
+        navy: "border border-transparent bg-heading text-white shadow-soft hover:bg-heading/80 hover:shadow-soft-lg hover:-translate-y-1 active:translate-y-0 active:shadow-soft-sm [&_svg]:hover:translate-x-1",
       },
       size: {
-        default: "h-11",
-        sm: "h-10 px-4",
-        lg: "h-12 px-6",
+        default: "h-14",
+        sm: "h-11 px-5 text-sm",
+        lg: "h-16 px-10 text-base",
       },
     },
     defaultVariants: {

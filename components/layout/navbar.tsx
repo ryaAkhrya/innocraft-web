@@ -42,21 +42,21 @@ export function Navbar() {
     <header
       className={cn(
         "sticky top-0 z-50 transition-all duration-300",
-        isScrolled ? "bg-white/80 shadow-sm backdrop-blur-xl" : "bg-transparent",
+        isScrolled ? "bg-white/90 backdrop-blur-xl shadow-soft border-b border-border" : "bg-transparent py-4",
       )}
     >
-      <Container className="py-4 sm:py-5">
-        <div className="mx-auto flex max-w-5xl items-center justify-between rounded-[1.25rem] border-2 border-border bg-white/90 px-4 py-3 shadow-[0_8px_32px_-12px_rgba(15,23,42,0.12)] backdrop-blur-md">
-          <Link href="/#home" className="flex items-center gap-3 transition-opacity hover:opacity-80" aria-label={`${settings.websiteName} home`}>
+      <Container className={cn("transition-all duration-300", isScrolled ? "py-3" : "py-4 sm:py-5")}>
+        <div className={cn("mx-auto flex max-w-5xl items-center justify-between bg-white px-5 py-3 transition-all duration-300", isScrolled ? "rounded-none bg-transparent" : "rounded-3xl border-2 border-border shadow-soft-sm")}>
+          <Link href="/#home" className="flex items-center gap-3 transition-transform hover:-translate-y-0.5 active:translate-y-0" aria-label={`${settings.websiteName} home`}>
             <Image src={logoUrl} alt={`${settings.websiteName} logo`} width={32} height={32} className="h-8 w-8 object-contain" />
-            <span className="text-sm font-bold uppercase tracking-[0.25em] text-heading">{settings.websiteName}</span>
+            <span className="text-sm font-extrabold uppercase tracking-[0.25em] text-heading">{settings.websiteName}</span>
           </Link>
 
           <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary navigation">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="relative text-sm font-semibold text-paragraph transition-colors hover:text-heading group">
+              <Link key={item.href} href={item.href} className="relative text-sm font-bold text-heading/70 uppercase tracking-widest transition-colors hover:text-coral group">
                 {item.label}
-                <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-primaryBg transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-2 left-0 h-1 w-0 rounded-full bg-coral transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </nav>
@@ -65,40 +65,40 @@ export function Navbar() {
             <PrimaryButton asChild>
               <a href={waUrl} target="_blank" rel="noopener noreferrer">
                 {t.nav.cta}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4 stroke-[3]" />
               </a>
             </PrimaryButton>
           </div>
 
           <button
             type="button"
-            className="rounded-full border border-border p-2 text-heading lg:hidden"
+            className="rounded-2xl border-2 border-border p-2 text-heading lg:hidden hover:bg-websiteBg hover:border-coral hover:text-coral transition-all"
             onClick={() => setIsOpen((value) => !value)}
             aria-label={isOpen ? "Close navigation" : "Open navigation"}
           >
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isOpen ? <X className="h-5 w-5 stroke-[2.5]" /> : <Menu className="h-5 w-5 stroke-[2.5]" />}
           </button>
         </div>
 
         {isOpen ? (
-          <div className="mt-3 rounded-[1.5rem] border border-border bg-white/90 p-4 shadow-soft lg:hidden">
-            <nav className="flex flex-col gap-3" aria-label="Mobile navigation">
+          <div className="mt-4 rounded-[2rem] border-2 border-border bg-white p-5 shadow-soft lg:hidden">
+            <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-2xl px-3 py-2 text-sm font-medium text-paragraph transition hover:bg-primaryBg/20 hover:text-heading"
+                  className="rounded-2xl px-4 py-3 text-sm font-bold uppercase tracking-widest text-heading transition-colors hover:bg-peach/30 hover:text-coral"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.label}
                 </Link>
               ))}
             </nav>
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              <PrimaryButton asChild>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <PrimaryButton asChild className="w-full">
                 <a href={waUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)}>
                   {t.nav.cta}
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-4 w-4 stroke-[3]" />
                 </a>
               </PrimaryButton>
             </div>

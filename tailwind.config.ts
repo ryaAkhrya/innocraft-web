@@ -9,28 +9,41 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primaryBg: "#FFCFC9",
-        websiteBg: "#FFF8F6",
-        websiteBgEnd: "#FFEFE8",
-        accentSoft: "#EDE4F0",
-        accentBlue: "#E2EAF8",
-        // New controlled muted accents
-        accentSage: "#E3E9DD",
-        accentDigitalBlue: "#E5F0FF",
-        accentEnergy: "#FFF4D4",
-        accentLavender: "#F1EBFA",
-        heading: "#0F172A",
-        paragraph: "#475569", // slightly darker than 6B7280 for better contrast
+        primaryBg: "#FF7F73", // Coral
+        websiteBg: "#FFF7F2", // Warm Cream
+        websiteBgEnd: "#FFF2EC", // Soft Background
+        
+        // V4 Modern Playful Color-Block Palette
+        peach: "#FFB4A9",
+        coral: "#FF7F73",
+        
+        freshGreen: "#8BCB88",
+        softGreen: "#DDF3DA",
+        
+        skyBlue: "#7FB8F5",
+        softBlue: "#E3F0FF",
+        
+        lavender: "#B9A7F2",
+        softLavender: "#EEE7FF",
+        
+        softYellow: "#FFD66B",
+        paleYellow: "#FFF0B8",
+        
+        heading: "#101B35", // Dark Navy
+        paragraph: "#475569", 
         cardBg: "#FFFFFF",
-        border: "#F3E7E5",
-        buttonBg: "#0F172A",
+        border: "rgba(16, 27, 53, 0.08)",
+        buttonBg: "#101B35",
         buttonHover: "#1E293B",
       },
       boxShadow: {
-        soft: "0 20px 45px -24px rgba(15, 23, 42, 0.2)",
-        "hero-card": "0 30px 80px -20px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(255, 207, 201, 0.15)",
-        "hero-card-hover": "0 40px 100px -24px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 207, 201, 0.25)",
-        "cube-glow": "0 0 60px -12px rgba(255, 207, 201, 0.3)",
+        soft: "0 8px 24px rgba(16, 27, 53, 0.06)", // Gentle depth
+        "soft-lg": "0 16px 32px rgba(16, 27, 53, 0.08)",
+        "soft-sm": "0 4px 12px rgba(16, 27, 53, 0.04)",
+        "color-peach": "0 8px 24px rgba(255, 180, 169, 0.3)",
+        "color-blue": "0 8px 24px rgba(127, 184, 245, 0.3)",
+        "color-green": "0 8px 24px rgba(139, 203, 136, 0.3)",
+        "hero-card": "0 20px 40px -10px rgba(16, 27, 53, 0.1), 0 0 0 1px rgba(255, 127, 115, 0.2)",
       },
       borderRadius: {
         "2xl": "1.5rem",

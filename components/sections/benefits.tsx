@@ -122,7 +122,7 @@ export function Benefits() {
 
   if (benefitCards.length === 0) {
     return (
-      <Section className="py-10 sm:py-16">
+      <Section className="py-20 sm:py-32">
         <Container>
           <SectionTitle
             eyebrow={badge}
@@ -130,8 +130,8 @@ export function Benefits() {
             description={subtitle}
           />
           <div className="mt-8 text-center">
-            <div className="rounded-3xl border border-border bg-white p-8 shadow-soft">
-              <p className="text-base text-paragraph">
+            <div className="rounded-[3rem] border-4 border-white bg-white p-8 shadow-soft-lg">
+              <p className="text-base font-medium text-paragraph">
                 Benefits coming soon.
               </p>
             </div>
@@ -142,46 +142,55 @@ export function Benefits() {
   }
 
   return (
-    <Section className="py-12 sm:py-24 relative overflow-hidden bg-white">
-      {/* Decorative background geometry */}
-      <div className="absolute inset-0 bg-grid-subtle opacity-[0.15] bg-[length:40px_40px]" />
-      
-      <Container className="relative">
+    <Section className="py-20 sm:py-32 relative overflow-hidden bg-websiteBg">
+      {/* Playful blobs */}
+      <div className="absolute top-1/4 left-0 w-[400px] h-[400px] bg-softYellow/30 rounded-full blur-[80px] pointer-events-none" />
+
+      <Container className="relative z-10">
         <SectionTitle
           eyebrow={badge}
           title={title}
           description={subtitle}
+          highlightWord="kualitas"
+          highlightColor="green"
         />
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+        <div className="mt-16 grid gap-8 lg:grid-cols-2">
           {benefitCards.map((card, i) => {
-            const accents = ["bg-accentSage/20 border-accentSage/50", "bg-accentDigitalBlue/20 border-accentDigitalBlue/50", "bg-accentEnergy/20 border-accentEnergy/50", "bg-accentLavender/20 border-accentLavender/50"];
-            const iconAccents = ["bg-accentSage text-[#4A5D23]", "bg-accentDigitalBlue text-[#1E3A8A]", "bg-accentEnergy text-[#92400E]", "bg-accentLavender text-[#6B21A8]"];
-            const accent = accents[i % accents.length];
+            // V4 Playful Solid Color Variants
+            const iconAccents = ["bg-peach text-heading", "bg-softBlue text-heading", "bg-softYellow text-heading", "bg-softGreen text-heading"];
+            const numberAccents = ["text-coral/20 group-hover:text-coral/40", "text-skyBlue/20 group-hover:text-skyBlue/40", "text-heading/10 group-hover:text-heading/20", "text-freshGreen/20 group-hover:text-freshGreen/40"];
+            
             const iconAccent = iconAccents[i % iconAccents.length];
+            const numberAccent = numberAccents[i % numberAccents.length];
 
             return (
               <MotionWrapper
                 key={card.id}
-                className={`group relative rounded-[2rem] border-2 p-6 sm:p-8 transition-transform duration-300 hover:-translate-y-1 ${accent}`}
+                className="group relative h-full"
               >
-                <div className="absolute top-0 right-0 p-6 opacity-10">
-                  <span className="text-6xl font-bold font-display italic">
-                    0{i + 1}
-                  </span>
-                </div>
+                {/* Offset shadow block */}
+                <div className={`absolute inset-0 translate-x-3 translate-y-3 rounded-[3rem] border-2 border-white ${iconAccent.split(' ')[0]} pointer-events-none transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4`} />
                 
-                <div className="relative z-10 flex flex-col sm:flex-row items-start gap-6">
-                  {/* Text-based icon (emoji / string) rendered consistently */}
-                  <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl transition-transform duration-300 group-hover:scale-110 shadow-sm ${iconAccent}`}>
-                    <span aria-hidden="true">{card.icon || "⭐"}</span>
+                <div className="relative flex flex-col items-start gap-6 rounded-[3rem] border-4 border-white bg-white p-8 sm:p-10 transition-transform duration-500 hover:-translate-y-2 shadow-soft-lg overflow-hidden h-full z-10">
+                  <div className="absolute top-0 right-0 p-8 select-none pointer-events-none transition-colors duration-500">
+                    <span className={`text-8xl font-display font-black transition-colors duration-500 ${numberAccent}`}>
+                      0{i + 1}
+                    </span>
                   </div>
-                  <div className="min-w-0">
-                    <h3 className="text-xl font-bold text-heading">
-                      {card.title}
-                    </h3>
-                    <p className="mt-3 text-base leading-relaxed text-paragraph">
-                      {card.description}
-                    </p>
+                  
+                  <div className="relative z-10 flex flex-col items-start gap-6">
+                    {/* Text-based icon (emoji / string) rendered consistently */}
+                    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-sm border-2 border-white text-2xl transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3 ${iconAccent}`}>
+                      <span aria-hidden="true">{card.icon || "⭐"}</span>
+                    </div>
+                    <div className="min-w-0 mt-2 pr-8">
+                      <h3 className="text-2xl font-display font-bold text-heading">
+                        {card.title}
+                      </h3>
+                      <p className="mt-3 text-lg font-medium leading-relaxed text-paragraph">
+                        {card.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </MotionWrapper>

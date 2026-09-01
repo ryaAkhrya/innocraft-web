@@ -27,103 +27,108 @@ export function ClassInfo() {
   const facilities = saved.programs.flatMap((p) => p.features);
 
   return (
-    <Section className="py-12 sm:py-24 relative overflow-hidden bg-websiteBg">
+    <Section className="py-20 sm:py-32 relative overflow-hidden bg-websiteBg">
       <Container className="relative">
-        <MotionWrapper className="relative overflow-hidden rounded-[2.5rem] border-2 border-border bg-white p-8 shadow-[0_12px_40px_rgba(15,23,42,0.04)] sm:p-12">
-          {/* Decorative geometry */}
-          <div className="absolute top-0 right-0 h-32 w-32 bg-accentLavender/20" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)' }} />
+        <MotionWrapper className="relative">
+          <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[3.5rem] border-2 border-white bg-peach pointer-events-none shadow-soft-sm" />
+          
+          <div className="relative overflow-hidden rounded-[3.5rem] border-4 border-white bg-white p-8 shadow-soft-lg sm:p-12 lg:p-16 z-10">
+            {/* Playful blob inside container */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-softYellow/30 blur-[80px] rounded-full pointer-events-none" />
+            
+            <SectionTitle
+              eyebrow={t.classInfo.eyebrow}
+              title={t.classInfo.title}
+              description={t.classInfo.description}
+              className="mb-16 max-w-2xl relative z-10"
+              highlightWord="Fasilitas"
+              highlightColor="green"
+            />
+            <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-stretch relative z-10">
+              <div className="flex flex-col justify-between rounded-[3rem] bg-softGreen border-2 border-white p-8 sm:p-10 shadow-soft-sm transition-transform duration-500 hover:-translate-y-2">
+                <div className="space-y-8">
+                  <div className="flex items-start gap-6 group">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border border-white/50 shadow-sm text-freshGreen transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+                      <CalendarDays className="h-7 w-7 stroke-[2.5]" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold uppercase tracking-widest text-heading/70 mb-1.5">Jadwal</h4>
+                      <p className="text-xl font-display font-bold text-heading">{t.classInfo.schedule}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-6 group">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border border-white/50 shadow-sm text-freshGreen transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+                      <Clock3 className="h-7 w-7 stroke-[2.5]" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold uppercase tracking-widest text-heading/70 mb-1.5">Durasi</h4>
+                      <p className="text-xl font-display font-bold text-heading">{t.classInfo.time}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-6 group">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border border-white/50 shadow-sm text-freshGreen transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+                      <Sparkles className="h-7 w-7 stroke-[2.5]" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold uppercase tracking-widest text-heading/70 mb-1.5">Usia</h4>
+                      <p className="text-xl font-display font-bold text-heading">{t.classInfo.age}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-6 group">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border border-white/50 shadow-sm text-freshGreen transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+                      <MapPin className="h-7 w-7 stroke-[2.5]" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold uppercase tracking-widest text-heading/70 mb-1.5">Lokasi</h4>
+                      <p className="text-xl font-display font-bold text-heading">{t.classInfo.note}</p>
+                    </div>
+                  </div>
+                </div>
 
-          <SectionTitle
-            eyebrow={t.classInfo.eyebrow}
-            title={t.classInfo.title}
-            description={t.classInfo.description}
-            className="mb-10 max-w-2xl"
-          />
-          <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="flex flex-col justify-between rounded-[2rem] border-2 border-border bg-[#FAF9F8] p-8 shadow-sm">
-              <div className="space-y-5">
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white border-2 border-border shadow-sm text-primaryBg">
-                    <CalendarDays className="h-5 w-5 stroke-[2]" />
+                <div className="mt-12 overflow-hidden rounded-[2rem] border-2 border-white bg-white shadow-soft-sm transition-transform hover:-translate-y-1 hover:shadow-soft duration-500">
+                  <div className="flex h-[200px] w-full items-center justify-center bg-gray-50">
+                    <iframe
+                      title="Lokasi Innocraft"
+                      src="https://maps.google.com/maps?q=Innocraft%20Kursus%20Minecraft%20Berbasis%20Coding&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen={false}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
                   </div>
-                  <div>
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-heading/50 mb-1">Jadwal</h4>
-                    <p className="font-semibold text-heading">{t.classInfo.schedule}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white border-2 border-border shadow-sm text-accentDigitalBlue">
-                    <Clock3 className="h-5 w-5 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-heading/50 mb-1">Durasi</h4>
-                    <p className="font-semibold text-heading">{t.classInfo.time}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white border-2 border-border shadow-sm text-accentEnergy">
-                    <Sparkles className="h-5 w-5 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-heading/50 mb-1">Usia</h4>
-                    <p className="font-semibold text-heading">{t.classInfo.age}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white border-2 border-border shadow-sm text-accentSage">
-                    <MapPin className="h-5 w-5 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-heading/50 mb-1">Lokasi</h4>
-                    <p className="font-semibold text-heading">{t.classInfo.note}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-10 overflow-hidden rounded-[1.5rem] border-2 border-border bg-white shadow-sm transition-transform hover:-translate-y-1 duration-300">
-                <div className="flex h-[180px] w-full items-center justify-center bg-gray-100 sm:h-[220px]">
-                  <iframe
-                    title="Lokasi Innocraft"
-                    src="https://maps.google.com/maps?q=Innocraft%20Kursus%20Minecraft%20Berbasis%20Coding&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen={false}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                </div>
-                <div className="border-t-2 border-border p-5 bg-white">
-                  <h4 className="font-bold text-heading">{t.classInfo.locationName || "Innocraft: Kursus Minecraft Berbasis Coding"}</h4>
-                  <a
-                    href="https://maps.app.goo.gl/Z5thHsW3zbN3dyGp9"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primaryBg hover:opacity-80 transition-opacity"
-                  >
-                    {t.classInfo.openInMaps || "Buka di Google Maps"} <span className="text-lg leading-none">→</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col rounded-[2rem] border-2 border-border bg-primaryBg/10 p-8 shadow-inner relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/40 blur-[40px] rounded-full" />
-              <div className="relative z-10">
-                <h3 className="text-2xl font-extrabold text-heading">
-                  {t.classInfo.eyebrow}
-                </h3>
-                <ul className="mt-8 space-y-4">
-                  {(facilities.length > 0 ? facilities : t.classInfo.facilities).map((facility) => (
-                    <li
-                      key={facility}
-                      className="inline-flex w-full items-center gap-3 rounded-xl border-2 border-white bg-white/80 px-5 py-3.5 text-base font-semibold text-heading shadow-sm transition-all hover:bg-white hover:shadow-md hover:-translate-y-0.5"
+                  <div className="border-t-2 border-white p-6 bg-white">
+                    <h4 className="text-lg font-display font-bold text-heading">{t.classInfo.locationName || "Innocraft: Kursus Minecraft Berbasis Coding"}</h4>
+                    <a
+                      href="https://maps.app.goo.gl/Z5thHsW3zbN3dyGp9"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-freshGreen hover:text-heading transition-colors"
                     >
-                      <div className="h-2 w-2 shrink-0 bg-primaryBg" />
-                      {facility}
-                    </li>
-                  ))}
-                </ul>
+                      {t.classInfo.openInMaps || "Buka di Google Maps"} <span className="text-lg leading-none">→</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col rounded-[3rem] bg-softBlue border-2 border-white p-8 sm:p-10 shadow-soft-sm relative overflow-hidden transition-transform duration-500 hover:-translate-y-2">
+                <div className="relative z-10">
+                  <h3 className="text-3xl font-display font-extrabold text-heading">
+                    {t.classInfo.eyebrow}
+                  </h3>
+                  <ul className="mt-10 space-y-4">
+                    {(facilities.length > 0 ? facilities : t.classInfo.facilities).map((facility) => (
+                      <li
+                        key={facility}
+                        className="inline-flex w-full items-center gap-4 rounded-2xl border-2 border-white bg-white px-6 py-4 text-lg font-medium text-heading shadow-soft-sm transition-transform duration-500 hover:-translate-y-1 hover:shadow-soft"
+                      >
+                        <div className="h-3 w-3 shrink-0 rounded-full bg-skyBlue shadow-color-blue" />
+                        {facility}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
