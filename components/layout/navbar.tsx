@@ -9,12 +9,10 @@ import { Container } from "@/components/ui/container";
 import { useLanguage } from "@/lib/i18n/language-provider";
 import { useSettings } from "@/lib/studio/settings-provider";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/components/theme-provider";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 12);
@@ -64,13 +62,6 @@ export function Navbar() {
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <button
-              onClick={toggleTheme}
-              className="rounded-xl border border-border p-2.5 text-heading hover:bg-websiteBg hover:text-coral transition-all"
-              aria-label="Toggle dark mode"
-            >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
             <PrimaryButton asChild>
               <a href={waUrl} target="_blank" rel="noopener noreferrer">
                 {t.nav.cta}
@@ -104,16 +95,6 @@ export function Navbar() {
               ))}
             </nav>
             <div className="mt-6 flex flex-col items-center gap-3">
-              <button
-                onClick={() => { toggleTheme(); setIsOpen(false); }}
-                className="flex items-center justify-center rounded-xl border-2 border-border p-3 text-heading hover:bg-websiteBg transition-all w-full font-bold uppercase tracking-widest text-sm"
-              >
-                {theme === "dark" ? (
-                  <><Sun className="mr-2 h-5 w-5" /> Mode Terang</>
-                ) : (
-                  <><Moon className="mr-2 h-5 w-5" /> Mode Gelap</>
-                )}
-              </button>
               <PrimaryButton asChild className="w-full">
                 <a href={waUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)}>
                   {t.nav.cta}
