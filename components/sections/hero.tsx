@@ -106,10 +106,10 @@ export function Hero() {
   }, []);
 
   return (
-    <Section id="home" className="relative pt-12 pb-16 sm:pt-20 sm:pb-24 overflow-hidden bg-websiteBg">
+    <Section id="home" className="relative pt-12 pb-16 sm:pt-20 sm:pb-24 overflow-hidden bg-websiteBg/85">
       {/* V4 Soft Playful Environment */}
-      <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[800px] h-[800px] bg-peach/40 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-softGreen/50 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[400px] h-[400px] sm:w-[800px] sm:h-[800px] bg-peach/40 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-softGreen/50 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none" />
 
       {/* Decorative Geometry */}
       <motion.div 
@@ -158,7 +158,7 @@ export function Hero() {
                 <motion.h1
                   initial={{ opacity: 0, y: 16 }}
                   variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 } } }}
-                  className="mt-6 text-4xl sm:text-[2.75rem] md:text-5xl font-display font-extrabold leading-[1.1] tracking-tight text-heading lg:text-[4.25rem]"
+                  className="mt-6 text-4xl sm:text-5xl lg:text-[4.25rem] font-display font-extrabold leading-[1.1] tracking-tight text-heading"
                 >
                   {(() => {
                     const titleText = heroData.title || t.hero.title;
@@ -167,7 +167,7 @@ export function Hero() {
                       return (
                         <>
                           {parts[0]}
-                          <span className="relative inline-block whitespace-nowrap px-3 mx-1">
+                          <span className="relative inline-block sm:whitespace-nowrap px-3 mx-1">
                             <span className="relative z-10">Kreator Digital</span>
                             <motion.span 
                               initial={{ scale: 0.9, opacity: 0, rotate: -2 }}
@@ -217,12 +217,12 @@ export function Hero() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.3 }}
-              className="order-2 lg:order-none relative"
+              className="order-2 lg:order-none relative mt-8 lg:mt-0"
             >
               {/* Soft colored backing plate */}
-              <div className="absolute inset-0 translate-x-4 translate-y-6 rounded-[3rem] bg-softYellow rotate-3 pointer-events-none shadow-soft-sm" />
+              <div className="absolute inset-0 translate-x-2 translate-y-3 sm:translate-x-4 sm:translate-y-6 rounded-[2rem] sm:rounded-[3rem] bg-softYellow rotate-3 pointer-events-none shadow-soft-sm" />
               
-              <div className="relative rounded-[3rem] border-4 border-white bg-white overflow-hidden shadow-soft-lg z-10 transition-transform duration-500 hover:-translate-y-2">
+              <div className="relative rounded-[2rem] sm:rounded-[3rem] border-4 border-white bg-white overflow-hidden shadow-soft-lg z-10 transition-transform duration-500 hover:-translate-y-2">
                 {(() => {
                   const rawUrl = (heroData.heroVideoUrl ?? "").trim();
                   const videoUrl = rawUrl.length > 0 ? rawUrl : null;

@@ -84,13 +84,13 @@ export function Contact() {
   const waUrl = "https://wa.me/6287878791238?text=Halo%20INNOCRAFT,%20saya%20ingin%20menjadwalkan%20kunjungan";
 
   return (
-    <Section id="contact" className="py-20 sm:py-32 bg-websiteBg relative overflow-hidden">
+    <Section id="contact" className="py-20 sm:py-32 bg-websiteBg/85 relative overflow-hidden">
       <div className="absolute left-0 bottom-0 w-[500px] h-[500px] bg-softGreen/30 rounded-full blur-[100px] -translate-x-1/2 translate-y-1/2 pointer-events-none" />
       <Container className="relative">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] items-start">
           <MotionWrapper className="relative flex flex-col justify-between h-full group">
-            <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[3.5rem] bg-softGreen border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4" />
-            <div className="relative z-10 flex flex-col justify-between h-full rounded-[3.5rem] border-4 border-white bg-white p-8 sm:p-12 shadow-soft-lg overflow-hidden transition-transform duration-500 group-hover:-translate-y-2 bg-gradient-to-br from-white to-softGreen/20">
+            <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[2rem] sm:rounded-[3.5rem] bg-softGreen border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 sm:group-hover:translate-x-4 sm:group-hover:translate-y-4" />
+            <div className="relative z-10 flex flex-col justify-between h-full rounded-[2rem] sm:rounded-[3.5rem] border-4 border-white bg-white dark:bg-slate-800 p-6 sm:p-12 shadow-soft-lg overflow-hidden transition-transform duration-500 sm:group-hover:-translate-y-2">
               <div className="relative z-10">
                 <SectionTitle
                   eyebrow={t.contact.eyebrow}
@@ -134,12 +134,12 @@ export function Contact() {
 
           <div className="grid gap-8">
             <MotionWrapper className="relative group">
-              <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[3rem] bg-softBlue border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4" />
-              <div className="relative rounded-[3rem] border-4 border-white bg-white p-8 sm:p-10 shadow-soft-lg transition-transform duration-500 group-hover:-translate-y-2">
+              <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[2rem] sm:rounded-[3rem] bg-softBlue border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 sm:group-hover:translate-x-4 sm:group-hover:translate-y-4" />
+              <div className="relative rounded-[2rem] sm:rounded-[3rem] border-4 border-white bg-white dark:bg-slate-800 p-6 sm:p-10 shadow-soft-lg transition-transform duration-500 sm:group-hover:-translate-y-2">
                 <h3 className="mb-8 font-display font-extrabold text-heading text-xl uppercase tracking-widest">Social Media & Email</h3>
                 <div className="space-y-6 text-base text-heading font-medium">
                   <div className="flex items-center gap-6 p-4 rounded-3xl hover:bg-softGreen/30 transition-colors group/item">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-[#25D366] group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 border-2 border-white shadow-sm text-[#25D366] group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
                       <MessageCircle className="h-7 w-7 stroke-[2.5]" />
                     </div>
                     <div className="flex-1">
@@ -153,7 +153,7 @@ export function Contact() {
                   </div>
 
                   <div className="flex items-center gap-6 p-4 rounded-3xl hover:bg-softBlue/30 transition-colors group/item">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-skyBlue group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 border-2 border-white shadow-sm text-skyBlue group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
                       <Mail className="h-7 w-7 stroke-[2.5]" />
                     </div>
                     <div className="flex-1">
@@ -167,7 +167,7 @@ export function Contact() {
                   </div>
 
                   <div className="flex items-center gap-6 p-4 rounded-3xl hover:bg-peach/30 transition-colors group/item">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-coral group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 border-2 border-white shadow-sm text-coral group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
                       <Send className="h-7 w-7 stroke-[2.5]" />
                     </div>
                     <div className="flex-1">
@@ -182,7 +182,7 @@ export function Contact() {
 
                   {contactData.facebook && (
                     <div className="flex items-center gap-6 p-4 rounded-3xl hover:bg-softBlue/40 transition-colors group/item">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-[#1877F2] group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 border-2 border-white shadow-sm text-[#1877F2] group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
                         <Facebook className="h-7 w-7 stroke-[2.5]" />
                       </div>
                       <div className="flex-1">
@@ -196,7 +196,7 @@ export function Contact() {
 
                   {contactData.tiktok && (
                     <div className="flex items-center gap-6 p-4 rounded-3xl hover:bg-gray-100 transition-colors group/item">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-heading group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 border-2 border-white shadow-sm text-heading group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
                         <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.68a6.34 6.34 0 0 0 6.27 6.36 6.37 6.37 0 0 0 6.33-6.23V8.8a8.27 8.27 0 0 0 4.14 2.21V7.55a4.8 4.8 0 0 1-2.15-.86z"/>
                         </svg>
@@ -214,12 +214,12 @@ export function Contact() {
             </MotionWrapper>
 
             <MotionWrapper className="relative group">
-              <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[3rem] bg-softYellow border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4" />
-              <div className="relative rounded-[3rem] border-4 border-white bg-white p-8 sm:p-10 shadow-soft-lg transition-transform duration-500 group-hover:-translate-y-2">
+              <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[2rem] sm:rounded-[3rem] bg-softYellow border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 sm:group-hover:translate-x-4 sm:group-hover:translate-y-4" />
+              <div className="relative rounded-[2rem] sm:rounded-[3rem] border-4 border-white bg-white dark:bg-slate-800 p-6 sm:p-10 shadow-soft-lg transition-transform duration-500 sm:group-hover:-translate-y-2">
                 <h3 className="mb-8 font-display font-extrabold text-heading text-xl uppercase tracking-widest">Lokasi & Waktu</h3>
                 <div className="space-y-8">
                   <div className="flex items-start gap-6 group/item">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-heading group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 border-2 border-white shadow-sm text-heading group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
                       <MapPin className="h-7 w-7 stroke-[2.5]" />
                     </div>
                     <div>
@@ -234,7 +234,7 @@ export function Contact() {
                     </div>
                   </div>
                   <div className="flex items-start gap-6 group/item">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white border-2 border-white shadow-sm text-heading group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 border-2 border-white shadow-sm text-heading group-hover/item:-translate-y-1 group-hover/item:scale-110 group-hover/item:-rotate-6 transition-transform duration-500">
                       <Clock3 className="h-7 w-7 stroke-[2.5]" />
                     </div>
                     <div>

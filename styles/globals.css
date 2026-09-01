@@ -12,34 +12,40 @@
   --shadow-lg: 0 24px 48px -16px rgba(15, 23, 42, 0.06);
   --shadow-xl: 0 32px 64px -20px rgba(15, 23, 42, 0.08);
   
-  --color-website-bg: #FFF7F2;
-  --color-website-bg-end: #FFF2EC;
-  --color-heading: #101B35;
-  --color-paragraph: #475569;
-  --color-card-bg: #FFFFFF;
-  --color-border: rgba(16, 27, 53, 0.08);
-  --color-button-bg: #101B35;
-  --color-button-hover: #1E293B;
+  --color-website-bg: 255 247 242; /* #FFF7F2 */
+  --color-website-bg-end: 255 242 236; /* #FFF2EC */
+  --color-heading: 16 27 53; /* #101B35 */
+  --color-paragraph: 71 85 105; /* #475569 */
+  --color-card-bg: 255 255 255; /* #FFFFFF */
+  --color-border: 16 27 53; /* #101B35 */
+  --color-button-bg: 16 27 53; /* #101B35 */
+  --color-button-hover: 30 41 59; /* #1E293B */
 }
 
 .dark {
   color-scheme: dark;
-  --color-website-bg: #0B1120;
-  --color-website-bg-end: #0F172A;
-  --color-heading: #F8FAFC;
-  --color-paragraph: #CBD5E1;
-  --color-card-bg: #1E293B;
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-button-bg: #334155;
-  --color-button-hover: #475569;
+  --color-website-bg: 11 17 32; /* #0B1120 */
+  --color-website-bg-end: 15 23 42; /* #0F172A */
+  --color-heading: 248 250 252; /* #F8FAFC */
+  --color-paragraph: 203 213 225; /* #CBD5E1 */
+  --color-card-bg: 30 41 59; /* #1E293B */
+  --color-border: 255 255 255; /* #FFFFFF */
+  --color-button-bg: 51 65 85; /* #334155 */
+  --color-button-hover: 71 85 105; /* #475569 */
 }
 
 @layer base {
   * { @apply box-border; }
-  html { @apply scroll-smooth; }
+  html { 
+    @apply scroll-smooth; 
+    max-width: 100vw;
+    overflow-x: clip;
+  }
   body {
     @apply min-h-screen text-paragraph antialiased;
     font-family: var(--font-inter), system-ui, sans-serif;
+    max-width: 100vw;
+    overflow-x: clip;
   }
   h1, h2, h3, h4, h5, h6 { @apply font-display text-heading; }
   ::selection { @apply bg-primaryBg/70 text-heading; }
@@ -583,21 +589,7 @@
     .gallery-card:active { transform: none; }
   }
 
-  /* Dark mode smart overrides for hardcoded Tailwind classes */
-  .dark .bg-white {
-    background-color: var(--color-card-bg);
-  }
-  .dark .border-white {
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  .dark .text-heading {
-    color: var(--color-heading);
-  }
-  .dark .bg-websiteBg {
-    background-color: var(--color-website-bg);
-  }
 }
-
 /* ============================================================
    DECORATION SYSTEM
    ============================================================ */

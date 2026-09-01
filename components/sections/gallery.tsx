@@ -92,7 +92,7 @@ export function Gallery() {
   }
 
   return (
-    <Section id="gallery" className="py-10 sm:py-16">
+    <Section id="gallery" className="py-10 sm:py-16 overflow-hidden dark:bg-[#141A2C] transition-colors duration-500">
       <Container>
         <SectionTitle
           eyebrow={t.gallery.eyebrow}
@@ -115,8 +115,8 @@ export function Gallery() {
                 key={item.id}
                 className="relative group h-full flex flex-col"
               >
-                <div className={`absolute inset-0 translate-x-3 translate-y-3 rounded-[2rem] border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4 ${backingColor}`} />
-                <div className="relative z-10 flex flex-col flex-1 rounded-[2rem] border-4 border-white bg-white shadow-soft-lg overflow-hidden transition-transform duration-500 group-hover:-translate-y-2">
+                <div className={`absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[1.5rem] sm:rounded-[2rem] border-2 border-white pointer-events-none shadow-soft-sm transition-transform duration-500 sm:group-hover:translate-x-4 sm:group-hover:translate-y-4 ${backingColor}`} />
+                <div className="relative z-10 flex flex-col flex-1 rounded-[1.5rem] sm:rounded-[2rem] border-4 border-white bg-white dark:bg-[#1C2333] shadow-soft-lg overflow-hidden transition-transform duration-500 sm:group-hover:-translate-y-2">
                   <div className="relative aspect-video w-full overflow-hidden bg-websiteBgEnd">
                     {item.imageUrl && item.imageUrl.trim().length > 0 ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -135,10 +135,10 @@ export function Gallery() {
                     )}
                   </div>
                   <div className="flex flex-col flex-1 p-6 sm:p-8">
-                    <h3 className="text-xl font-display font-bold text-heading leading-tight">
+                    <h3 className="text-xl font-display font-bold text-heading dark:text-slate-100 leading-tight">
                       {item.title}
                     </h3>
-                    <p className="mt-3 text-sm sm:text-base text-paragraph/80 leading-relaxed flex-1">
+                    <p className="mt-3 text-sm sm:text-base text-paragraph/80 dark:text-slate-300 leading-relaxed flex-1">
                       {item.description}
                     </p>
                   </div>

@@ -7,7 +7,7 @@ import { SectionTitle } from "@/components/ui/section-title";
 
 export function CurriculumSection() {
   return (
-    <Section id="curriculum" className="py-20 sm:py-32 relative bg-websiteBg">
+    <Section id="curriculum" className="py-20 sm:py-32 relative bg-websiteBg/85 overflow-hidden">
       {/* Decorative Blob */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 w-[600px] h-[600px] bg-softBlue/40 rounded-full blur-[120px] pointer-events-none" />
       
@@ -27,11 +27,11 @@ export function CurriculumSection() {
             {/* Card 1: Young Innovator */}
             <div className="group relative h-full">
               {/* V4 playful offset block */}
-              <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[3rem] bg-freshGreen border-2 border-white pointer-events-none shadow-color-green rotate-1" />
+              <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[2rem] sm:rounded-[3rem] bg-freshGreen border-2 border-white pointer-events-none shadow-color-green rotate-1" />
               
-              <div className="relative h-full flex flex-col rounded-[3rem] bg-white p-8 sm:p-12 border-4 border-white shadow-soft-lg transition-transform duration-500 hover:-translate-y-2 z-10 overflow-hidden">
+              <div className="relative h-full flex flex-col rounded-[2rem] sm:rounded-[3rem] bg-white dark:bg-slate-800 p-6 sm:p-12 border-4 border-white shadow-soft-lg transition-transform duration-500 sm:hover:-translate-y-2 z-10 overflow-hidden">
                 <div className="mb-10 relative z-10">
-                  <div className="inline-block bg-softGreen px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest text-heading mb-6 border-2 border-white shadow-sm">
+                  <div className="inline-block bg-softGreen px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest text-[#101B35] dark:text-[#101B35] mb-6 border-2 border-white shadow-sm">
                     Foundational Program
                   </div>
                   <h3 className="text-3xl font-display font-extrabold text-heading mb-4">
@@ -64,12 +64,12 @@ export function CurriculumSection() {
             {/* Card 2: Professional Purpose */}
             <div className="group relative h-full mt-4 md:mt-0">
               {/* V4 playful offset block */}
-              <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[3rem] bg-skyBlue border-2 border-white pointer-events-none shadow-color-blue -rotate-1" />
+              <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[2rem] sm:rounded-[3rem] bg-skyBlue border-2 border-white pointer-events-none shadow-color-blue -rotate-1" />
               
-              <div className="relative h-full flex flex-col rounded-[3rem] bg-white p-8 sm:p-12 border-4 border-white shadow-soft-lg transition-transform duration-500 hover:-translate-y-2 z-10 overflow-hidden">
+              <div className="relative h-full flex flex-col rounded-[2rem] sm:rounded-[3rem] bg-white dark:bg-slate-800 p-6 sm:p-12 border-4 border-white shadow-soft-lg transition-transform duration-500 sm:hover:-translate-y-2 z-10 overflow-hidden">
 
                 <div className="mb-10 relative z-10">
-                  <div className="inline-block bg-softBlue px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest text-heading mb-6 border-2 border-white shadow-sm">
+                  <div className="inline-block bg-softBlue px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest text-[#101B35] dark:text-[#101B35] mb-6 border-2 border-white shadow-sm">
                     Advanced Program
                   </div>
                   <h3 className="text-3xl font-display font-extrabold text-heading mb-2">

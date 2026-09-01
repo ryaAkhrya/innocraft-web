@@ -11,13 +11,13 @@ import { useLanguage } from "@/lib/i18n/language-provider";
 export function FinalCta() {
   const { t } = useLanguage();
   return (
-    <Section className="py-20 sm:py-32 bg-websiteBg relative">
+    <Section className="py-20 sm:py-32 bg-websiteBg/85 relative">
       <Container>
         <MotionWrapper className="relative">
           {/* V4 Playful offset backing */}
-          <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[3.5rem] bg-softYellow border-2 border-white pointer-events-none shadow-soft-sm" />
+          <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[2rem] sm:rounded-[3.5rem] bg-softYellow border-2 border-white pointer-events-none shadow-soft-sm" />
           
-          <div className="relative overflow-hidden rounded-[3.5rem] bg-heading px-8 py-16 sm:px-16 sm:py-24 text-center shadow-soft-lg border-4 border-white z-10 transition-transform duration-500 hover:-translate-y-2">
+          <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[3.5rem] bg-[#101B35] dark:bg-slate-900 px-6 py-12 sm:px-16 sm:py-24 text-center shadow-soft-lg border-4 border-white z-10 transition-transform duration-500 sm:hover:-translate-y-2">
             {/* Playful Background Elements */}
             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-peach/20 blur-[80px] rounded-full pointer-events-none translate-x-1/3 -translate-y-1/3" />
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-skyBlue/20 blur-[80px] rounded-full pointer-events-none -translate-x-1/3 translate-y-1/3" />
@@ -39,7 +39,7 @@ export function FinalCta() {
               <div className="mt-12 flex flex-col sm:flex-row items-center gap-6 justify-center w-full sm:w-auto">
                 <Link 
                   href="#contact"
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border-2 border-white bg-peach px-10 py-5 text-sm font-bold uppercase tracking-widest text-heading transition-all hover:bg-coral hover:text-white shadow-soft-lg hover:shadow-color-peach hover:-translate-y-1 active:translate-y-0"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border-2 border-white bg-peach px-10 py-5 text-sm font-bold uppercase tracking-widest text-[#101B35] dark:text-[#101B35] transition-all hover:bg-coral hover:text-white dark:hover:text-white shadow-soft-lg hover:shadow-color-peach hover:-translate-y-1 active:translate-y-0"
                 >
                   {t.cta.action}
                   <ArrowRight className="ml-3 h-5 w-5 stroke-[2.5]" />

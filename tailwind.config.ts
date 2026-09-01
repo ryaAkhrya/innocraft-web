@@ -11,8 +11,8 @@ const config: Config = {
     extend: {
       colors: {
         primaryBg: "#FF7F73", // Coral
-        websiteBg: "var(--color-website-bg)", // Warm Cream
-        websiteBgEnd: "var(--color-website-bg-end)", // Soft Background
+        websiteBg: "rgb(var(--color-website-bg) / <alpha-value>)", // Warm Cream
+        websiteBgEnd: "rgb(var(--color-website-bg-end) / <alpha-value>)", // Soft Background
         
         // V4 Modern Playful Color-Block Palette
         peach: "#FFB4A9",
@@ -30,12 +30,12 @@ const config: Config = {
         softYellow: "#FFD66B",
         paleYellow: "#FFF0B8",
         
-        heading: "var(--color-heading)", // Dark Navy
-        paragraph: "var(--color-paragraph)", 
-        cardBg: "var(--color-card-bg)",
-        border: "var(--color-border)",
-        buttonBg: "var(--color-button-bg)",
-        buttonHover: "var(--color-button-hover)",
+        heading: "rgb(var(--color-heading) / <alpha-value>)", // Dark Navy
+        paragraph: "rgb(var(--color-paragraph) / <alpha-value>)", 
+        cardBg: "rgb(var(--color-card-bg) / <alpha-value>)",
+        border: "rgba(var(--color-border) / 0.08)",
+        buttonBg: "rgb(var(--color-button-bg) / <alpha-value>)",
+        buttonHover: "rgb(var(--color-button-hover) / <alpha-value>)",
       },
       boxShadow: {
         soft: "0 8px 24px rgba(16, 27, 53, 0.06)", // Gentle depth

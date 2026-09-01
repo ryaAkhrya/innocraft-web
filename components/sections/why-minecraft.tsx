@@ -12,10 +12,10 @@ import { cn } from "@/lib/utils";
 export function WhyMinecraft() {
   const { t } = useLanguage();
   return (
-    <Section id="about" className="py-20 sm:py-32 relative bg-websiteBgEnd">
+    <Section id="about" className="py-20 sm:py-32 relative bg-websiteBgEnd/85">
       <Container className="relative">
         <MotionWrapper>
-          <div className="relative rounded-[3rem] bg-white p-8 sm:p-12 lg:p-16 border-4 border-white shadow-soft-lg z-10">
+          <div className="relative rounded-[2rem] sm:rounded-[3rem] bg-white dark:bg-slate-800 p-6 sm:p-12 lg:p-16 border-4 border-white shadow-soft-lg z-10">
             <SectionTitle 
               eyebrow={t.whyMinecraft.eyebrow} 
               title={t.whyMinecraft.title} 
@@ -33,17 +33,17 @@ export function WhyMinecraft() {
                   
                   // V4 Playful Color Blocks
                   const blockColors = ["bg-peach/40", "bg-softGreen", "bg-softYellow", "bg-softBlue"];
-                  const iconColors = ["text-coral", "text-freshGreen", "text-heading", "text-skyBlue"];
+                  const iconColors = ["text-coral", "text-freshGreen", "text-[#101B35]", "text-skyBlue"];
                   const blockClass = blockColors[index % blockColors.length];
                   const iconClass = iconColors[index % iconColors.length];
 
                   return (
-                    <div key={item.title} className={cn("relative flex flex-col rounded-[2rem] p-8 transition-transform duration-500 hover:-translate-y-2 hover:shadow-soft-sm border-2 border-white", blockClass)}>
+                    <div key={item.title} className={cn("relative flex flex-col rounded-[2rem] p-6 sm:p-8 transition-transform duration-500 hover:-translate-y-2 hover:shadow-soft-sm border-2 border-white", blockClass)}>
                       <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm border border-white/50">
                         <Icon className={cn("h-7 w-7", iconClass)} />
                       </div>
-                      <h3 className="text-2xl font-display font-bold text-heading mb-3">{item.title}</h3>
-                      <p className="text-paragraph text-lg font-medium leading-relaxed">{item.description}</p>
+                      <h3 className="text-2xl font-display font-bold text-[#101B35] dark:text-[#101B35] mb-3">{item.title}</h3>
+                      <p className="text-slate-700 dark:text-slate-800 text-lg font-medium leading-relaxed">{item.description}</p>
                     </div>
                   );
                 })}
@@ -51,7 +51,7 @@ export function WhyMinecraft() {
             </div>
           </div>
           {/* Playful backplate */}
-          <div className="absolute inset-0 translate-x-3 translate-y-3 lg:translate-x-6 lg:translate-y-6 rounded-[3rem] bg-softLavender border-2 border-white pointer-events-none -z-10 shadow-soft-sm" />
+          <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 lg:translate-x-6 lg:translate-y-6 rounded-[2rem] sm:rounded-[3rem] bg-softLavender border-2 border-white pointer-events-none -z-10 shadow-soft-sm" />
         </MotionWrapper>
       </Container>
     </Section>

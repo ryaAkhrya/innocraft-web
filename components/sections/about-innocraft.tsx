@@ -66,7 +66,7 @@ export function AboutInnocraft() {
     : null;
 
   return (
-    <Section className="py-20 sm:py-32 bg-websiteBg relative overflow-hidden">
+    <Section className="py-20 sm:py-32 bg-websiteBg/85 relative overflow-hidden">
       <Container className="relative z-10">
         <MotionWrapper>
           <div className="grid gap-16 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
@@ -74,11 +74,11 @@ export function AboutInnocraft() {
             <div className="order-2 lg:order-1 flex flex-col justify-center">
               {/* Eyebrow / Labels */}
               <div className="mb-8 flex gap-3">
-                <span className="inline-flex items-center gap-2 rounded-2xl border-2 border-white bg-peach px-4 py-2 text-xs font-bold uppercase tracking-widest text-heading shadow-soft-sm">
+                <span className="inline-flex items-center gap-2 rounded-2xl border-2 border-white bg-peach px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#101B35] dark:text-[#101B35] shadow-soft-sm">
                   <span className="h-2 w-2 rounded-full bg-coral animate-pulse" />
                   Create
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-2xl border-2 border-white bg-softBlue px-4 py-2 text-xs font-bold uppercase tracking-widest text-heading shadow-soft-sm">
+                <span className="inline-flex items-center gap-2 rounded-2xl border-2 border-white bg-softBlue px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#101B35] dark:text-[#101B35] shadow-soft-sm">
                   <span className="h-2 w-2 rounded-full bg-skyBlue animate-pulse" />
                   Code
                 </span>
@@ -111,10 +111,10 @@ export function AboutInnocraft() {
             {/* Image Column - Clean Editorial Aesthetic */}
             <div className="order-1 lg:order-2 relative px-4 sm:px-8 max-w-md mx-auto lg:max-w-none w-full">
               {/* Soft abstract shape behind image */}
-              <div className="absolute inset-0 translate-x-4 translate-y-6 bg-coral border-2 border-white rounded-[3.5rem] pointer-events-none shadow-color-peach rotate-3" />
+              <div className="absolute inset-0 translate-x-1.5 translate-y-2 sm:translate-x-4 sm:translate-y-6 bg-coral border-2 border-white rounded-[2rem] sm:rounded-[3.5rem] pointer-events-none shadow-color-peach rotate-3" />
 
-              <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] w-full rounded-[3.5rem] bg-white border-4 border-white p-2 shadow-soft-lg transition-transform hover:-translate-y-2 z-10">
-                <div className="h-full w-full overflow-hidden rounded-[3rem] bg-websiteBgEnd">
+              <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] w-full rounded-[2rem] sm:rounded-[3.5rem] bg-white dark:bg-slate-800 border-4 border-white p-2 shadow-soft-lg transition-transform sm:hover:-translate-y-2 z-10">
+                <div className="h-full w-full overflow-hidden rounded-[1.5rem] sm:rounded-[3rem] bg-websiteBgEnd">
                   {imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img

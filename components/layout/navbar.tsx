@@ -44,11 +44,11 @@ export function Navbar() {
     <header
       className={cn(
         "sticky top-0 z-50 transition-all duration-300",
-        isScrolled ? "bg-white/90 backdrop-blur-xl shadow-soft border-b border-border" : "bg-transparent py-4",
+        isScrolled ? "bg-white/90 dark:bg-slate-900/95 backdrop-blur-xl shadow-soft border-b border-border" : "bg-transparent py-4",
       )}
     >
       <Container className={cn("transition-all duration-300", isScrolled ? "py-3" : "py-4 sm:py-5")}>
-        <div className={cn("mx-auto flex max-w-5xl items-center justify-between bg-white px-5 py-3 transition-all duration-300", isScrolled ? "rounded-none bg-transparent" : "rounded-3xl border-2 border-border shadow-soft-sm")}>
+        <div className={cn("mx-auto flex max-w-5xl items-center justify-between px-5 py-3 transition-all duration-300", isScrolled ? "rounded-none bg-transparent" : "rounded-3xl border-2 border-border shadow-soft-sm bg-white/95 dark:bg-slate-800/95 backdrop-blur-md")}>
           <Link href="/#home" className="flex items-center gap-3 transition-transform hover:-translate-y-0.5 active:translate-y-0" aria-label={`${settings.websiteName} home`}>
             <Image src={logoUrl} alt={`${settings.websiteName} logo`} width={32} height={32} className="h-8 w-8 object-contain" />
             <span className="text-sm font-extrabold uppercase tracking-[0.25em] text-heading">{settings.websiteName}</span>
@@ -90,7 +90,7 @@ export function Navbar() {
         </div>
 
         {isOpen ? (
-          <div className="absolute left-5 right-5 top-[calc(100%+0.5rem)] rounded-[2rem] border-2 border-border bg-white p-5 shadow-soft-xl lg:hidden">
+          <div className="absolute left-5 right-5 top-[calc(100%+0.5rem)] rounded-[2rem] border-2 border-border bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl p-5 shadow-soft-xl lg:hidden">
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
               {navItems.map((item) => (
                 <Link

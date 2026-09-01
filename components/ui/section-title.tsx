@@ -36,7 +36,7 @@ export function SectionTitle({
     return (
       <>
         {parts[0]}
-        <span className="relative inline-block whitespace-nowrap px-3 mx-1">
+        <span className="relative inline-block sm:whitespace-nowrap px-3 mx-1">
           <span className="relative z-10">{highlightWord}</span>
           <motion.span
             initial={{ scale: 0.9, opacity: 0, rotate: -2 }}

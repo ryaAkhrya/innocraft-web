@@ -142,7 +142,7 @@ export function Benefits() {
   }
 
   return (
-    <Section className="py-20 sm:py-32 relative overflow-hidden bg-websiteBg">
+    <Section className="py-20 sm:py-32 relative overflow-hidden bg-websiteBg/85 dark:bg-[#101B35] transition-colors duration-500">
       {/* Playful blobs */}
       <div className="absolute top-1/4 left-0 w-[400px] h-[400px] bg-softYellow/30 rounded-full blur-[80px] pointer-events-none" />
 
@@ -158,7 +158,7 @@ export function Benefits() {
           {benefitCards.map((card, i) => {
             // V4 Playful Solid Color Variants
             const iconAccents = ["bg-peach text-heading", "bg-softBlue text-heading", "bg-softYellow text-heading", "bg-softGreen text-heading"];
-            const numberAccents = ["text-coral/20 group-hover:text-coral/40", "text-skyBlue/20 group-hover:text-skyBlue/40", "text-heading/10 group-hover:text-heading/20", "text-freshGreen/20 group-hover:text-freshGreen/40"];
+            const numberAccents = ["text-coral/20 dark:text-coral/30 group-hover:text-coral/40 dark:group-hover:text-coral/50", "text-skyBlue/20 dark:text-skyBlue/30 group-hover:text-skyBlue/40 dark:group-hover:text-skyBlue/50", "text-heading/10 dark:text-slate-400/20 group-hover:text-heading/20 dark:group-hover:text-slate-400/30", "text-freshGreen/20 dark:text-freshGreen/30 group-hover:text-freshGreen/40 dark:group-hover:text-freshGreen/50"];
             
             const iconAccent = iconAccents[i % iconAccents.length];
             const numberAccent = numberAccents[i % numberAccents.length];
@@ -169,9 +169,9 @@ export function Benefits() {
                 className="group relative h-full"
               >
                 {/* Offset shadow block */}
-                <div className={`absolute inset-0 translate-x-3 translate-y-3 rounded-[3rem] border-2 border-white ${iconAccent.split(' ')[0]} pointer-events-none transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4`} />
+                <div className={`absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[2rem] sm:rounded-[3rem] border-2 border-white ${iconAccent.split(' ')[0]} pointer-events-none transition-transform duration-500 sm:group-hover:translate-x-4 sm:group-hover:translate-y-4`} />
                 
-                <div className="relative flex flex-col items-start gap-6 rounded-[3rem] border-4 border-white bg-white p-8 sm:p-10 transition-transform duration-500 hover:-translate-y-2 shadow-soft-lg overflow-hidden h-full z-10">
+                <div className="relative flex flex-col items-start gap-6 rounded-[2rem] sm:rounded-[3rem] border-4 border-white bg-white dark:bg-[#18243A] p-6 sm:p-10 transition-transform duration-500 sm:hover:-translate-y-2 shadow-soft-lg overflow-hidden h-full z-10">
                   <div className="absolute top-0 right-0 p-8 select-none pointer-events-none transition-colors duration-500">
                     <span className={`text-8xl font-display font-black transition-colors duration-500 ${numberAccent}`}>
                       0{i + 1}
@@ -184,10 +184,10 @@ export function Benefits() {
                       <span aria-hidden="true">{card.icon || "⭐"}</span>
                     </div>
                     <div className="min-w-0 mt-2 pr-8">
-                      <h3 className="text-2xl font-display font-bold text-heading">
+                      <h3 className="text-2xl font-display font-bold text-heading dark:text-slate-100">
                         {card.title}
                       </h3>
-                      <p className="mt-3 text-lg font-medium leading-relaxed text-paragraph">
+                      <p className="mt-3 text-lg font-medium leading-relaxed text-paragraph dark:text-slate-300">
                         {card.description}
                       </p>
                     </div>

@@ -78,70 +78,73 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${poppins.variable} min-h-screen bg-breathing text-paragraph transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200`}>
-        {/* Decorative background elements */}
-        <div className="decoration-blob decoration-blob--peach" aria-hidden="true" />
-        <div className="decoration-blob decoration-blob--lavender" aria-hidden="true" />
-        <div className="decoration-blob decoration-blob--blue" aria-hidden="true" />
+        {/* Global Decorative Container - Prevents any overflow */}
+        <div className="fixed inset-0 z-[-10] pointer-events-none overflow-hidden" aria-hidden="true">
+          {/* Decorative background elements */}
+          <div className="decoration-blob decoration-blob--peach" />
+          <div className="decoration-blob decoration-blob--lavender" />
+          <div className="decoration-blob decoration-blob--blue" />
 
-        {/* Depth / atmospheric fog layers */}
-        <div className="decoration-depth decoration-depth--top" aria-hidden="true" />
-        <div className="decoration-depth decoration-depth--mid" aria-hidden="true" />
-        <div className="decoration-depth decoration-depth--bottom" aria-hidden="true" />
+          {/* Depth / atmospheric fog layers */}
+          <div className="decoration-depth decoration-depth--top" />
+          <div className="decoration-depth decoration-depth--mid" />
+          <div className="decoration-depth decoration-depth--bottom" />
 
-        {/* Translucent 3D cubes */}
-        <div className="decoration-cube decoration-cube--1" aria-hidden="true">
-          <div className="cube-face" />
-          <div className="cube-face" />
+          {/* Translucent 3D cubes */}
+          <div className="decoration-cube decoration-cube--1">
+            <div className="cube-face" />
+            <div className="cube-face" />
+          </div>
+          <div className="decoration-cube decoration-cube--2">
+            <div className="cube-face" />
+            <div className="cube-face" />
+          </div>
+          <div className="decoration-cube decoration-cube--3">
+            <div className="cube-face" />
+            <div className="cube-face" />
+          </div>
+          <div className="decoration-cube decoration-cube--4">
+            <div className="cube-face" />
+            <div className="cube-face" />
+          </div>
+
+          {/* Large floating blocks behind hero */}
+          <div className="decoration-block-large decoration-block-large--1" />
+          <div className="decoration-block-large decoration-block-large--2" />
+          <div className="decoration-block-large decoration-block-large--3" />
+          <div className="decoration-block-large decoration-block-large--4" />
+
+          {/* Small floating blocks */}
+          <div className="decoration-block decoration-block--1" />
+          <div className="decoration-block decoration-block--2" />
+          <div className="decoration-block decoration-block--3" />
+          <div className="decoration-block decoration-block--4" />
+
+          {/* Geometric shapes */}
+          <div className="decoration-geometric decoration-geometric--diamond" />
+          <div className="decoration-geometric decoration-geometric--plus" />
+          <div className="decoration-geometric decoration-geometric--lshape" />
+          <div className="decoration-geometric decoration-geometric--ring" />
+
+          {/* Floating voxels (blok.png) */}
+          <div className="decoration-voxel decoration-voxel--1" />
+          <div className="decoration-voxel decoration-voxel--2" />
+          <div className="decoration-voxel decoration-voxel--3" />
+          <div className="decoration-voxel decoration-voxel--4" />
+          <div className="decoration-voxel decoration-voxel--5" />
+          <div className="decoration-voxel decoration-voxel--6" />
+          <div className="decoration-voxel decoration-voxel--7" />
+          <div className="decoration-voxel decoration-voxel--8" />
+          <div className="decoration-voxel decoration-voxel--9" />
+          <div className="decoration-voxel decoration-voxel--10" />
+
+          {/* Sparkles */}
+          <div className="decoration-sparkle decoration-sparkle--1" />
+          <div className="decoration-sparkle decoration-sparkle--2" />
+          <div className="decoration-sparkle decoration-sparkle--3" />
+          <div className="decoration-sparkle decoration-sparkle--4" />
+          <div className="decoration-sparkle decoration-sparkle--5" />
         </div>
-        <div className="decoration-cube decoration-cube--2" aria-hidden="true">
-          <div className="cube-face" />
-          <div className="cube-face" />
-        </div>
-        <div className="decoration-cube decoration-cube--3" aria-hidden="true">
-          <div className="cube-face" />
-          <div className="cube-face" />
-        </div>
-        <div className="decoration-cube decoration-cube--4" aria-hidden="true">
-          <div className="cube-face" />
-          <div className="cube-face" />
-        </div>
-
-        {/* Large floating blocks behind hero */}
-        <div className="decoration-block-large decoration-block-large--1" aria-hidden="true" />
-        <div className="decoration-block-large decoration-block-large--2" aria-hidden="true" />
-        <div className="decoration-block-large decoration-block-large--3" aria-hidden="true" />
-        <div className="decoration-block-large decoration-block-large--4" aria-hidden="true" />
-
-        {/* Small floating blocks */}
-        <div className="decoration-block decoration-block--1" aria-hidden="true" />
-        <div className="decoration-block decoration-block--2" aria-hidden="true" />
-        <div className="decoration-block decoration-block--3" aria-hidden="true" />
-        <div className="decoration-block decoration-block--4" aria-hidden="true" />
-
-        {/* Geometric shapes */}
-        <div className="decoration-geometric decoration-geometric--diamond" aria-hidden="true" />
-        <div className="decoration-geometric decoration-geometric--plus" aria-hidden="true" />
-        <div className="decoration-geometric decoration-geometric--lshape" aria-hidden="true" />
-        <div className="decoration-geometric decoration-geometric--ring" aria-hidden="true" />
-
-        {/* Floating voxels (blok.png) — gentle voxel rain */}
-        <div className="decoration-voxel decoration-voxel--1" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--2" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--3" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--4" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--5" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--6" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--7" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--8" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--9" aria-hidden="true" />
-        <div className="decoration-voxel decoration-voxel--10" aria-hidden="true" />
-
-        {/* Sparkles */}
-        <div className="decoration-sparkle decoration-sparkle--1" aria-hidden="true" />
-        <div className="decoration-sparkle decoration-sparkle--2" aria-hidden="true" />
-        <div className="decoration-sparkle decoration-sparkle--3" aria-hidden="true" />
-        <div className="decoration-sparkle decoration-sparkle--4" aria-hidden="true" />
-        <div className="decoration-sparkle decoration-sparkle--5" aria-hidden="true" />
 
         <div className="relative z-10">
           <ThemeProvider>

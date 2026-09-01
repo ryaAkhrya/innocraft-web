@@ -16,7 +16,7 @@ export function Footer() {
     : "/logo.png";
 
   return (
-    <footer className="relative bg-websiteBg text-heading border-t border-border overflow-hidden">
+    <footer className="relative bg-websiteBg/85 text-heading border-t border-border overflow-hidden">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-peach/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-softBlue/20 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/3 pointer-events-none" />
       
@@ -24,7 +24,7 @@ export function Footer() {
         <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-4">
             <Link href="/#home" className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-soft-sm border-2 border-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white dark:bg-slate-800 shadow-soft-sm border-2 border-white">
                 <Image src={logoUrl} alt={`${settings.websiteName} logo`} width={28} height={28} className="h-7 w-7 object-contain" />
               </div>
               <span className="text-2xl font-display font-extrabold tracking-widest text-heading uppercase">{settings.websiteName}</span>

@@ -34,13 +34,13 @@ export function Opportunities() {
   };
 
   return (
-    <Section className="py-20 sm:py-32 bg-websiteBgEnd relative overflow-hidden">
+    <Section className="py-20 sm:py-32 bg-websiteBgEnd/85 relative overflow-hidden">
       <Container className="relative z-10">
         <MotionWrapper className="relative">
           {/* Playful offset backing */}
-          <div className="absolute inset-0 translate-x-4 translate-y-4 rounded-[3.5rem] border-2 border-white bg-softBlue pointer-events-none shadow-soft-sm" />
+          <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-4 sm:translate-y-4 rounded-[2rem] sm:rounded-[3.5rem] border-2 border-white bg-softBlue pointer-events-none shadow-soft-sm" />
 
-          <div className="rounded-[3.5rem] border-4 border-white bg-white p-8 shadow-soft-lg sm:p-12 lg:p-16 relative overflow-hidden z-10">
+          <div className="rounded-[2rem] sm:rounded-[3.5rem] border-4 border-white bg-white dark:bg-slate-800 p-6 sm:p-12 lg:p-16 relative overflow-hidden z-10">
             {/* Playful blobs inside the card */}
             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-peach/20 blur-[80px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-softGreen/20 blur-[80px] rounded-full pointer-events-none" />
@@ -78,8 +78,8 @@ export function Opportunities() {
                     <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-white/50 shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
                       <Icon className={cn("h-7 w-7 stroke-[2.5]", iconClass)} />
                     </div>
-                    <h3 className="text-xl font-display font-bold text-heading">{item.title}</h3>
-                    <p className="mt-3 text-base font-medium leading-relaxed text-paragraph">{item.description}</p>
+                    <h3 className="text-xl font-display font-bold text-[#101B35] dark:text-[#101B35]">{item.title}</h3>
+                    <p className="mt-3 text-base font-medium leading-relaxed text-slate-700 dark:text-slate-800">{item.description}</p>
                   </motion.div>
                 );
               })}
@@ -90,7 +90,7 @@ export function Opportunities() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.8 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="mt-12 rounded-[2rem] border-2 border-white bg-softYellow p-6 text-base leading-relaxed text-heading font-medium text-center shadow-soft-sm relative z-10"
+              className="mt-12 rounded-[2rem] border-2 border-white bg-softYellow p-6 text-base leading-relaxed text-[#101B35] dark:text-[#101B35] font-medium text-center shadow-soft-sm relative z-10"
             >
               <span className="font-bold text-coral mr-2">✨ Note:</span>
               {t.opportunities.note}

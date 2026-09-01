@@ -90,13 +90,13 @@ export function Mentor() {
   if (mentors.length === 1) {
     const mentor = mentors[0];
     return (
-      <Section className="py-20 sm:py-32 bg-websiteBg relative overflow-hidden">
+      <Section className="py-20 sm:py-32 bg-websiteBg/85 relative overflow-hidden">
         <Container>
           <MotionWrapper className="relative mx-auto max-w-5xl">
             {/* V4 Playful Background Blob */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-peach/30 rounded-full blur-[100px] pointer-events-none" />
             
-            <div className="rounded-[3.5rem] border-4 border-white bg-white p-8 sm:p-12 lg:p-16 shadow-soft-lg z-10 relative overflow-hidden transition-transform hover:-translate-y-2 duration-500">
+            <div className="rounded-[2rem] sm:rounded-[3.5rem] border-4 border-white bg-white dark:bg-slate-800 p-6 sm:p-12 lg:p-16 shadow-soft-lg z-10 relative overflow-hidden transition-transform sm:hover:-translate-y-2 duration-500">
               
               <div className="text-center lg:text-left mb-12 relative z-10">
                 <SectionTitle
@@ -111,10 +111,10 @@ export function Mentor() {
               <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16 relative z-10">
                 <MotionWrapper className="relative">
                   {/* Photo playful offset backing */}
-                  <div className="absolute inset-0 rounded-[3rem] bg-softYellow border-2 border-white translate-x-3 translate-y-4 pointer-events-none shadow-color-peach rotate-2" />
+                  <div className="absolute inset-0 rounded-[2rem] sm:rounded-[3rem] bg-softYellow border-2 border-white translate-x-1.5 translate-y-2 sm:translate-x-3 sm:translate-y-4 pointer-events-none shadow-color-peach rotate-2" />
                   
-                  <div className="relative overflow-hidden rounded-[3rem] border-4 border-white bg-white shadow-soft-sm transition-transform duration-500 hover:-translate-y-2 p-2">
-                    <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-websiteBgEnd">
+                  <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[3rem] border-4 border-white bg-white dark:bg-slate-800 shadow-soft-sm transition-transform duration-500 sm:hover:-translate-y-2 p-2">
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] bg-websiteBgEnd">
                       {mentor?.photoUrl?.trim() ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -132,7 +132,7 @@ export function Mentor() {
                   </div>
                 </MotionWrapper>
                 <div className="text-center lg:text-left">
-                  <div className="mb-6 inline-flex items-center gap-2 rounded-2xl border-2 border-white bg-white px-5 py-2.5 shadow-soft-sm">
+                  <div className="mb-6 inline-flex items-center gap-2 rounded-2xl border-2 border-white bg-white dark:bg-slate-800 px-5 py-2.5 shadow-soft-sm">
                     <span className="h-3 w-3 rounded-full bg-freshGreen shadow-color-green" />
                     <span className="text-xs font-bold uppercase tracking-widest text-heading">{t.mentor.eyebrow}</span>
                   </div>
@@ -150,12 +150,12 @@ export function Mentor() {
                   {(mentor?.instagramUrl || mentor?.whatsappUrl) && (
                     <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
                       {mentor.instagramUrl && (
-                        <a href={mentor.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white bg-peach text-heading shadow-soft hover:-translate-y-1 hover:shadow-color-peach hover:bg-coral hover:text-white transition-all">
+                        <a href={mentor.instagramUrl || undefined} target="_blank" rel="noopener noreferrer" className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white bg-peach text-[#101B35] dark:text-[#101B35] shadow-soft hover:-translate-y-1 hover:shadow-color-peach hover:bg-coral hover:text-white dark:hover:text-white transition-all">
                           <InstagramIcon className="w-6 h-6" />
                         </a>
                       )}
                       {mentor.whatsappUrl && (
-                        <a href={mentor.whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white bg-softGreen text-heading shadow-soft hover:-translate-y-1 hover:shadow-color-green hover:bg-freshGreen hover:text-white transition-all">
+                        <a href={mentor.whatsappUrl || undefined} target="_blank" rel="noopener noreferrer" className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white bg-softGreen text-[#101B35] dark:text-[#101B35] shadow-soft hover:-translate-y-1 hover:shadow-color-green hover:bg-freshGreen hover:text-white dark:hover:text-white transition-all">
                           <WhatsappIcon className="w-6 h-6" />
                         </a>
                       )}
@@ -172,7 +172,7 @@ export function Mentor() {
 
   // Two or more mentors: responsive grid
   return (
-    <Section className="py-20 sm:py-32 bg-websiteBg">
+    <Section className="py-20 sm:py-32 bg-websiteBg/85 overflow-hidden">
       <Container>
         <div className="text-center mb-16">
           <SectionTitle
@@ -187,7 +187,7 @@ export function Mentor() {
         
         {mentors.length === 0 ? (
           <div className="mt-8 text-center">
-            <div className="rounded-[3rem] border-4 border-white bg-white p-8 shadow-soft-lg max-w-md mx-auto">
+            <div className="rounded-[2rem] sm:rounded-[3rem] border-4 border-white bg-white dark:bg-slate-800 p-6 sm:p-8 shadow-soft-lg max-w-md mx-auto">
               <p className="text-lg font-medium text-paragraph">
                 Mentor profiles coming soon.
               </p>
@@ -205,10 +205,10 @@ export function Mentor() {
                 className="group relative h-full"
               >
                 {/* V4 playful offset backing */}
-                <div className={`absolute inset-0 rounded-[3rem] border-2 border-white ${offsetColor} translate-x-3 translate-y-3 transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4 pointer-events-none shadow-soft-sm`} />
+                <div className={`absolute inset-0 rounded-[2rem] sm:rounded-[3rem] border-2 border-white ${offsetColor} translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 transition-transform duration-500 sm:group-hover:translate-x-4 sm:group-hover:translate-y-4 pointer-events-none shadow-soft-sm`} />
                 
-                <div className="h-full flex flex-col overflow-hidden rounded-[3rem] border-4 border-white bg-white p-4 shadow-soft-lg transition-transform duration-500 hover:-translate-y-2 z-10 relative">
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-websiteBgEnd">
+                <div className="h-full flex flex-col overflow-hidden rounded-[2rem] sm:rounded-[3rem] border-4 border-white bg-white dark:bg-slate-800 p-4 shadow-soft-lg transition-transform duration-500 sm:hover:-translate-y-2 z-10 relative">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] bg-websiteBgEnd">
                     {mentor.photoUrl?.trim() ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -235,16 +235,16 @@ export function Mentor() {
                     )}
                     {(mentor.instagramUrl || mentor.whatsappUrl) && (
                       <div className="mt-auto pt-6 flex gap-3 justify-center">
-                        {mentor.instagramUrl && (
-                          <a href={mentor.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-white bg-peach text-heading shadow-soft hover:-translate-y-1 hover:shadow-color-peach hover:bg-coral hover:text-white transition-all">
-                            <InstagramIcon className="w-5 h-5" />
+                        <div className="flex gap-2">
+                          <a href={mentor.instagramUrl || undefined} target="_blank" rel="noopener noreferrer" className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white bg-peach text-[#101B35] dark:text-[#101B35] shadow-soft hover:-translate-y-1 hover:shadow-color-peach hover:bg-coral hover:text-white dark:hover:text-white transition-all">
+                            <span className="sr-only">Instagram</span>
+                            <InstagramIcon className="h-6 w-6 stroke-[2.5]" />
                           </a>
-                        )}
-                        {mentor.whatsappUrl && (
-                          <a href={mentor.whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-white bg-softGreen text-heading shadow-soft hover:-translate-y-1 hover:shadow-color-green hover:bg-freshGreen hover:text-white transition-all">
-                            <WhatsappIcon className="w-5 h-5" />
+                          <a href={mentor.whatsappUrl || undefined} target="_blank" rel="noopener noreferrer" className="flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-white bg-softGreen text-[#101B35] dark:text-[#101B35] shadow-soft hover:-translate-y-1 hover:shadow-color-green hover:bg-freshGreen hover:text-white dark:hover:text-white transition-all">
+                            <span className="sr-only">WhatsApp</span>
+                            <WhatsappIcon className="h-6 w-6 stroke-[2.5]" />
                           </a>
-                        )}
+                        </div>
                       </div>
                     )}
                   </div>

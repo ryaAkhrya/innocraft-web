@@ -107,7 +107,7 @@ export function Projects() {
   }
 
   return (
-    <Section id="projects" className="py-20 sm:py-32 bg-websiteBgEnd relative">
+    <Section id="projects" className="py-20 sm:py-32 bg-websiteBgEnd/85 relative overflow-hidden">
       {/* Playful scattered blobs */}
       <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-peach/30 rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-0 w-[500px] h-[500px] bg-softBlue/30 rounded-full blur-[100px] pointer-events-none" />
@@ -152,9 +152,9 @@ export function Projects() {
                 className="group relative"
               >
                 {/* V4 offset playful shadow block */}
-                <div className={`absolute inset-0 translate-x-3 translate-y-3 rounded-[3rem] border-2 border-white ${cardBg} pointer-events-none transition-transform duration-500 group-hover:translate-x-4 group-hover:translate-y-4`} />
+                <div className={`absolute inset-0 translate-x-1.5 translate-y-1.5 sm:translate-x-3 sm:translate-y-3 rounded-[2rem] sm:rounded-[3rem] border-2 border-white ${cardBg} pointer-events-none transition-transform duration-500 sm:group-hover:translate-x-4 sm:group-hover:translate-y-4`} />
 
-                <div className="relative flex flex-col overflow-hidden rounded-[3rem] border-4 border-white bg-white transition-transform duration-500 hover:-translate-y-2 z-10 h-full shadow-soft-sm">
+                <div className="relative flex flex-col overflow-hidden rounded-[2rem] sm:rounded-[3rem] border-4 border-white bg-white dark:bg-slate-800 transition-transform duration-500 sm:hover:-translate-y-2 z-10 h-full shadow-soft-sm">
                   <div className={`aspect-[4/3] sm:aspect-video overflow-hidden border-b-4 border-white relative ${cardBg}`}>
                     {item.imageUrl && item.imageUrl.trim().length > 0 ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -178,7 +178,7 @@ export function Projects() {
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-grow flex-col p-8 sm:p-10 bg-white">
+                  <div className="flex flex-grow flex-col p-6 sm:p-10 bg-white dark:bg-slate-800">
                     <h3 className="text-3xl font-display font-extrabold text-heading">
                       {item.title}
                     </h3>
@@ -191,19 +191,19 @@ export function Projects() {
                       {item.description}
                     </p>
                   </div>
-                  <div className="p-8 sm:p-10 pt-0 bg-white">
+                  <div className="p-6 sm:p-10 pt-0 bg-white dark:bg-slate-800">
                     {externalUrl ? (
                       <a
                         href={externalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`inline-flex w-full sm:w-auto items-center justify-center rounded-2xl border-2 border-white ${cardBg} px-8 py-4 text-sm font-bold uppercase tracking-widest text-heading transition-all hover:brightness-105 shadow-soft-sm hover:-translate-y-1 hover:shadow-soft`}
+                        className={`inline-flex w-full sm:w-auto items-center justify-center rounded-2xl border-2 border-white ${cardBg} px-8 py-4 text-sm font-bold uppercase tracking-widest text-[#101B35] dark:text-[#101B35] transition-all hover:brightness-105 shadow-soft-sm hover:-translate-y-1 hover:shadow-soft`}
                       >
                         {item.ctaText || "Lihat Proyek"}
                         <ArrowUpRight className="ml-3 h-5 w-5" />
                       </a>
                     ) : (
-                      <button disabled className="inline-flex w-full sm:w-auto items-center justify-center rounded-2xl border-2 border-border/50 bg-websiteBgEnd px-8 py-4 text-sm font-bold uppercase tracking-widest text-heading/30 cursor-not-allowed">
+                      <button disabled className="inline-flex w-full sm:w-auto items-center justify-center rounded-2xl border-2 border-border/50 bg-websiteBgEnd dark:bg-slate-700 px-8 py-4 text-sm font-bold uppercase tracking-widest text-heading/30 cursor-not-allowed">
                         {item.ctaText || "Lihat Proyek"}
                         <ArrowUpRight className="ml-3 h-5 w-5 opacity-50" />
                       </button>
