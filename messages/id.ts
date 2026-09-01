@@ -116,6 +116,8 @@ export const idMessages = {
     age: "Usia peserta: 8-16 tahun",
     facilities: ["Materi step-by-step", "Disediakan Laptop", "Output yang bisa dibawa pulang", "Project studio", "Mentoring terjadwal", "Review & improvement"],
     note: "Pembelajaran dilaksanakan langsung di kelas Innocraft.",
+    locationName: "Innocraft: Kursus Minecraft Berbasis Coding",
+    openInMaps: "Buka di Google Maps →",
   },
   cta: {
     title: "Siap melihat bagaimana anak Anda bisa tumbuh di sini?",

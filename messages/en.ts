@@ -116,6 +116,8 @@ export const enMessages = {
     age: "Participant age: 8-16",
     facilities: ["Step-by-step materials", "Laptop provided", "Take-home output", "Studio project", "Scheduled mentoring", "Review & improvement"],
     note: "Classes are held directly at the Innocraft classroom.",
+    locationName: "Innocraft: Minecraft Coding Course",
+    openInMaps: "Open in Google Maps →",
   },
   cta: {
     title: "Ready to see how your child could grow here?",
