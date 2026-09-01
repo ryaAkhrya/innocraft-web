@@ -114,8 +114,8 @@ export const enMessages = {
     schedule: "Schedule",
     time: "Sessions are arranged on a flexible schedule based on class needs.",
     age: "Participant age: 8-16",
-    facilities: ["Comfortable room", "Laptop facility", "Stable internet", "Interactive mentor"],
-    note: "The class location can be adjusted based on program needs.",
+    facilities: ["Step-by-step materials", "Laptop provided", "Take-home output", "Studio project", "Scheduled mentoring", "Review & improvement"],
+    note: "Classes are held directly at the Innocraft classroom.",
   },
   cta: {
     title: "Ready to see how your child could grow here?",

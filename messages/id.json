@@ -114,7 +114,7 @@
     "schedule": "Jadwal", "days": "Setiap hari",
     "time": "Sesi berlangsung pada jam yang fleksibel sesuai kebutuhan kelas.",
     "age": "Usia peserta: 8-16 tahun",
-    "facilities": ["Ruangan nyaman", "Fasilitas Laptop", "Internet stabil", "Mentor interaktif"],
+    "facilities": ["Materi step-by-step", "Disediakan Laptop", "Output yang bisa dibawa pulang", "Project studio", "Mentoring terjadwal", "Review & improvement"],
     "note": "Pembelajaran dilaksanakan langsung di kelas Innocraft."
   },
   "cta": {
